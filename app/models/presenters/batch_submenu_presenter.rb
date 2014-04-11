@@ -1,61 +1,21 @@
+module Presenters
+
+
 class BatchSubmenuPresenter
   attr_reader :options
-  
+  include ActionController::UrlWriter
+  include ActionView::Helpers::TextHelper
   
   private
   
-  def add_submenu_option_params(text, actionParams, tags=[])
-    actionConfig = @defaults.dup
-    actionParams.keys.each do |key, value|
-       actionConfig[key] = value
-    end
-    @options += [{:label => text, :params => actionConfig, :tags => tags}]    
-  end
-  
-  def prepare_list
-    if @options == nil
-      @options = Array.new
-    end    
-  end
-
   def set_defaults(defaults)
     @defaults=defaults
   end
-
-
-  
-  public
-  
-  def add_submenu_option_with_builder_url (text, builder, params_builder, tags=[])
-    prepare_list
-    
-    @options += [{:label => text, :url_builder => builder, :url_params_builder => params_builder, :tags => tags}]
-  end
-  
-  def add_submenu_option(text, actionParams, tags=[])    
-    prepare_list
-    
-    if actionParams.is_a?(String)
-      @options += [{:label => text, :url =>  actionParams, :tags => tags}]
-    else
-      if actionParams.is_a?(Symbol)
-        actionParams = { :action => actionParams }
-      end
-      add_submenu_option_params(text, actionParams, tags)
-    end
-  end
-
-  def to_s
-    @options.each {|option| "#{option},"}
-  end
-
-
- 
   
   def initialize(current_user, batch)
     @current_user = current_user
     @batch = batch
-    @pipeline = batch.pipeline
+    @pipeline = @batch.pipeline
 
     set_defaults({:controller => :batches, :id => @batch.id})
       
@@ -64,9 +24,9 @@ class BatchSubmenuPresenter
   
   def build_submenu
     add_submenu_option "View summary", { :controller => :pipelines, :action => :summary }
-    add_submenu_option_with_builder_url "comment", :batch_comments_path, [@batch], [:pluralize => @batch.comments.size]
+    add_submenu_option pluralize(@batch.comments.size, "comment" ), batch_comments_path(@batch) , [:pluralize => @batch.comments.size]
     unless @current_user.is_owner? && ! @current_user.is_manager?
-      add_submenu_option_with_builder_url "Edit batch", :edit_batch_path, [@batch]
+      add_submenu_option "Edit batch", edit_batch_path(@batch)
       load_pipeline_options
     end
     add_submenu_option "NPG run data", "#{configatron.run_data_by_batch_id_url}#{@batch.id}" 
@@ -115,4 +75,31 @@ class BatchSubmenuPresenter
        add_submenu_option "Batch Report", :pulldown_batch_report 
      end
   end
+  
+  public
+  
+  def add_submenu_option(text, actionParams, tags=[])    
+    if @options == nil
+      @options = Array.new
+    end    
+    
+    if actionParams.is_a?(String)
+      @options += [{:label => text, :url =>  actionParams, :tags => tags}]
+    elsif actionParams.is_a?(Symbol)
+      actionParams = { :action => actionParams }
+      actionConfig = @defaults.dup
+      actionParams.each_pair do |key, value|
+         actionConfig[key] = value
+      end
+      @options += [{:label => text, :params => actionConfig, :tags => tags}]    
+    elsif actionParams.is_a?(Proc)
+      @options += [{:label => text, :url_builder => actionParams, :tags => tags}]
+    end
+  end
+
+  def to_s
+    @options.each {|option| "#{option},"}
+  end
+  
+end
 end
