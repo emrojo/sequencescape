@@ -2,8 +2,8 @@
   <% if option[:params] -%>
     <% add :menu, option[:label] => url_for(option[:params]) -%>
   <% elsif option[:url] -%>
-    <% add :menu, option[:label] => url -%>
+    <% add :menu, option[:label] => option[:url] -%>
   <% elsif option[:url_builder] -%>
-    <% add :menu, option[:label] => (option[:url_builder]).call(option[:url_builder_params]) -%>
+    <% add :menu, option[:label] => (option[:url_builder]).call() -%>
   <% end -%>
 <% end -%>
