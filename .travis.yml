@@ -1,5 +1,5 @@
 language: ruby
 rvm:
   - jruby-1.7.4
-before_script:
+before_install:
   - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
