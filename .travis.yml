@@ -2,4 +2,4 @@ language: ruby
 rvm:
   - jruby-1.7.4
 before_script:
-  - ssh -T -o "VerifyHostKeyDNS yes" git@github.com
+  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
