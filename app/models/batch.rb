@@ -300,6 +300,36 @@ class Batch < ActiveRecord::Base
     requests.map(&:target_asset)
   end
 
+  def assets_for_creations_of_mx_stock_tube
+    if (@assets_response)
+      return @assets_response
+    end
+
+    @assets_response = { :error_message => nil, :elements => []}
+    unless requests.empty?
+      @assets_response[:elements] = []
+      unless multiplexed?
+        @assets_response[:elements] = assets
+        @assets_response[:elements].delete_if{ |a| a.has_stock_asset? }
+        if @assets_response[:elements].empty?
+          @assets_response[:error_message] = "Stock tubes already exist for everything."
+        end
+      else
+        unless requests.first.target_asset.children.empty?
+          multiplexed_library = requests.first.target_asset.children.first
+          if multiplexed_library.can_create_stock_asset?
+            @assets_response[:elements] = [multiplexed_library]
+          else
+            @assets_response[:error_message] = "Already has a Stock tube."
+          end
+        else
+          @assets_response[:error_message] = "There's no multiplexed library tube available to have a stock tube."
+        end
+      end
+    end
+    return @assets_response
+  end
+    
   def verify_tube_layout(barcodes, user = nil)
     self.requests.each do |request|
       barcode = barcodes["#{request.position(self)}"]

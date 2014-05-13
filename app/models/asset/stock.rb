@@ -11,9 +11,11 @@ module Asset::Stock
         deprecate :new_stock_asset
 
         delegate :is_a_stock_asset?, :to => 'self.class'
+        
+        validate :can_create_stock_asset?
       end
     end
-
+    
     # By being able to create a stock asset the asset itself is not a stock.
     def is_a_stock_asset?
       false
@@ -40,5 +42,9 @@ module Asset::Stock
 
   def is_a_stock_asset?
     true
+  end
+
+  def can_create_stock_asset?
+    ! has_stock_asset? && ! is_a_stock_asset?
   end
 end

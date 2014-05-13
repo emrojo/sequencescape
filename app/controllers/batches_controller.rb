@@ -666,35 +666,17 @@ class BatchesController < ApplicationController
   end
 
   def new_stock_assets
+    @assets = {}
     @batch = Batch.find(params[:id])
-    unless @batch.requests.empty?
-      @batch_assets = []
-      unless @batch.multiplexed?
-        @batch_assets = @batch.requests.map(&:target_asset)
-        @batch_assets.delete_if{ |a| a.has_stock_asset? }
-        if @batch_assets.empty?
-          flash[:error] = "Stock tubes already exist for everything."
-          redirect_to batch_path(@batch)
-        end
-      else
-        unless @batch.requests.first.target_asset.children.empty?
-          multiplexed_library = @batch.requests.first.target_asset.children.first
+    batch_assets = @batch.assets_for_creations_of_mx_stock_tube
 
-          if  ! multiplexed_library.has_stock_asset? && ! multiplexed_library.is_a_stock_asset?
-            @batch_assets = [multiplexed_library]
-          else
-            flash[:error] = "Already has a Stock tube."
-            redirect_to batch_path(@batch)
-          end
-        else
-          flash[:error] = "There's no multiplexed library tube available to have a stock tube."
-          redirect_to batch_path(@batch)
-        end
-      end
-      @assets = {}
-      @batch_assets.each do |batch_asset|
-        @assets[batch_asset.id] = batch_asset.new_stock_asset
-      end
+    if (batch_assets[:error_message])
+      flash[:error] = (batch_assets[:error_message])
+      redirect_to batch_path(@batch) 
+    end
+    
+    batch_assets[:elements].each do |batch_asset|
+      @assets[batch_asset.id] = batch_asset.new_stock_asset
     end
   end
 
