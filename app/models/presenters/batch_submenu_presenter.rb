@@ -26,6 +26,8 @@ module Presenters
     end
 
     def load_pipeline_options
+      
+      
       # Conditions to check in order to display the pipeline options
       cond_is_manager = !@current_user.is_owner? || @current_user.is_manager?
       cond_is_pulldown_pipeline= @pipeline.is_a?(PulldownMultiplexLibraryPreparationPipeline)
@@ -34,8 +36,7 @@ module Presenters
       cond_is_genotyping_pipeline= @pipeline.is_a?(GenotypingPipeline)
       cond_is_pacbio_pipeline= @pipeline.is_a?(PacBioSequencingPipeline)
       cond_not_seq_pipeline = !@pipeline.is_a?(SequencingPipeline)
-      cond_pipeline_can_create_stock_assets =  @batch.pipeline.can_create_stock_assets? #&& 
-        #(@batch.assets_for_creations_of_mx_stock_tube[:error_message] == nil)
+      cond_pipeline_can_create_stock_assets =  @batch.can_create_stock_tubes?
       cond_is_pacbio_sample_pipeline =  @pipeline.is_a?(PacBioSamplePrepPipeline)
       cond_tube_layout_not_verified = @batch.has_limit? and !@batch.has_event("Tube layout verified")
 

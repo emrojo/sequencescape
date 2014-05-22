@@ -483,11 +483,6 @@ class Asset < ActiveRecord::Base
     return nil
   end
 
-  def has_stock_asset?
-    return false
-  end
-
-
   def has_many_requests?
     Request.find_all_target_asset(self.id).size > 1
   end

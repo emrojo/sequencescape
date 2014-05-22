@@ -668,18 +668,18 @@ class BatchesController < ApplicationController
   def new_stock_assets
     @assets = {}
     @batch = Batch.find(params[:id])
-    batch_assets = @batch.assets_for_creations_of_mx_stock_tube
 
-    if (batch_assets[:error_message])
-      flash[:error] = (batch_assets[:error_message])
-      redirect_to batch_path(@batch) 
-    end
-    
-    batch_assets[:elements].each do |batch_asset|
-      @assets[batch_asset.id] = batch_asset.new_stock_asset
+    validation = @batch.validate_can_create_stock_tubes
+    if validation.nil?
+      @batch.assets_for_creation_of_stock_tubes.each do |batch_asset|
+        @assets[batch_asset.id] = batch_asset.new_stock_asset
+      end
+    else
+      flash[:error] = validation
+      redirect_to batch_path(@batch)      
     end
   end
-
+  
   def edit_volume_and_concentration
     @batch = Batch.find(params[:id])
   end

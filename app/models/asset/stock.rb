@@ -11,20 +11,24 @@ module Asset::Stock
         deprecate :new_stock_asset
 
         delegate :is_a_stock_asset?, :to => 'self.class'
-        
-        validate :can_create_stock_asset?
+
+        def can_create_stock_asset?
+          return ! has_stock_asset?# && ! is_a_stock_asset?
+        end
       end
     end
     
-    # By being able to create a stock asset the asset itself is not a stock.
-    def is_a_stock_asset?
-      false
-    end
-
     def stock_asset_factory(name, ctor)
       line = __LINE__
       class_eval(%Q{
         def #{name}(attributes = {}, &block)
+          if ! can_create_stock_asset?
+            if name.end_with? "!"
+              raise ActiveRecord::RecordInvalid, self
+            else
+              return nil
+            end
+          end
           self.class.stock_asset_type.#{ctor}(attributes.reverse_merge(
             :name     => "(s) \#{self.name}",
             :barcode  => AssetBarcode.new_barcode,
@@ -34,17 +38,16 @@ module Asset::Stock
         end
       }, __FILE__, line)
     end
-  end
-
-  def has_stock_asset?
-    false
-  end
-
-  def is_a_stock_asset?
-    true
+    
+    
   end
 
   def can_create_stock_asset?
-    ! has_stock_asset? && ! is_a_stock_asset?
+    false
   end
+  
+  def is_a_stock_asset?
+    true
+  end
+  
 end

@@ -299,36 +299,61 @@ class Batch < ActiveRecord::Base
   def assets
     requests.map(&:target_asset)
   end
+  
+  def assets_without_stock_asset
+    assets.delete_if{ |a| a.has_stock_asset? }
+  end
 
-  def assets_for_creations_of_mx_stock_tube
-    if (@assets_response)
-      return @assets_response
-    end
-
-    @assets_response = { :error_message => nil, :elements => []}
-    unless requests.empty?
-      @assets_response[:elements] = []
-      unless multiplexed?
-        @assets_response[:elements] = assets
-        @assets_response[:elements].delete_if{ |a| a.has_stock_asset? }
-        if @assets_response[:elements].empty?
-          @assets_response[:error_message] = "Stock tubes already exist for everything."
-        end
-      else
-        unless requests.first.target_asset.children.empty?
-          multiplexed_library = requests.first.target_asset.children.first
-          if multiplexed_library.can_create_stock_asset?
-            @assets_response[:elements] = [multiplexed_library]
-          else
-            @assets_response[:error_message] = "Already has a Stock tube."
+  def can_create_stock_tubes?
+    return validate_can_create_stock_tubes.nil?
+  end
+  
+  def validate_can_create_stock_tubes
+    error_message = nil
+    if pipeline.can_create_stock_assets?
+      if ! requests.empty?
+        unless multiplexed?
+          if assets_without_stock_asset.empty?
+            error_message = "Stock tubes already exist for everything."
           end
         else
-          @assets_response[:error_message] = "There's no multiplexed library tube available to have a stock tube."
+          if get_library_tube.nil?
+            error_message = "There's no multiplexed library tube available to have a stock tube."
+          else
+            if get_library_tube.is_a_stock_asset?
+              error_message = "Already has a Stock tube."
+            end
+          end
         end
+      else
+        error_message = "There are no assets to create stock tubes"
+      end
+    else
+      error_message = "This pipeline cannot create stock tubes"
+    end
+    return error_message
+  end
+
+  def get_library_tube
+    first_request = requests.first
+    unless first_request.nil?
+      list_targets = first_request.target_asset.children
+      unless list_targets.empty?
+        return list_targets.first
       end
     end
-    return @assets_response
+    return nil
   end
+    
+  def assets_for_creation_of_stock_tubes
+    if ! requests.empty?
+      if ! multiplexed?
+        return assets_without_stock_asset
+      else
+        return [get_library_tube]
+      end
+    end
+  end  
     
   def verify_tube_layout(barcodes, user = nil)
     self.requests.each do |request|
