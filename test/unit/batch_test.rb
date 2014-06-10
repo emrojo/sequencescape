@@ -974,5 +974,25 @@ class BatchTest < ActiveSupport::TestCase
       @batch.complete!(@user)
     end
   end
+  
+  context "Batch#validate_can_create_stock_tubes" do
+    setup do
+      @request1 = @pipeline.request_types.last.create!(:asset => Factory(:sample_tube), :target_asset => Factory(:empty_library_tube))
+      @request2 = @pipeline.request_types.last.create!(:asset => Factory(:sample_tube), :target_asset => Factory(:empty_library_tube))
+
+      @batch = @pipeline.batches.create!(:requests => [ @request1, @request2 ])
+    end
+    
+    should "return default object without error_message and 2 assets on it" do
+      assert_equal true, @batch.validate_can_create_stock_tubes
+    end
+
+#    should "return return object with 1 asset on it if the other has a stock created" do
+#      @request1.target_asset.create_stock_asset!
+#      debugger
+#      assets_for_creation = @batch.assets_for_creations_of_mx_stock_tube
+#      assert_equal true, (assets_for_creation[:elements].length==1)
+#    end
+  end
 
 end
