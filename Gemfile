@@ -1,18 +1,18 @@
 source 'http://rubygems.org'
 source 'http://gems.github.com'
 
-gem "rails", "~>2.3"
+gem "rails", "~>3.2.19"
 
 # Warehouse builder
 gem "log4r"
-gem "db-charmer"
+# gem "db-charmer"
 
 gem "aasm", "~>2.4.0"
 gem "acts_as_audited"
 gem "configatron"
 gem "rest-client" # curb substitute.
 gem "fastercsv", "~>1.4.0"
-gem "formtastic", "~>1.2.0"
+gem "formtastic", "~>2.3"
 gem "activerecord-jdbc-adapter", ">= 1.2.6", :platforms => :jruby
 gem "jdbc-mysql", :platforms => :jruby
 gem "mysql", :platforms => :mri
@@ -21,7 +21,7 @@ gem "will_paginate", "~>2.3.15"
 gem 'net-ldap'
 gem 'carrierwave', "~>0.4.0"
 gem 'jruby-openssl', :platforms => :jruby
-gem 'rdoc', '~>2.4.2'
+gem 'rdoc'
 
 gem 'trinidad', :platforms => :jruby
 
@@ -35,10 +35,10 @@ gem 'sanger_barcode', '~>0.1.0', :git => 'git+ssh://git@github.com/sanger/sanger
 gem "acts-as-dag", :git => "git+ssh://git@github.com/sanger/acts-as-dag.git", :branch => '38792421_add_dependent_destroy_to_links'
 
 # Better table alterations
-gem "alter_table", :git => "git+ssh://git@github.com/sanger/alter_table.git"
+# gem "alter_table", :git => "git+ssh://git@github.com/sanger/alter_table.git"
 
 # For background processing
-gem "delayed_job", '~>2.0.4'
+gem "delayed_job"
 
 gem "ruby_walk",  ">= 0.0.3",:git => "git+ssh://git@github.com/sanger/ruby_walk"
 
@@ -46,7 +46,7 @@ gem "irods_reader", '>=0.0.2', :git => 'git+ssh://git@github.com/sanger/irods_re
 
 # For the API level
 gem "uuidtools"
-gem "sinatra", "~>1.1.0"
+gem "sinatra"
 gem "rack-acceptable", :require => 'rack/acceptable'
 # gem "json_pure" #gem "yajl-ruby", :require => 'yajl'
 gem "json"
@@ -91,7 +91,7 @@ group :test do
   gem "nokogiri"
   gem "shoulda", "~>2.10.0"
   gem "timecop"
-  gem "treetop", "~>1.2.5"
+  gem "treetop"
   gem 'parallel_tests'
 
   gem "timocratic-test_benchmark"
