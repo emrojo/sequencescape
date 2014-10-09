@@ -1,3 +1,4 @@
+Sequencescape::Application.configure do
 # Settings specified here will take precedence over those in config/environment.rb
 
 # The test environment is used exclusively to run your application's
@@ -13,7 +14,7 @@ config.whiny_nils = true
 config.log_level = :warn
 
 # Show full error reports and disable caching
-config.action_controller.consider_all_requests_local = true
+# config.action_controller.consider_all_requests_local = true
 config.action_controller.perform_caching             = false
 
 # Disable request forgery protection in test environment
@@ -29,3 +30,4 @@ config.reload_plugins = true
 I_KNOW_I_AM_USING_AN_OLD_AND_BUGGY_VERSION_OF_LIBXML2 = true
 
 config.active_record.observers = [ :batch_cache_sweeper, :request_observer ]
+end

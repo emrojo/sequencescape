@@ -1,3 +1,4 @@
+Sequencescape::Application.configure do
 # Edit at your own peril - it's recommended to regenerate this file
 # in the future when you upgrade to a newer version of Cucumber.
 
@@ -13,7 +14,7 @@ config.whiny_nils = true
 config.log_level = :debug
 
 # Show full error reports and disable caching
-config.action_controller.consider_all_requests_local = true
+# config.action_controller.consider_all_requests_local = true
 config.action_controller.perform_caching             = false
 
 # Disable request forgery protection in test environment
@@ -31,4 +32,5 @@ if defined?(ENV_JAVA)
   ENV_JAVA['http.proxyPort'] = nil
   ENV_JAVA['https.proxyHost'] = nil
   ENV_JAVA['https.proxyPort'] = nil
+end
 end

@@ -17,9 +17,9 @@ gem "activerecord-jdbc-adapter", ">= 1.2.6", :platforms => :jruby
 gem "jdbc-mysql", :platforms => :jruby
 gem "mysql", :platforms => :mri
 gem "spreadsheet"
-gem "will_paginate", "~>2.3.15"
+gem "will_paginate"
 gem 'net-ldap'
-gem 'carrierwave', "~>0.4.0"
+gem 'carrierwave'
 gem 'jruby-openssl', :platforms => :jruby
 gem 'rdoc'
 
