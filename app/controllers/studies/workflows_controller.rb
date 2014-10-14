@@ -42,7 +42,7 @@ class Studies::WorkflowsController < ApplicationController
 
     tabserver = configatron.reporting_server
     tabuser   = configatron.reporting_server_username #current_user.login
-    tabpath   = '/t/dna/SS_studies_0/Studies'
+    tabpath   = 't/dna/views/SS_studies_0/Studies'
     tabparams = ':embed=yes&:tabs=no&:toolbar=yes'
     @ticket    = tableau_get_trusted_ticket(tabserver, tabuser, "dna")
     if @ticket != "-1"
