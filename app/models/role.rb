@@ -35,7 +35,7 @@ class Role < ActiveRecord::Base
         has_many :roles, :as => :authorizable
 
         named_scope :with_related_users_included, { :include => { :roles => :users } }
-        named_scope :of_interest_to, lambda { |user|
+       scope :of_interest_to, lambda { |user|
           {
             :joins => joins_through_to_users,
             :conditions => ['rj_u.id=?', user.id],

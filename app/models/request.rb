@@ -25,15 +25,15 @@ class Request < ActiveRecord::Base
     DelegateValidation::AlwaysValidValidator
   end
 
-    named_scope :for_pipeline, lambda { |pipeline|
-      {
-        :joins => [ 'LEFT JOIN pipelines_request_types prt ON prt.request_type_id=requests.request_type_id' ],
-        :conditions => [ 'prt.pipeline_id=?', pipeline.id],
-        :readonly => false
-      }
+ scope :for_pipeline, lambda { |pipeline|
+    {
+      :joins => [ 'LEFT JOIN pipelines_request_types prt ON prt.request_type_id=requests.request_type_id' ],
+      :conditions => [ 'prt.pipeline_id=?', pipeline.id],
+      :readonly => false
     }
+  }
 
-  named_scope :for_pooling_of, lambda { |plate|
+ scope :for_pooling_of, lambda { |plate|
     joins =
       if plate.stock_plate?
         [ 'INNER JOIN assets AS pw ON requests.asset_id=pw.id' ]
@@ -59,7 +59,7 @@ class Request < ActiveRecord::Base
     }
   }
 
-    named_scope :for_pre_cap_grouping_of, lambda { |plate|
+   scope :for_pre_cap_grouping_of, lambda { |plate|
     joins =
       if plate.stock_plate?
         [ 'INNER JOIN assets AS pw ON requests.asset_id=pw.id' ]
@@ -102,7 +102,7 @@ class Request < ActiveRecord::Base
   belongs_to :submission
   belongs_to :order
 
-  named_scope :with_request_type_id, lambda { |id| { :conditions => { :request_type_id => id } } }
+ scope :with_request_type_id, lambda { |id| { :conditions => { :request_type_id => id } } }
 
   # project is read only so we can set it everywhere
   # but it will be only used in specific and controlled place
@@ -147,11 +147,11 @@ class Request < ActiveRecord::Base
 
   #  validates_presence_of :study, :request_type#TODO, :submission
 
-  named_scope :between, lambda { |source,target| { :conditions => { :asset_id => source.id, :target_asset_id => target.id } } }
-  named_scope :into_by_id, lambda { |target_ids| { :conditions => { :target_asset_id => target_ids } } }
+ scope :between, lambda { |source,target| { :conditions => { :asset_id => source.id, :target_asset_id => target.id } } }
+ scope :into_by_id, lambda { |target_ids| { :conditions => { :target_asset_id => target_ids } } }
 
   # TODO: Really need to be consistent in who our named scopes behave
-  named_scope :request_type, lambda { |request_type|
+ scope :request_type, lambda { |request_type|
     id =
       case
       when request_type.nil? then nil   # TODO: Are the pipelines with nil request_type_id really nil?
@@ -163,10 +163,10 @@ class Request < ActiveRecord::Base
   }
 
   named_scope :where_is_a?,     lambda { |clazz| { :conditions => [ 'sti_type IN (?)',     [ clazz, *Class.subclasses_of(clazz) ].map(&:name) ] } }
-  named_scope :where_is_not_a?, lambda { |clazz| { :conditions => [ 'sti_type NOT IN (?)', [ clazz, *Class.subclasses_of(clazz) ].map(&:name) ] } }
+ scope :where_is_not_a?, lambda { |clazz| { :conditions => [ 'sti_type NOT IN (?)', [ clazz, *Class.subclasses_of(clazz) ].map(&:name) ] } }
   named_scope :where_has_a_submission, { :conditions => 'submission_id IS NOT NULL' }
 
-  named_scope :full_inbox, :conditions => {:state => ["pending","hold"]}
+ scope :full_inbox, conditions(:state => ["pending","hold"])
 
   named_scope :with_asset, :conditions =>  'asset_id is not null'
   named_scope :with_target, :conditions =>  'target_asset_id is not null and (target_asset_id <> asset_id)'
@@ -174,17 +174,17 @@ class Request < ActiveRecord::Base
 
   #Asset are Locatable (or at least some of them)
   belongs_to :location_association, :primary_key => :locatable_id, :foreign_key => :asset_id
-  named_scope :located, lambda {|location_id| { :joins => :location_association, :conditions =>  ['location_associations.location_id = ?', location_id ], :readonly => false } }
+ scope :located, lambda {|location_id| { :joins => :location_association, :conditions =>  ['location_associations.location_id = ?', location_id ], :readonly => false } }
 
   #Use container location
-  named_scope :holder_located, lambda { |location_id|
+ scope :holder_located, lambda { |location_id|
     {
       :joins => ["INNER JOIN container_associations hl ON hl.content_id = asset_id", "INNER JOIN location_associations ON location_associations.locatable_id = hl.container_id"],
       :conditions => ['location_associations.location_id = ?', location_id ],
       :readonly => false
     }
   }
-  named_scope :holder_not_control, lambda {
+ scope :holder_not_control, lambda {
     {
       :joins => ["INNER JOIN container_associations hncca ON hncca.content_id = asset_id", "INNER JOIN assets AS hncc ON hncc.id = hncca.container_id"],
       :conditions => ['hncc.sti_type != ?', 'ControlPlate' ],
@@ -194,14 +194,14 @@ class Request < ActiveRecord::Base
   named_scope :without_asset, :conditions =>  'asset_id is null'
   named_scope :without_target, :conditions =>  'target_asset_id is null'
   named_scope :ordered, :order => ["id ASC"]
-  named_scope :full_inbox, :conditions => {:state => ["pending","hold"]}
-  named_scope :hold, :conditions => {:state => "hold"}
+ scope :full_inbox, conditions(:state => ["pending","hold"])
+ scope :hold, conditions(:state => "hold")
 
   named_scope :loaded_for_inbox_display, :include => [{:submission => {:orders =>:study}, :asset => [:scanned_into_lab_event,:studies]}]
   named_scope :ordered_for_ungrouped_inbox, :order => 'id DESC'
   named_scope :ordered_for_submission_grouped_inbox, :order => 'submission_id DESC, id ASC'
 
-  named_scope :group_conditions, lambda { |conditions, variables| {
+ scope :group_conditions, lambda { |conditions, variables| {
     :conditions => [ conditions.join(' OR '), *variables ]
   } }
   def self.group_requests(finder_method, options = {})
@@ -215,9 +215,9 @@ class Request < ActiveRecord::Base
     ))
   end
 
-  named_scope :for_submission_id, lambda { |id| { :conditions => { :submission_id => id } } }
-  named_scope :for_asset_id, lambda { |id| { :conditions => { :asset_id => id } } }
-  named_scope :for_study_ids, lambda { |ids|
+ scope :for_submission_id, lambda { |id| { :conditions => { :submission_id => id } } }
+ scope :for_asset_id, lambda { |id| { :conditions => { :asset_id => id } } }
+ scope :for_study_ids, lambda { |ids|
     {
       :joins =>  'INNER JOIN aliquots AS al ON requests.asset_id = al.receptacle_id',
       :group => "requests.id",
@@ -230,7 +230,7 @@ class Request < ActiveRecord::Base
       super('requests.id',:distinct =>true)
     end
   end
-  named_scope :for_study_id, lambda { |id|
+ scope :for_study_id, lambda { |id|
     {
       :joins =>  'INNER JOIN aliquots AS al ON requests.asset_id = al.receptacle_id',
       :group => "requests.id",
@@ -251,7 +251,7 @@ class Request < ActiveRecord::Base
     for_study_ids(studies.map(&:id))
   end
 
-  named_scope :for_initial_study_id, lambda { |id| { :conditions  => {:initial_study_id => id } }
+ scope :for_initial_study_id, lambda { |id| { :conditions  => {:initial_study_id => id } }
 }
 
 
@@ -259,15 +259,15 @@ class Request < ActiveRecord::Base
 
   delegate :study, :study_id, :to => :asset, :allow_nil => true
 
-  named_scope :for_workflow, lambda { |workflow| { :joins => :workflow, :conditions => { :workflow => { :key => workflow } } } }
-  named_scope :for_request_types, lambda { |types| { :joins => :request_type, :conditions => { :request_types => { :key => types } } } }
+ scope :for_workflow, lambda { |workflow| { :joins => :workflow, :conditions => { :workflow => { :key => workflow } } } }
+ scope :for_request_types, lambda { |types| { :joins => :request_type, :conditions => { :request_types => { :key => types } } } }
 
-  named_scope :for_search_query, lambda { |query,with_includes|
+ scope :for_search_query, lambda { |query,with_includes|
     { :conditions => [ 'id=?', query ] }
   }
 
-  named_scope :find_all_target_asset, lambda { |target_asset_id| { :conditions => [ 'target_asset_id = ?', "#{target_asset_id}" ] } }
-  named_scope :for_studies, lambda { |*studies| { :conditions => { :initial_study_id => studies.map(&:id) } } }
+ scope :find_all_target_asset, lambda { |target_asset_id| { :conditions => [ 'target_asset_id = ?', "#{target_asset_id}" ] } }
+ scope :for_studies, lambda { |*studies| { :conditions => { :initial_study_id => studies.map(&:id) } } }
 
   named_scope :with_assets_for_starting_requests, :include => [:request_metadata,{:asset=>:aliquots,:target_asset=>:aliquots}]
   named_scope :not_failed, :conditions => ['state != ?', 'failed']
@@ -469,7 +469,7 @@ class Request < ActiveRecord::Base
   def ready?
     true
   end
-  
+
   def target_purpose
     nil
   end

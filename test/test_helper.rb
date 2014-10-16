@@ -1,4 +1,4 @@
-ENV["RAILS_ENV"] = "test"
+ENV["Rails.env"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 #TODO: for rails 3 replace with rails/test_help
 require "test_help"
@@ -70,7 +70,7 @@ class ActiveSupport::TestCase
 
   # Used by Quiet Backtrace pluging to reduce testing noise
   #self.backtrace_silencers << :rails_vendor
-  #self.backtrace_filters   << :rails_root
+  #self.backtrace_filters   << :Rails.root
   # Add more helper methods to be used by all tests here...
 end
 

@@ -6,7 +6,7 @@ class SetIlluminaPipelinesToOptimumPackingStrategy < ActiveRecord::Migration
     named_scope :illumina_plate_purposes, { :conditions => {
       :name => (IlluminaB::PlatePurposes::PLATE_PURPOSE_FLOWS + Pulldown::PlatePurposes::PLATE_PURPOSE_FLOWS).flatten,
     } }
-    named_scope :cherrypickable_as_target, { :conditions => { :cherrypickable_target => true } }
+   scope :cherrypickable_as_target, conditions( :cherrypickable_target => true } )
   end
 
   def self.up

@@ -7,4 +7,4 @@ gem install rails -v=2.2.2 #RY!
 gem install rcov -v=0.9.8
 gem install curb -v'~>0.5.9.0'
 rake gems:install
-rake gems:install RAILS_ENV=test
+rake gems:install Rails.env=test

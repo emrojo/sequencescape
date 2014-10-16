@@ -62,7 +62,7 @@ module Sequencescape
 
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/extras )
+  # config.load_paths += %W( #{Rails.root}/extras )
   config.autoload_paths += %W{ #{Rails.root}/app/observers }
   config.autoload_paths += %W{ #{Rails.root}/app/api }
 
@@ -88,7 +88,7 @@ module Sequencescape
   #  }
 
   # Enable localisations to be split over multiple paths.
-  config.i18n.load_path << Dir[File.join(Rails.root, %w{config locales metadata *.{rb,yml}})]
+  config.i18n.load_path = Dir[File.join(Rails.root, %w{config locales metadata *.{rb,yml}})]
 
 
   # Jruby 1.7 seems to try and use the http.proxyX settings, but ignores the noProxyHost ENV.

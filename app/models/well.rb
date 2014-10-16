@@ -28,13 +28,13 @@ class Well < Aliquot::Receptacle
 
   named_scope :include_stock_wells, { :include => { :stock_wells => :requests_as_source } }
 
-  named_scope :located_at, lambda { |plate, location|
+ scope :located_at, lambda { |plate, location|
     { :joins => :map, :conditions => { :maps => { :description => location, :asset_size => plate.size } } }
   }
 
   has_many :target_well_links, :class_name => 'Well::Link', :foreign_key => :source_well_id, :conditions => { :type => 'stock' }
   has_many :target_wells, :through => :target_well_links, :source => :target_well
-  named_scope :stock_wells_for, lambda { |wells| {
+ scope :stock_wells_for, lambda { |wells| {
     :joins      => :target_well_links,
     :conditions => {
       :well_links =>{
@@ -43,7 +43,7 @@ class Well < Aliquot::Receptacle
       }
     }}
 
-  named_scope :located_at_position, lambda { |position| { :joins => :map, :readonly => false, :conditions => { :maps => { :description => position } } } }
+ scope :located_at_position, lambda { |position| { :joins => :map, :readonly => false, :conditions => { :maps => { :description => position } } } }
 
   contained_by :plate
   delegate :location, :location_id, :location_id=, :to => :container , :allow_nil => true
@@ -52,14 +52,14 @@ class Well < Aliquot::Receptacle
   has_one :well_attribute, :inverse_of => :well
   after_create { |w| w.create_well_attribute unless w.well_attribute.present? }
 
-  named_scope :pooled_as_target_by, lambda { |type|
+ scope :pooled_as_target_by, lambda { |type|
     {
       :joins      => 'LEFT JOIN requests patb ON assets.id=patb.target_asset_id',
       :conditions => [ '(patb.sti_type IS NULL OR patb.sti_type IN (?))', [ type, *Class.subclasses_of(type) ].map(&:name) ],
       :select     => 'assets.*, patb.submission_id AS pool_id'
     }
   }
-  named_scope :pooled_as_source_by, lambda { |type|
+ scope :pooled_as_source_by, lambda { |type|
     {
       :joins      => 'LEFT JOIN requests pasb ON assets.id=pasb.asset_id',
       :conditions => [ '(pasb.sti_type IS NULL OR pasb.sti_type IN (?))', [ type, *Class.subclasses_of(type) ].map(&:name) ],
@@ -71,7 +71,7 @@ class Well < Aliquot::Receptacle
   named_scope :in_inverse_column_major_order, { :joins => :map, :order => 'column_order DESC' }
   named_scope :in_inverse_row_major_order, { :joins => :map, :order => 'row_order DESC' }
 
-  named_scope :in_plate_column, lambda {|col,size| {:joins => :map, :conditions => {:maps => {:description => Map::Coordinate.descriptions_for_column(col,size), :asset_size => size }}}}
+ scope :in_plate_column, lambda {|col,size| {:joins => :map, :conditions => {:maps => {:description => Map::Coordinate.descriptions_for_column(col,size), :asset_size => size }}}}
   named_scope :in_plate_row,    lambda {|row,size| {:joins => :map, :conditions => {:maps => {:description => Map::Coordinate.descriptions_for_row(row,size), :asset_size =>size }}}}
 
   named_scope :with_blank_samples, {

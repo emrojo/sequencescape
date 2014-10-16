@@ -5,7 +5,7 @@ class PlatePurpose < Purpose
         # TODO: change to purpose_id
         belongs_to :plate_purpose, :foreign_key => :plate_purpose_id
         belongs_to :purpose, :foreign_key => :plate_purpose_id
-        named_scope :with_plate_purpose, lambda { |*purposes|
+       scope :with_plate_purpose, lambda { |*purposes|
           { :conditions => { :plate_purpose_id => purposes.flatten.map(&:id) } }
         }
       end
@@ -23,14 +23,14 @@ class PlatePurpose < Purpose
   end
 
   include Relationship::Associations
-  
-  named_scope :compatible_with_purpose, lambda {|purpose| { :conditions => ["(target_type is null and 'Plate'=?)  or target_type=?",purpose.target_plate_type, purpose.target_plate_type], :order=>"name ASC" } }  
 
-  named_scope :cherrypickable_as_target, :conditions => { :cherrypickable_target => true }
-  named_scope :cherrypickable_as_source, :conditions => { :cherrypickable_source => true }
-  named_scope :cherrypickable_default_type, :conditions => { :cherrypickable_target => true, :cherrypickable_source => true }
+ scope :compatible_with_purpose, lambda {|purpose| { :conditions => ["(target_type is null and 'Plate'=?)  or target_type=?",purpose.target_plate_type, purpose.target_plate_type], :order=>"name ASC" } }
+
+ scope :cherrypickable_as_target, conditions( :cherrypickable_target => true )
+ scope :cherrypickable_as_source, conditions( :cherrypickable_source => true )
+ scope :cherrypickable_default_type, conditions( :cherrypickable_target => true, :cherrypickable_source => true )
   named_scope :for_submissions, { :conditions => 'can_be_considered_a_stock_plate = true OR name = "Working Dilution"', :order=>'can_be_considered_a_stock_plate DESC'}
-  named_scope :considered_stock_plate, { :conditions => { :can_be_considered_a_stock_plate => true } }
+ scope :considered_stock_plate, conditions( :can_be_considered_a_stock_plate => true } )
 
   serialize :cherrypick_filters
   validates_presence_of(:cherrypick_filters, :if => :cherrypickable_target?)

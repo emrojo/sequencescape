@@ -102,21 +102,21 @@ module Request::Statemachine
       end
 
       # new version of combinable named_scope
-      named_scope :for_state, lambda { |state| { :conditions => { :state => state } } }
+     scope :for_state, lambda { |state| { :conditions => { :state => state } } }
 
-      named_scope :completed, :conditions => {:state => COMPLETED_STATE}
-      named_scope :passed, :conditions => {:state => "passed"}
-      named_scope :failed, :conditions => {:state => "failed"}
-      named_scope :pipeline_pending, :conditions => {:state => "pending"} #  we don't want the blocked one here
-      named_scope :pending, :conditions => {:state => ["pending", "blocked"]} # block is a kind of substate of pending
+     scope :completed, conditions(:state => COMPLETED_STATE)
+     scope :passed, conditions(:state => "passed")
+     scope :failed, conditions(:state => "failed")
+     scope :pipeline_pending, conditions(:state => "pending") #  we don't want the blocked one here
+     scope :pending, conditions(:state => ["pending", "blocked"]) # block is a kind of substate of pending
 
-      named_scope :started, :conditions => {:state => "started"}
-      named_scope :cancelled, :conditions => {:state => "cancelled"}
-      named_scope :aborted, :conditions => {:state => "aborted"}
+     scope :started, conditions(:state => "started")
+     scope :cancelled, conditions(:state => "cancelled")
+     scope :aborted, conditions(:state => "aborted")
 
-      named_scope :open, :conditions => {:state => OPENED_STATE}
-      named_scope :closed, :conditions => {:state => ["passed", "failed", "cancelled", "aborted"]}
-      named_scope :hold, :conditions => {:state => "hold"}
+     scope :open, conditions(:state => OPENED_STATE)
+     scope :closed, conditions(:state => ["passed", "failed", "cancelled", "aborted"])
+     scope :hold, conditions(:state => "hold")
     end
   end
 

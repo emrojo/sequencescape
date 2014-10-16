@@ -15,9 +15,9 @@ class Tube < Aliquot::Receptacle
     requests_as_target.where_is_a?(TransferRequest).all
   end
 
-  named_scope :include_scanned_into_lab_event, :include => :scanned_into_lab_event
+  scope :include_scanned_into_lab_event, includes(:scanned_into_lab_event)
 
-  named_scope :with_purpose, lambda { |*purposes|
+ scope :with_purpose, lambda { |*purposes|
     { :conditions => { :plate_purpose_id => purposes.flatten.map(&:id) } }
   }
 

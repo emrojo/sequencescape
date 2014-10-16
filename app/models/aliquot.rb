@@ -21,12 +21,12 @@ class Aliquot < ActiveRecord::Base
     has_one :primary_aliquot, :class_name => 'Aliquot', :foreign_key => :receptacle_id, :order => 'created_at ASC', :readonly => true
 
     # Named scopes for the future
-    named_scope :include_aliquots, :include => { :aliquots => [ :sample, :tag, :bait_library ] }
-    named_scope :with_aliquots, :joins => :aliquots
+    scope :include_aliquots, includes( :aliquots => [ :sample, :tag, :bait_library ] )
+    scope :with_aliquots, joins(:aliquots)
 
     # Provide some named scopes that will fit with what we've used in the past
-    named_scope :with_sample_id, lambda { |id|     { :conditions => { :aliquots => { :sample_id => Array(id)     } }, :joins => :aliquots } }
-    named_scope :with_sample,    lambda { |sample| { :conditions => { :aliquots => { :sample_id => Array(sample) } }, :joins => :aliquots } }
+    scope :with_sample_id, lambda { |id|     { :conditions => { :aliquots => { :sample_id => Array(id)     } }, :joins => :aliquots } }
+    scope :with_sample,    lambda { |sample| { :conditions => { :aliquots => { :sample_id => Array(sample) } }, :joins => :aliquots } }
 
     # TODO: Remove these at some point in the future as they're kind of wrong!
     has_one :sample, :through => :primary_aliquot

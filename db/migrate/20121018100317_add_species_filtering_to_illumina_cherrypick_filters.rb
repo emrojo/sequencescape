@@ -3,7 +3,7 @@ class AddSpeciesFilteringToIlluminaCherrypickFilters < ActiveRecord::Migration
     set_table_name('plate_purposes')
     set_inheritance_column(nil)
     serialize :cherrypick_filters
-    named_scope :with_name, lambda { |*names| { :conditions => { :name => names } } }
+   scope :with_name, lambda { |*names| { :conditions => { :name => names } } }
   end
 
   def self.update

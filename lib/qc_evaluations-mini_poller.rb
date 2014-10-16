@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require File.dirname(__FILE__) + "/../config/environment"# unless defined?(RAILS_ROOT)
+require File.dirname(__FILE__) + "/../config/environment"# unless defined?(Rails.root)
 #require 'activemessaging'
 
 script_name = File.split(__FILE__).last

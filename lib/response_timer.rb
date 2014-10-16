@@ -40,7 +40,7 @@ class ResponseTimer
     @output.syswrite <<-HEADER
 Rails response log
 Started at: #{Time.now}
-Environment: #{RAILS_ENV}:R#{RUBY_VERSION}:#{File.split(Rails.root).last.capitalize}:#{engine}
+Environment: #{Rails.env}:R#{RUBY_VERSION}:#{File.split(Rails.root).last.capitalize}:#{engine}
 ------------
     HEADER
   end

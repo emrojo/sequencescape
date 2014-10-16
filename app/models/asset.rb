@@ -39,7 +39,7 @@ class Asset < ActiveRecord::Base
   has_many :submitted_assets
   has_many :orders, :through => :submitted_assets
 
-  named_scope :requests_as_source_is_a?, lambda { |t| { :joins => :requests_as_source, :conditions => { :requests => { :sti_type => [ t, *Class.subclasses_of(t) ].map(&:name) } } } }
+ scope :requests_as_source_is_a?, lambda { |t| { :joins => :requests_as_source, :conditions => { :requests => { :sti_type => [ t, *Class.subclasses_of(t) ].map(&:name) } } } }
 
   extend ContainerAssociation::Extension
 
@@ -55,12 +55,12 @@ class Asset < ActiveRecord::Base
   #has_many :holded_assets, :as => :holder, :class_name => "Asset"
   belongs_to :map
   belongs_to :barcode_prefix
-  named_scope :sorted , :order => "map_id ASC"
-  named_scope :position_name, lambda { |*args| { :joins => :map, :conditions => ["description = ? AND asset_size = ?", args[0], args[1]] }}
-  named_scope :get_by_type, lambda {|*args| {:conditions => { :sti_type => args[0]} } }
-  named_scope :for_summary, {:include=>[:map,:barcode_prefix]}
+  scope :sorted , order("map_id ASC")
+  scope :position_name, lambda { |*args| { :joins => :map, :conditions => ["description = ? AND asset_size = ?", args[0], args[1]] }}
+  scope :get_by_type, lambda {|*args| {:conditions => { :sti_type => args[0]} } }
+  scope :for_summary, includes([:map,:barcode_prefix])
 
-  named_scope :of_type, lambda { |*args| { :conditions => { :sti_type => args.map { |t| [t, Class.subclasses_of(t)] }.flatten.map(&:name) } } }
+ scope :of_type, lambda { |*args| { :conditions => { :sti_type => args.map { |t| [t, Class.subclasses_of(t)] }.flatten.map(&:name) } } }
 
   def studies
     []
@@ -75,14 +75,14 @@ class Asset < ActiveRecord::Base
     (orders.map(&:study)+studies).compact.uniq
   end
   # Named scope for search by query string behaviour
-  named_scope :for_search_query, lambda { |query,with_includes|
+ scope :for_search_query, lambda { |query,with_includes|
     {
       :conditions => [
         'assets.name IS NOT NULL AND (assets.name LIKE :like OR assets.id=:query OR assets.barcode = :query)', { :like => "%#{query}%", :query => query } ]
     }.tap {|cond| cond.merge!(:include => :requests, :order => 'requests.pipeline_id ASC') if with_includes }
   }
 
-  named_scope :with_name, lambda { |*names| { :conditions => { :name => names.flatten } } }
+ scope :with_name, lambda { |*names| { :conditions => { :name => names.flatten } } }
 
   extend EventfulRecord
   has_many_events do
@@ -383,7 +383,7 @@ class Asset < ActiveRecord::Base
   # set of conditions that can find any one of these barcodes.  We map each of the individual barcodes
   # to their appropriate query conditions (as though they operated on their own) and then we join
   # them together with 'OR' to get the overall conditions.
-  named_scope :with_machine_barcode, lambda { |*barcodes|
+ scope :with_machine_barcode, lambda { |*barcodes|
     query_details = barcodes.flatten.map do |source_barcode|
       case source_barcode.to_s
       when /^\d{13}$/ #An EAN13 barcode
@@ -416,7 +416,7 @@ class Asset < ActiveRecord::Base
   }
 
 
-  named_scope :source_assets_from_machine_barcode, lambda { |destination_barcode|
+ scope :source_assets_from_machine_barcode, lambda { |destination_barcode|
     destination_asset = find_from_machine_barcode(destination_barcode)
     if destination_asset
       source_asset_ids = destination_asset.parents.map(&:id)

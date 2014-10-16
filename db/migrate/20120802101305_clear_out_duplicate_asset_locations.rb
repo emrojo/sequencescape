@@ -1,7 +1,7 @@
 class ClearOutDuplicateAssetLocations < ActiveRecord::Migration
   class LocationAssociation < ActiveRecord::Base
     set_table_name('location_associations')
-    named_scope :for_asset, lambda { |x| { :conditions => { :locatable_id => details['locatable_id'] } } }
+   scope :for_asset, lambda { |x| { :conditions => { :locatable_id => details['locatable_id'] } } }
 
     def self.duplicated(&block)
       connection.select_all("SELECT locatable_id, COUNT(*) AS total FROM location_associations GROUP BY locatable_id HAVING total > 1").each do |details|

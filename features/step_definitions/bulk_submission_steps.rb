@@ -1,5 +1,5 @@
 def upload_submission_spreadsheet(name)
-  attach_file("bulk_submission_spreadsheet", File.join(RAILS_ROOT,'features', 'submission', 'csv', "#{name}.csv"))
+  attach_file("bulk_submission_spreadsheet", File.join(Rails.root,'features', 'submission', 'csv', "#{name}.csv"))
   click_button "bulk_submission_submit"
 end
 

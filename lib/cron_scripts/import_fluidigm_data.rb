@@ -2,9 +2,8 @@ class ::Plate
 
   fluidigm_request_id = RequestType.find_by_key('pick_to_fluidigm').id
 
-  named_scope :requiring_fluidigm_data, {
-    :select => 'DISTINCT assets.*, plate_metadata.fluidigm_barcode AS fluidigm_barcode',
-    :joins => [
+  scope :requiring_fluidigm_data, select('DISTINCT assets.*, plate_metadata.fluidigm_barcode AS fluidigm_barcode').
+    joins([
 
       'INNER JOIN plate_metadata ON plate_metadata.plate_id = assets.id AND plate_metadata.fluidigm_barcode IS NOT NULL', # The fluidigm metadata
       'INNER JOIN container_associations AS fluidigm_plate_association ON fluidigm_plate_association.container_id = assets.id', # The fluidigm wells
@@ -12,9 +11,8 @@ class ::Plate
 
       'INNER JOIN well_links AS stock_well_link ON stock_well_link.target_well_id = fluidigm_plate_association.content_id AND type= \'stock\'',
       'LEFT OUTER JOIN events ON eventful_id = stock_well_link.source_well_id AND eventful_type = "Asset" AND (family = "update_gender_markers" OR family = "update_sequenom_count") AND content = "FLUIDIGM" '
-    ],
-    :conditions => 'events.id IS NULL'
-  }
+    ]).
+  conditions('events.id IS NULL')
 end
 
 

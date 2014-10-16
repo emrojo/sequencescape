@@ -16,7 +16,7 @@ private
 
     has_one(association_name, { :class_name => class_name, :dependent => :destroy, :validate => true, :autosave => true }.merge(options).merge(:foreign_key => "#{as_name}_id", :inverse_of => :owner))
     accepts_nested_attributes_for(association_name, :update_only => true)
-    named_scope :"include_#{ association_name }", { :include => association_name }
+    scope :"include_#{ association_name }", includes(association_name)
 
     # We now ensure that, if the metadata is not already created, that a blank instance is built.  We cannot
     # do this through the initialization of our model because we use the ActiveRecord::Base#becomes method in

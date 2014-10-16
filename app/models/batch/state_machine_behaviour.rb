@@ -29,7 +29,7 @@ module Batch::StateMachineBehaviour
       # Some named scopes needed for finding the batches in a particular state
       named_scope :pending,   :conditions => {:state => "pending"}
       named_scope :started,   :conditions => {:state => "started"}
-      named_scope :completed, :conditions => {:state => "completed"}
+     scope :completed, conditions(:state => "completed")
       named_scope :released,  :conditions => {:state => "released"}
       named_scope :failed,    :conditions => {:production_state => "fail"}
 

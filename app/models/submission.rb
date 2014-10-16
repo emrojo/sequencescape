@@ -39,9 +39,9 @@ class Submission < ActiveRecord::Base
          :user]}
   ]}
 
-  named_scope :building, :conditions => { :state => "building" }
-  named_scope :pending, :conditions => { :state => "pending" }
-  named_scope :ready, :conditions => { :state => "ready" }
+ scope :building, conditions( :state => "building" )
+ scope :pending, conditions( :state => "pending" )
+ scope :ready, conditions( :state => "ready" )
 
   before_destroy :building?, :empty_of_orders?
 

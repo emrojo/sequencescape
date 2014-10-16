@@ -129,15 +129,15 @@ class Study < ActiveRecord::Base
   end
   private :set_default_ethical_approval
 
-  named_scope :for_search_query, lambda { |query,with_includes|
+ scope :for_search_query, lambda { |query,with_includes|
     { :conditions => [ 'name LIKE ? OR id=?', "%#{query}%", query ] }
   }
 
-  named_scope :with_no_ethical_approval, { :conditions => { :ethically_approved => false } }
+ scope :with_no_ethical_approval, conditions( :ethically_approved => false } )
 
-  named_scope :is_active,   { :conditions => { :state => 'active'   } }
-  named_scope :is_inactive, { :conditions => { :state => 'inactive' } }
-  named_scope :is_pending,  { :conditions => { :state => 'pending'  } }
+ scope :is_active, conditions( :state => 'active'   } )
+ scope :is_inactive, conditions( :state => 'inactive' } )
+ scope :is_pending, conditions( :state => 'pending'  } )
 
   named_scope :newest_first, { :order => "#{ self.quoted_table_name }.created_at DESC" }
   named_scope :with_user_included, { :include => :user }

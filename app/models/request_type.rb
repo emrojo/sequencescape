@@ -35,8 +35,8 @@ class RequestType < ActiveRecord::Base
   belongs_to :product_line
 
   # Couple of named scopes for finding billable types
-  named_scope :billable, { :conditions => { :billable => true } }
-  named_scope :non_billable, { :conditions => { :billable => false } }
+ scope :billable, conditions( :billable => true } )
+ scope :non_billable, conditions( :billable => false } )
 
   # Defines the acceptable plate purposes or the request type.  Essentially this is used to limit the
   # cherrypick plate types when going into pulldown to the correct list.
@@ -59,7 +59,7 @@ class RequestType < ActiveRecord::Base
 
   delegate :accessioning_required?, :to => :request_class
 
-  named_scope :applicable_for_asset, lambda { |asset|
+ scope :applicable_for_asset, lambda { |asset|
     {
       :conditions => [
         'asset_type = ?

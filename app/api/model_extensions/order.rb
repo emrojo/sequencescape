@@ -38,9 +38,9 @@ module ModelExtensions::Order
 
       before_validation :merge_in_structured_request_options
 
-      named_scope :include_study,   :include => { :study => :uuid_object }
-      named_scope :include_project, :include => { :project => :uuid_object }
-      named_scope :include_assets,  :include => { :assets => :uuid_object }
+      scope :include_study, includes( :study => :uuid_object )
+      scope :include_project, includes( :project => :uuid_object )
+      scope :include_assets, includes( :assets => :uuid_object )
 
       has_many :submitted_assets
       has_many :assets, :through => :submitted_assets do
@@ -50,7 +50,7 @@ module ModelExtensions::Order
         end
       end
 
-      named_scope :that_submitted_asset_id, lambda { |asset_id|
+     scope :that_submitted_asset_id, lambda { |asset_id|
         { :conditions => { :submitted_assets => { :asset_id => asset_id } }, :joins => :submitted_assets }
       }
 

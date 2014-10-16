@@ -4,8 +4,8 @@ class MetadataMigration < ActiveRecord::Migration
       set_table_name('property_definitions')
       has_many :properties, :class_name => 'MetadataMigration::Property', :foreign_key => :property_definition_id, :dependent => :destroy
 
-      named_scope :for_class, lambda { |c| { :conditions => { :relates_to => c } } }
-      named_scope :for_keys, lambda { |keys| { :conditions => { :key => keys } } }
+     scope :for_class, lambda { |c| { :conditions => { :relates_to => c } } }
+     scope :for_keys, lambda { |keys| { :conditions => { :key => keys } } }
 
       # It's more efficient to delete all of the properties and then delete the definition.
       def self.delete_for(relates_to, keys)

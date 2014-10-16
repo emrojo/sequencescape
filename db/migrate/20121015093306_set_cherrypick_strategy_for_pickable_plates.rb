@@ -2,7 +2,7 @@ class SetCherrypickStrategyForPickablePlates < ActiveRecord::Migration
   class PlatePurpose < ActiveRecord::Base
     set_table_name('plate_purposes')
     set_inheritance_column(nil)
-    named_scope :cherrypick_target, { :conditions => { :cherrypickable_target => true } }
+   scope :cherrypick_target, conditions( :cherrypickable_target => true } )
   end
 
   def self.up

@@ -1,7 +1,7 @@
 class SupercedeAllHiddenSubmissionTemplates < ActiveRecord::Migration
   class SubmissionTemplate < ActiveRecord::Base
     set_table_name('submission_templates')
-    named_scope :hidden, :conditions => { :visible => false }
+   scope :hidden, conditions( :visible => false )
   end
 
   def self.up

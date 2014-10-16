@@ -35,7 +35,7 @@ class Qcable < ActiveRecord::Base
   # set of conditions that can find any one of these barcodes.  We map each of the individual barcodes
   # to their appropriate query conditions (as though they operated on their own) and then we join
   # them together with 'OR' to get the overall conditions.
-  named_scope :with_machine_barcode, lambda { |*barcodes|
+ scope :with_machine_barcode, lambda { |*barcodes|
     query_details = barcodes.flatten.map do |source_barcode|
       barcode_number = Barcode.number_to_human(source_barcode)
       prefix_string  = Barcode.prefix_from_barcode(source_barcode)

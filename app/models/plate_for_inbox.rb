@@ -96,8 +96,8 @@ class PlateForInbox < ActiveRecord::Base
   end
   private :lookup_stock_plate
 
-  named_scope :with_plate_purpose, lambda {|purposes| { :conditions => {:plate_purpose_id=>purposes.map(&:id)}} }
-  named_scope :in_state, lambda {|states|
+ scope :with_plate_purpose, lambda {|purposes| { :conditions => {:plate_purpose_id=>purposes.map(&:id)}} }
+ scope :in_state, lambda {|states|
     if states.sort != PlateForInbox.state_order.sort
       { :having => ['state_index IN (?) OR (a_stock_plate=TRUE AND cancelled_requests=FALSE)', states.map {|s| PlateForInbox.state_order.index(s)+1} ] }
     else

@@ -25,13 +25,13 @@ class BillingEvent < ActiveRecord::Base
 #  validates_uniqueness_of :reference, :if => :charge?
 #  validates_uniqueness_of :reference, :if => :charge_internally?
 
-  named_scope :charged_to_project, { :conditions => { :kind => 'charge' } }
-  named_scope :charged_internally, { :conditions => { :kind => 'charge_internally' } }
-  named_scope :refunded_to_project, { :conditions => { :kind => 'refund' } }
-  named_scope :for_reference, lambda { |reference| { :conditions => { :reference => reference } } }
+  scope :charged_to_project,  conditions(:kind => 'charge' )
+  scope :charged_internally,  conditions(:kind => 'charge_internally' )
+  scope :refunded_to_project, conditions(:kind => 'refund' )
+  scope :for_reference, lambda { |reference| { :conditions => { :reference => reference } } }
 
-  named_scope :related_to_reference, lambda { |reference| { :conditions => [ 'reference LIKE ?', "#{reference}%" ] } }
-  named_scope :only_these_kinds, lambda { |*kinds| { :conditions => { :kind => kinds } } }
+  scope :related_to_reference, lambda { |reference| { :conditions => [ 'reference LIKE ?', "#{reference}%" ] } }
+  scope :only_these_kinds, lambda { |*kinds| { :conditions => { :kind => kinds } } }
 
   def self.charge_for_reference(ref)
     self.charged_to_project.for_reference(ref).first

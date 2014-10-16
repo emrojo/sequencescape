@@ -46,7 +46,7 @@ module Asset::Ownership
       base.class_eval do
         has_one :plate_owner, :class_name => 'Plate::Owner'
         has_one :owner, :source => :user, :through => :plate_owner
-        named_scope :for_user, lambda { |user|
+       scope :for_user, lambda { |user|
           {
             :joins => "LEFT OUTER JOIN `plate_owners` AS `for_usr_plate_owner` ON `for_usr_plate_owner`.plate_id = assets.id",
             :conditions => ["`for_usr_plate_owner`.user_id = ?", user.id]

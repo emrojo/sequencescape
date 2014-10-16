@@ -21,7 +21,7 @@ class Plate < Asset
   delegate :barcode_type, :to => :plate_purpose, :allow_nil => true
   delegate :asset_shape, :to => :plate_purpose, :allow_nil => true
   delegate :fluidigm_barcode, :to => :plate_metadata
- 
+
   validates_length_of :fluidigm_barcode, :is => 10, :allow_blank => true
 
   # Transfer requests into a plate are the requests leading into the wells of said plate.
@@ -177,7 +177,7 @@ WHERE c.container_id=?
 
   before_create :set_plate_name_and_size
 
-  named_scope :qc_started_plates, lambda {
+ scope :qc_started_plates, lambda {
     {
       :select => "distinct assets.*",
       :order => 'assets.id DESC',
@@ -197,7 +197,7 @@ WHERE c.container_id=?
     }
   }
 
-  named_scope :with_requests, lambda { |requests|
+ scope :with_requests, lambda { |requests|
     {
       :select     => "DISTINCT assets.*",
       :joins      => [

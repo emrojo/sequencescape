@@ -22,7 +22,7 @@ class Batch < ActiveRecord::Base
       errors.add_to_base "All requests must be ready? to be added to a batch"
     end
   end
-  
+
   def cluster_formation_requests_must_be_over_minimum
     if (!@pipeline.min_size.nil?) && (@requests.size < @pipeline.min_size)
       errors.add_to_base "You must create batches of at least " + @pipeline.min_size.to_s+" requests in the pipeline " + @pipeline.name
@@ -51,7 +51,7 @@ class Batch < ActiveRecord::Base
   has_many :failures, :as => :failable
 
   # Named scope for search by query string behavior
-  named_scope :for_search_query, lambda { |query,with_includes|
+ scope :for_search_query, lambda { |query,with_includes|
     conditions = [ 'id=?', query ]
     if user = User.find_by_login(query)
       conditions = [ 'user_id=?', user.id ]
@@ -59,12 +59,12 @@ class Batch < ActiveRecord::Base
     { :conditions => conditions }
   }
 
-  named_scope :includes_for_ui,    { :limit => 5, :include => :user }
-  named_scope :pending_for_ui,     { :conditions => { :state => 'pending',   :production_state => nil    }, :order => 'created_at DESC' }
-  named_scope :released_for_ui,    { :conditions => { :state => 'released',  :production_state => nil    }, :order => 'created_at DESC' }
-  named_scope :completed_for_ui,   { :conditions => { :state => 'completed', :production_state => nil    }, :order => 'created_at DESC' }
-  named_scope :failed_for_ui,      { :conditions => {                        :production_state => 'fail' }, :order => 'created_at DESC' }
-  named_scope :in_progress_for_ui, { :conditions => { :state => 'started',   :production_state => nil    }, :order => 'created_at DESC' }
+  scope :includes_for_ui,    limit(5).includes(:user)
+  scope :pending_for_ui,     conditions(:state => 'pending',   :production_state => nil   ).order('created_at DESC')
+  scope :released_for_ui,    conditions(:state => 'released',  :production_state => nil   ).order('created_at DESC')
+  scope :completed_for_ui,   conditions(:state => 'completed', :production_state => nil   ).order('created_at DESC')
+  scope :failed_for_ui,      conditions(                       :production_state => 'fail').order('created_at DESC')
+  scope :in_progress_for_ui, conditions(:state => 'started',   :production_state => nil   ).order('created_at DESC')
 
   delegate :size, :to => :requests
 

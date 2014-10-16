@@ -37,7 +37,7 @@ module TimeKeeping
 end
 
 def custom_log(script_name)
-  log_file = "./log/#{script_name}-#{RAILS_ENV}-mart-builder-#{Time.now.strftime('%Y%m%d%H%M%S')}.log"
+  log_file = "./log/#{script_name}-#{Rails.env}-mart-builder-#{Time.now.strftime('%Y%m%d%H%M%S')}.log"
   # create a logger
   console_formatter = Log4r::PatternFormatter.new(:pattern => "[%l] [#%c] %d :: %m")
   @log = Log4r::Logger.new 'log'

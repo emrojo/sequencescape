@@ -52,7 +52,7 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
         context "with attached file" do
           setup do
             @controller.stubs(:current_user).returns(@user)
-            post :new, :study_id => @study, :file => File.open(RAILS_ROOT + '/test/data/two_plate_sample_info_valid.xls')
+            post :new, :study_id => @study, :file => File.open(Rails.root + '/test/data/two_plate_sample_info_valid.xls')
           end
 
           should "respond successfully and render the new template" do
@@ -63,7 +63,7 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
 
         context "with invalid file" do
           setup do
-            post :new, :study_id => @study, :file => File.open(RAILS_ROOT + '/config/environment.rb')
+            post :new, :study_id => @study, :file => File.open(Rails.root + '/config/environment.rb')
           end
 
           should_set_the_flash_to "Problems processing your file. Only Excel spreadsheets accepted"

@@ -36,18 +36,18 @@ class Order < ActiveRecord::Base
 
   belongs_to :workflow, :class_name => 'Submission::Workflow'
   validates_presence_of :workflow
-  
+
 
   belongs_to :submission, :inverse_of => :orders
   #validates_presence_of :submission
-  
+
   before_destroy :is_building_submission?
   after_destroy :on_delete_destroy_submission
-  
+
   def is_building_submission?
     self.submission.building?
   end
-  
+
   def on_delete_destroy_submission
     if is_building_submission?
       # After destroying an order, if it is the last order on it's submission
@@ -57,7 +57,7 @@ class Order < ActiveRecord::Base
       return true
     end
     return false
-  end  
+  end
 
   serialize :request_types
   validates_presence_of :request_types
@@ -105,7 +105,7 @@ class Order < ActiveRecord::Base
     ((asset_group.try(:assets) || []) + (assets)).uniq
   end
 
-  named_scope :for_studies, lambda {|*args| {:conditions => { :study_id => args[0]} } }
+ scope :for_studies, lambda {|*args| {:conditions => { :study_id => args[0]} } }
 
   cattr_reader :per_page
   @@per_page = 500

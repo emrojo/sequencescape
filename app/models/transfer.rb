@@ -48,7 +48,7 @@ class Transfer < ActiveRecord::Base
     module PlateState
       def self.included(base)
         base.class_eval do
-          named_scope :in_state, lambda { |states|
+         scope :in_state, lambda { |states|
             states = Array(states).map(&:to_s)
 
             # If all of the states are present there is no point in actually adding this set of conditions because we're
@@ -84,7 +84,7 @@ class Transfer < ActiveRecord::Base
     module TubeState
       def self.included(base)
         base.class_eval do
-          named_scope :in_state, lambda { |states|
+         scope :in_state, lambda { |states|
             states = Array(states).map(&:to_s)
 
             # If all of the states are present there is no point in actually adding this set of conditions because we're
@@ -102,7 +102,7 @@ class Transfer < ActiveRecord::Base
               { }
             end
           }
-          named_scope :without_finished_tubes, lambda { |purpose|
+         scope :without_finished_tubes, lambda { |purpose|
             {:conditions => ["NOT (plate_purpose_id IN (?) AND state = 'passed')", purpose.map(&:id) ]}
           }
         end
@@ -181,7 +181,7 @@ class Transfer < ActiveRecord::Base
   # You can only transfer from one plate to another once, anything else is an error.
   belongs_to :source, :class_name => 'Plate'
   validates_presence_of :source
-  named_scope :include_source, :include => { :source => ModelExtensions::Plate::PLATE_INCLUDES }
+  scope :include_source, includes( :source => ModelExtensions::Plate::PLATE_INCLUDES )
 
   # Before creating an instance of this class the appropriate transfers need to be made from a source
   # asset to the destination one.
