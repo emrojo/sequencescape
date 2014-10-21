@@ -1,5 +1,5 @@
 class PresenterSkeleton
-  class_inheritable_reader :attributes
+  class_attribute :attributes, :instance_writer => false
   write_inheritable_attribute :attributes,  []
 
   def initialize(user, submission_attributes = {})

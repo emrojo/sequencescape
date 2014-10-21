@@ -29,7 +29,7 @@ class Transfer::BetweenPlateAndTubes < Transfer
 
     validates_presence_of :source
 
-    named_scope :include_destination, :include => Transfer::BetweenPlateAndTubes::DESTINATION_INCLUDES
+    scope :include_destination, includes(Transfer::BetweenPlateAndTubes::DESTINATION_INCLUDES)
   end
 
   include Transfer::ControlledDestinations

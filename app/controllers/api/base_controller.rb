@@ -1,5 +1,5 @@
 class Api::BaseController < ApplicationController
-  class_inheritable_accessor :model_class
+  class_attribute :model_class
   before_filter { |controller| Uuid.translate_uuids_to_ids_in_params(controller.params) }
   around_filter :wrap_in_transaction, :only => [ :create, :update, :destroy ]
 

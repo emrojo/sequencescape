@@ -12,7 +12,7 @@ module ::Core::Io::Base::JsonFormattingBehaviour::Input
 
   def self.extended(base)
     base.class_eval do
-      class_inheritable_reader :model_for_input
+      class_attribute :model_for_input, :instance_writer => false
       extend AssociationHandling
     end
   end

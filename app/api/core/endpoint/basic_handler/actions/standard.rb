@@ -3,7 +3,7 @@ module Core::Endpoint::BasicHandler::Actions::Standard
     base.class_eval do
       include InstanceMethods
 
-      class_inheritable_reader :standard_actions
+      class_attribute :standard_actions, :instance_writer => false
       write_inheritable_attribute(:standard_actions, {})
     end
   end

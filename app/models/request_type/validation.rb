@@ -19,7 +19,7 @@ module RequestType::Validation
   end
 
   class RequestTypeValidator < DelegateValidation::Validator
-    class_inheritable_reader :request_type
+    class_attribute :request_type, :instance_writer => false
     write_inheritable_attribute :request_type, nil
 
     def library_types_present?

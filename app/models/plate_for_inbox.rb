@@ -104,10 +104,9 @@ class PlateForInbox < ActiveRecord::Base
       {}
     end
   }
-  named_scope :with_no_outgoing_transfers, {
-    :joins      => "LEFT OUTER JOIN `transfers` outgoing_transfers ON outgoing_transfers.`source_id`=assets.`id`",
-    :conditions => 'outgoing_transfers.source_id IS NULL'
-  }
+
+  scope with_no_outgoing_transfers, joins("LEFT OUTER JOIN `transfers` outgoing_transfers ON outgoing_transfers.`source_id`=assets.`id`").
+    conditions('outgoing_transfers.source_id IS NULL')
 
   def state
     plate_purpose.state_of(self)

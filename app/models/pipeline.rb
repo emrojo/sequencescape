@@ -106,7 +106,7 @@ class Pipeline < ActiveRecord::Base
 
  scope :externally_managed, conditions( :externally_managed => true )
  scope :internally_managed, conditions( :externally_managed => false )
-  named_scope :active,   :conditions => { :active => true }
+ scope :active conditions(:active => true)
  scope :inactive, conditions( :active => false )
 
  scope :for_request_type, lambda { |rt|

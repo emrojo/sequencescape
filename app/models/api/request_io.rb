@@ -10,8 +10,7 @@ class Api::RequestIO < Api::Base
       base.class_eval do
         extend ClassMethods
 
-        named_scope :including_associations_for_json, {
-          :include => [
+        scope :including_associations_for_json, includes([
             :uuid_object,
             :request_type,
             :request_metadata,
@@ -29,8 +28,7 @@ class Api::RequestIO < Api::Base
               :initial_study =>:uuid_object,
               :initial_project => :uuid_object
             }
-          ]
-        }
+          ])
 
         alias_method(:json_root, :url_name)
       end

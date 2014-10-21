@@ -167,7 +167,7 @@ WHERE c.container_id=?
     end
   end
 
-  named_scope :include_wells_and_attributes, { :include => { :wells => [ :map, :well_attribute ] } }
+  scope :include_wells_and_attributes, includes(:wells => [ :map, :well_attribute ])
 
   #has_many :wells, :as => :holder, :class_name => "Well"
   DEFAULT_SIZE = 96
@@ -187,7 +187,7 @@ WHERE c.container_id=?
     }
   }
 
-  named_scope :with_sample,    lambda { |sample|
+  scope :with_sample,    lambda { |sample|
     {
       :select => "distinct assets.*",
       :joins => "LEFT OUTER JOIN container_associations AS wscas ON wscas.container_id = assets.id

@@ -95,14 +95,14 @@ class Request < ActiveRecord::Base
   delegate :billable?, :to => :request_type, :allow_nil => true
   belongs_to :workflow, :class_name => "Submission::Workflow"
 
-  named_scope :for_billing, :include => [ :initial_project, :request_type, { :target_asset => :aliquots } ]
+  scope :for_billing, includes([ :initial_project, :request_type, { :target_asset => :aliquots }])
 
   belongs_to :user
 
   belongs_to :submission
   belongs_to :order
 
- scope :with_request_type_id, lambda { |id| { :conditions => { :request_type_id => id } } }
+  scope :with_request_type_id, lambda { |id| { :conditions => { :request_type_id => id } } }
 
   # project is read only so we can set it everywhere
   # but it will be only used in specific and controlled place
@@ -162,15 +162,15 @@ class Request < ActiveRecord::Base
     {:conditions => { :request_type_id => id} }
   }
 
-  named_scope :where_is_a?,     lambda { |clazz| { :conditions => [ 'sti_type IN (?)',     [ clazz, *Class.subclasses_of(clazz) ].map(&:name) ] } }
- scope :where_is_not_a?, lambda { |clazz| { :conditions => [ 'sti_type NOT IN (?)', [ clazz, *Class.subclasses_of(clazz) ].map(&:name) ] } }
-  named_scope :where_has_a_submission, { :conditions => 'submission_id IS NOT NULL' }
+  scope :where_is_a?,     lambda { |clazz| { :conditions => [ 'sti_type IN (?)',     [ clazz, *Class.subclasses_of(clazz) ].map(&:name) ] } }
+  scope :where_is_not_a?, lambda { |clazz| { :conditions => [ 'sti_type NOT IN (?)', [ clazz, *Class.subclasses_of(clazz) ].map(&:name) ] } }
+  scope :where_has_a_submission, conditions('submission_id IS NOT NULL')
 
  scope :full_inbox, conditions(:state => ["pending","hold"])
 
-  named_scope :with_asset, :conditions =>  'asset_id is not null'
-  named_scope :with_target, :conditions =>  'target_asset_id is not null and (target_asset_id <> asset_id)'
-  named_scope :join_asset, :joins => [ :asset ]
+  scope :with_asset,  conditions('asset_id is not null')
+  scope :with_target, conditions('target_asset_id is not null and (target_asset_id <> asset_id)')
+  scope :join_asset,  joins(:asset)
 
   #Asset are Locatable (or at least some of them)
   belongs_to :location_association, :primary_key => :locatable_id, :foreign_key => :asset_id
@@ -191,15 +191,15 @@ class Request < ActiveRecord::Base
       :readonly => false
     }
   }
-  named_scope :without_asset, :conditions =>  'asset_id is null'
-  named_scope :without_target, :conditions =>  'target_asset_id is null'
-  named_scope :ordered, :order => ["id ASC"]
+ scope :without_asset, conditions('asset_id is null')
+ scope :without_target, conditions('target_asset_id is null')
+ scope :ordered, order("id ASC")
  scope :full_inbox, conditions(:state => ["pending","hold"])
  scope :hold, conditions(:state => "hold")
 
-  named_scope :loaded_for_inbox_display, :include => [{:submission => {:orders =>:study}, :asset => [:scanned_into_lab_event,:studies]}]
-  named_scope :ordered_for_ungrouped_inbox, :order => 'id DESC'
-  named_scope :ordered_for_submission_grouped_inbox, :order => 'submission_id DESC, id ASC'
+  scope :loaded_for_inbox_display, includes([{:submission => {:orders =>:study}, :asset => [:scanned_into_lab_event,:studies]}])
+  scope :ordered_for_ungrouped_inbox, order('id DESC')
+  scope :ordered_for_submission_grouped_inbox, order('submission_id DESC, id ASC')
 
  scope :group_conditions, lambda { |conditions, variables| {
     :conditions => [ conditions.join(' OR '), *variables ]
@@ -266,11 +266,11 @@ class Request < ActiveRecord::Base
     { :conditions => [ 'id=?', query ] }
   }
 
- scope :find_all_target_asset, lambda { |target_asset_id| { :conditions => [ 'target_asset_id = ?', "#{target_asset_id}" ] } }
- scope :for_studies, lambda { |*studies| { :conditions => { :initial_study_id => studies.map(&:id) } } }
+  scope :find_all_target_asset, lambda { |target_asset_id| { :conditions => [ 'target_asset_id = ?', "#{target_asset_id}" ] } }
+  scope :for_studies, lambda { |*studies| { :conditions => { :initial_study_id => studies.map(&:id) } } }
 
-  named_scope :with_assets_for_starting_requests, :include => [:request_metadata,{:asset=>:aliquots,:target_asset=>:aliquots}]
-  named_scope :not_failed, :conditions => ['state != ?', 'failed']
+  scope :with_assets_for_starting_requests, includes([:request_metadata,{:asset=>:aliquots,:target_asset=>:aliquots}])
+  scope :not_failed, conditions(['state != ?', 'failed'])
 
   #------
   #TODO: use eager loading association

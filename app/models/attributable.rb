@@ -15,9 +15,9 @@ module Attributable
     base.extend(ClassMethods)
     base.class_eval do
       # NOTE: Do not use 'attributes' because that's an ActiveRecord internal name
-      class_inheritable_reader :attribute_details
+      class_attribute :attribute_details, :instance_writer => false
       write_inheritable_attribute(:attribute_details, [])
-      class_inheritable_reader :association_details
+      class_attribute :association_details, :instance_writer => false
       write_inheritable_attribute(:association_details, [])
     end
   end

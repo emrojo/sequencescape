@@ -139,8 +139,8 @@ class Study < ActiveRecord::Base
  scope :is_inactive, conditions( :state => 'inactive' } )
  scope :is_pending, conditions( :state => 'pending'  } )
 
-  named_scope :newest_first, { :order => "#{ self.quoted_table_name }.created_at DESC" }
-  named_scope :with_user_included, { :include => :user }
+  scope :newest_first, order("#{ self.quoted_table_name }.created_at DESC" )
+  scope :with_user_included, includes(:user)
 
   YES = 'Yes'
   NO  = 'No'
@@ -507,35 +507,34 @@ class Study < ActiveRecord::Base
     end
   end
 
-  named_scope :awaiting_ethical_approval, {
-    :joins => :study_metadata,
-    :conditions => {
+  scope :awaiting_ethical_approval,
+    joins(:study_metadata).
+    conditions(
       :ethically_approved => false,
       :study_metadata => {
         :contains_human_dna => Study::YES,
         :contaminated_human_dna => Study::NO,
         :commercially_available => Study::NO
       }
-    }
-  }
+    )
 
-  named_scope :contaminated_with_human_dna, {
-    :joins => :study_metadata,
-    :conditions => {
+
+  scope :contaminated_with_human_dna,
+    joins(:study_metadata).
+    conditions(
       :study_metadata => {
         :contaminated_human_dna => Study::YES
       }
-    }
-  }
+    )
 
-  named_scope :with_remove_x_and_autosomes, {
-    :joins => :study_metadata,
-    :conditions => {
+  scope :with_remove_x_and_autosomes,
+    joins(:study_metadata).
+    conditions(
       :study_metadata => {
         :remove_x_and_autosomes => Study::YES
       }
-    }
-  }
+    )
+
 
   def self.all_awaiting_ethical_approval
     self.awaiting_ethical_approval

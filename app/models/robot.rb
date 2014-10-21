@@ -10,7 +10,7 @@ class Robot < ActiveRecord::Base
     { :conditions => [ 'barcode=? AND ?', barcode_number, Barcode.prefix_from_barcode(barcode)==prefix ] }
   }
 
-  named_scope :include_properties, { :include => :robot_properties }
+  scope :include_properties, includes(:robot_properties)
 
   def max_beds
     max_plates_property.try(:value).to_i

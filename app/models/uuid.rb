@@ -13,7 +13,7 @@ class Uuid < ActiveRecord::Base
         after_create :ensure_uuid_created
 
         # Some named scopes ...
-        named_scope :include_uuid, { :include => :uuid_object }
+        scope :include_uuid, includes(:uuid_object )
       end
     end
 

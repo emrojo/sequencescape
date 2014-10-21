@@ -10,7 +10,7 @@ class Api::BillingEventIO < Api::Base
       base.class_eval do
         extend ClassMethods
 
-        named_scope :including_associations_for_json, { :include => [ :uuid_object, { :project =>[ { :project_metadata => :budget_division }, :uuid_object ] }, { :request => [ :request_metadata, :request_type, :uuid_object ] } ] }
+        scope :including_associations_for_json, includes([ :uuid_object, { :project =>[ { :project_metadata => :budget_division }, :uuid_object ] }, { :request => [ :request_metadata, :request_type, :uuid_object ] } ] )
       end
     end
   end

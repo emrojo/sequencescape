@@ -5,7 +5,7 @@ class AddIlbStdPcrrxpPlatePurpose < ActiveRecord::Migration
       belongs_to :child, :class_name => 'AddIlbStdPcrrxpPlatePurpose::Purpose'
       belongs_to :transfer_request_type, :class_name => 'AddIlbStdPcrrxpPlatePurpose::RequestType'
 
-      named_scope :with_child,  lambda { |plate_purpose| { :conditions => { :child_id  => plate_purpose.id } } }
+      scope :with_child,  lambda { |plate_purpose| { :conditions => { :child_id  => plate_purpose.id } } }
     end
 
     set_table_name('plate_purposes')

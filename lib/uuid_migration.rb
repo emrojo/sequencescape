@@ -1,5 +1,5 @@
 class UuidMigration < ActiveRecord::Migration
-  class_inheritable_accessor :model_to_migrate
+  class_attribute :model_to_migrate
 
   def self.up
     Uuid.transaction do
