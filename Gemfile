@@ -8,7 +8,6 @@ gem "log4r"
 # gem "db-charmer"
 
 gem "aasm", "~>2.4.0"
-gem "acts_as_audited"
 gem "configatron"
 gem "rest-client" # curb substitute.
 gem "fastercsv", "~>1.4.0"
@@ -32,7 +31,7 @@ gem 'sanger_barcode', '~>0.1.0', :git => 'git+ssh://git@github.com/sanger/sanger
 # The graph library (1.x only because 2.x uses Rails 3).  This specific respository fixes an issue
 # seen in creating asset links during the assign_tags_handler (which blew up in rewire_crossing in the
 # gem code).
-gem "acts-as-dag", :git => "git+ssh://git@github.com/sanger/acts-as-dag.git", :branch => '38792421_add_dependent_destroy_to_links'
+gem "acts-as-dag", '~>3.0.0'
 
 # Better table alterations
 # gem "alter_table", :git => "git+ssh://git@github.com/sanger/alter_table.git"

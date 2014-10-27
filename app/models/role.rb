@@ -15,7 +15,7 @@ class Role < ActiveRecord::Base
   belongs_to :authorizable, :polymorphic => true
 
   validates_presence_of :name
-  scope :general_roles, conditions("authorizable_type IS NULL")
+  scope :general_roles, where("authorizable_type IS NULL")
 
   def self.keys
     Role.all.map { |r| r.name }.uniq
@@ -48,7 +48,7 @@ class Role < ActiveRecord::Base
     module ClassMethods
       def joins_through_to_users
         [
-          "INNER JOIN roles rj_r ON rj_r.authorizable_type IN (#{[self,*Class.subclasses_of(self)].map{|c|"'#{c.name}'"}.join(',')}) AND rj_r.authorizable_id=#{table_name}.id",
+          "INNER JOIN roles rj_r ON rj_r.authorizable_type IN (#{[self,*self.descendants].map{|c|"'#{c.name}'"}.join(',')}) AND rj_r.authorizable_id=#{table_name}.id",
           "INNER JOIN roles_users rj_ru ON rj_r.id=rj_ru.role_id",
           "INNER JOIN users rj_u ON rj_u.id=rj_ru.user_id"
         ]

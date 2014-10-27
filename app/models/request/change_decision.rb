@@ -1,5 +1,6 @@
 class Request::ChangeDecision
-  include Validateable
+  include ActiveModel::Validations
+  # include Validateable
 
   class ChangeDecisionError < ::StandardError
     attr_reader :object
@@ -29,15 +30,15 @@ class Request::ChangeDecision
       record.errors.add(:asset_qc_state, 'cannot be same as current state')
     end
   end
-  validates_presence_of :asset_qc_state, :unless => :asset_qc_state_absent?
+  validates :asset_qc_state, :presence => true, :unless => :asset_qc_state_absent?
 
   attr_accessor :billing_event_kind
   validates_each(:billing_event_kind, :unless => :billing_event_kind_absent?) do |record, attr, value|
     record.errors.add(:billing_event_kind, 'cannot be same value') unless record.billing.empty? or value != record.billing.first.kind
   end
-  validates_presence_of :billing_event_kind, :unless => :billing_event_kind_absent?
+  validates :billing_event_kind, :presence => true, :unless => :billing_event_kind_absent?
   attr_accessor :description_billing
-  validates_presence_of :description_billing, :unless => :billing_event_kind_absent?
+  validates :description_billing, :presence => true, :unless => :billing_event_kind_absent?
 
   attr_accessor :comment
   validates_presence_of :comment
@@ -45,7 +46,7 @@ class Request::ChangeDecision
   attr_accessor :request
 
   attr_writer :billing
-  validates_presence_of :billing, :unless => :billing_event_kind_absent?, :message => 'should exist'
+  validates :billing, :presence => true, :unless => :billing_event_kind_absent?, :message => 'should exist'
 
   attr_accessor :user
   validates_presence_of(:request)

@@ -13,7 +13,7 @@ module Batch::RequestBehaviour
       scope :unbatched,
         joins('LEFT OUTER JOIN batch_requests ubr ON `requests`.`id`=`ubr`.`request_id`').
         readonly(false).
-        conditions('`ubr`.`request_id` IS NULL')
+        where('`ubr`.`request_id` IS NULL')
       delegate :position, :to=>:batch_request, :allow_nil=>true
     end
   end

@@ -16,7 +16,7 @@ module DelegateValidation
   end
 
   class Validator
-    include Validateable
+    include ActiveModel::Validations
 
     attr_reader :target
     protected :target
@@ -72,11 +72,11 @@ module DelegateValidation
   # A composite validator that will perform multiple validations across several validator classes.
   class CompositeValidator
     class_attribute :validator_classes, :instance_writer => false
-    write_inheritable_attribute :validator_classes, []
+    validator_classes =  []
 
     def self.CompositeValidator(*validator_classes)
       Class.new(CompositeValidator).tap do |sub_class|
-        sub_class.write_inheritable_attribute(:validator_classes, validator_classes)
+        sub_class.validator_classes =  validator_classes
       end
     end
 

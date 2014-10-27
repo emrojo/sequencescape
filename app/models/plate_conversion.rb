@@ -10,7 +10,7 @@ class PlateConversion < ActiveRecord::Base
 
   belongs_to :parent, :class_name => 'Plate'
 
-  validates_presence_of :target, :purpose, :user
+  validates :target, :presence => true, :purpose, :user
 
   after_create :convert_target
 

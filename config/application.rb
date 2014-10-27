@@ -65,6 +65,7 @@ module Sequencescape
   # config.load_paths += %W( #{Rails.root}/extras )
   config.autoload_paths += %W{ #{Rails.root}/app/observers }
   config.autoload_paths += %W{ #{Rails.root}/app/api }
+  config.autoload_paths += %W{ #{Rails.root}/lib }
 
   # UPDATE ? - Is this old rails code or custom code?
   # if %w(development test sandbox production cucumber).include? Rails.env
@@ -89,6 +90,7 @@ module Sequencescape
 
   # Enable localisations to be split over multiple paths.
   config.i18n.load_path = Dir[File.join(Rails.root, %w{config locales metadata *.{rb,yml}})]
+  I18n.enforce_available_locales = false
 
 
   # Jruby 1.7 seems to try and use the http.proxyX settings, but ignores the noProxyHost ENV.

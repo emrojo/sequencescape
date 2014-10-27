@@ -64,7 +64,7 @@ class ContainerAssociation < ActiveRecord::Base
         class_eval(&block) if block_given?
       end
 
-      scope :"include_#{content_name}", includes(:contents  do)
+      scope :"include_#{content_name}", includes(:contents)  do
         def to_include
           [:contents]
         end

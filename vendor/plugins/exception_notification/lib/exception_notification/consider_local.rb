@@ -15,17 +15,17 @@ module ExceptionNotification::ConsiderLocal
       addresses = read_inheritable_attribute(:local_addresses)
       unless addresses
         addresses = [IPAddr.new("127.0.0.1")]
-        write_inheritable_attribute(:local_addresses, addresses)
+        local_addresses =  addresses
       end
       addresses
     end
   end
-  
+
 private
-  
+
   def local_request?
     remote = IPAddr.new(request.remote_ip)
     !self.class.local_addresses.detect { |addr| addr.include?(remote) }.nil?
   end
-  
+
 end

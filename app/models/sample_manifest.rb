@@ -24,8 +24,6 @@ class SampleManifest < ActiveRecord::Base
   self.spreadsheet_offset = 9
   self.spreadsheet_header_row = 8
 
-  acts_as_audited :on => [:destroy, :update]
-
   attr_accessor :override
   attr_reader :manifest_errors
 
@@ -56,14 +54,14 @@ class SampleManifest < ActiveRecord::Base
 
   #TODO[xxx] Consider index to make it faster
   scope :pending_manifests,
-   order(      'sample_manifests.id DESC')
-   joins(      'LEFT OUTER JOIN documents ON documentable_type="SampleManifest" AND documentable_id=sample_manifests.id AND documentable_extended="uploaded"')
-   conditions( 'documents.id IS NULL')
- }
+   order( 'sample_manifests.id DESC').
+   joins( 'LEFT OUTER JOIN documents ON documentable_type="SampleManifest" AND documentable_id=sample_manifests.id AND documentable_extended="uploaded"').
+   where( 'documents.id IS NULL')
+
   scope :completed_manifests,
-   order(      'sample_manifests.updated_at DESC')
-   joins(      'LEFT OUTER JOIN documents ON documentable_type="SampleManifest" AND documentable_id=sample_manifests.id AND documentable_extended="uploaded"')
-   conditions( 'documents.id IS NOT NULL')
+   order( 'sample_manifests.updated_at DESC').
+   joins( 'LEFT OUTER JOIN documents ON documentable_type="SampleManifest" AND documentable_id=sample_manifests.id AND documentable_extended="uploaded"').
+   where( 'documents.id IS NOT NULL')
 
 
   def generate

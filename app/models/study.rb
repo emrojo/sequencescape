@@ -133,11 +133,11 @@ class Study < ActiveRecord::Base
     { :conditions => [ 'name LIKE ? OR id=?', "%#{query}%", query ] }
   }
 
- scope :with_no_ethical_approval, conditions( :ethically_approved => false } )
+ scope :with_no_ethical_approval, where( :ethically_approved => false } )
 
- scope :is_active, conditions( :state => 'active'   } )
- scope :is_inactive, conditions( :state => 'inactive' } )
- scope :is_pending, conditions( :state => 'pending'  } )
+ scope :is_active, where( :state => 'active'   } )
+ scope :is_inactive, where( :state => 'inactive' } )
+ scope :is_pending, where( :state => 'pending'  } )
 
   scope :newest_first, order("#{ self.quoted_table_name }.created_at DESC" )
   scope :with_user_included, includes(:user)
@@ -299,7 +299,7 @@ class Study < ActiveRecord::Base
 
     has_one :data_release_non_standard_agreement, :class_name => 'Document', :as => :documentable
     accepts_nested_attributes_for :data_release_non_standard_agreement
-    validates_presence_of :data_release_non_standard_agreement, :if => :non_standard_agreement?
+    validates :data_release_non_standard_agreement, :presence => true, :if => :non_standard_agreement?
     validates_associated  :data_release_non_standard_agreement, :if => :non_standard_agreement?
 
     validate :valid_policy_url?
@@ -509,7 +509,7 @@ class Study < ActiveRecord::Base
 
   scope :awaiting_ethical_approval,
     joins(:study_metadata).
-    conditions(
+    where(
       :ethically_approved => false,
       :study_metadata => {
         :contains_human_dna => Study::YES,
@@ -521,7 +521,7 @@ class Study < ActiveRecord::Base
 
   scope :contaminated_with_human_dna,
     joins(:study_metadata).
-    conditions(
+    where(
       :study_metadata => {
         :contaminated_human_dna => Study::YES
       }
@@ -529,7 +529,7 @@ class Study < ActiveRecord::Base
 
   scope :with_remove_x_and_autosomes,
     joins(:study_metadata).
-    conditions(
+    where(
       :study_metadata => {
         :remove_x_and_autosomes => Study::YES
       }

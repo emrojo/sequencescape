@@ -8,7 +8,7 @@ module Identifiable
       } }
 
      scope :sync_identifier, lambda { |t| {
-        :joins => "INNER JOIN identifiers sid ON sid.identifiable_id=samples.id AND sid.identifiable_type IN (#{[self,*Class.subclasses_of(self)].map(&:name).map(&:inspect).join(',')})",
+        :joins => "INNER JOIN identifiers sid ON sid.identifiable_id=samples.id AND sid.identifiable_type IN (#{[self,*self.descendants].map(&:name).map(&:inspect).join(',')})",
         :conditions => ['sid.resource_name=? AND NOT sid.do_not_sync AND sid.external_id IS NOT NULL', t]
       } }
     end

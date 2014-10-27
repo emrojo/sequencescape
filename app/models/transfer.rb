@@ -10,9 +10,9 @@ class Transfer < ActiveRecord::Base
 
         # This looks odd but it's a LEFT OUTER JOIN, meaning that the rows we would be interested in have no source_id.
         scope :with_no_outgoing_transfers,
-          select(      "DISTINCT #{base.quoted_table_name}.*")
-          joins(       "LEFT OUTER JOIN `transfers` outgoing_transfers ON outgoing_transfers.`source_id`=#{base.quoted_table_name}.`id`"()
-          conditions( 'outgoing_transfers.source_id IS NULL')
+          select("DISTINCT #{base.quoted_table_name}.*").
+          joins("LEFT OUTER JOIN `transfers` outgoing_transfers ON outgoing_transfers.`source_id`=#{base.quoted_table_name}.`id`").
+          where('outgoing_transfers.source_id IS NULL')
 
       end
     end
@@ -60,7 +60,7 @@ class Transfer < ActiveRecord::Base
               query_conditions, joins = 'transfer_requests_as_target.state IN (?)', [
                 "STRAIGHT_JOIN `container_associations` ON (`assets`.`id` = `container_associations`.`container_id`)",
                 "INNER JOIN `assets` wells_assets ON (`wells_assets`.`id` = `container_associations`.`content_id`) AND (`wells_assets`.`sti_type` = 'Well')",
-                "LEFT OUTER JOIN `requests` transfer_requests_as_target ON transfer_requests_as_target.target_asset_id = wells_assets.id AND (transfer_requests_as_target.`sti_type` IN (#{[TransferRequest, *Class.subclasses_of(TransferRequest)].map(&:name).map(&:inspect).join(',')}))"
+                "LEFT OUTER JOIN `requests` transfer_requests_as_target ON transfer_requests_as_target.target_asset_id = wells_assets.id AND (transfer_requests_as_target.`sti_type` IN (#{[TransferRequest, *TransferRequest.descendants].map(&:name).map(&:inspect).join(',')}))"
               ]
 
               # Note that 'state IS NULL' is included here for plates that are stock plates, because they will not have any
@@ -92,7 +92,7 @@ class Transfer < ActiveRecord::Base
             if states.sort != ALL_STATES.sort
 
               query_conditions, joins = 'transfer_requests_as_target.state IN (?)', [
-                "LEFT OUTER JOIN `requests` transfer_requests_as_target ON transfer_requests_as_target.target_asset_id = `assets`.id AND (transfer_requests_as_target.`sti_type` IN (#{[TransferRequest, *Class.subclasses_of(TransferRequest)].map(&:name).map(&:inspect).join(',')}))"
+                "LEFT OUTER JOIN `requests` transfer_requests_as_target ON transfer_requests_as_target.target_asset_id = `assets`.id AND (transfer_requests_as_target.`sti_type` IN (#{[TransferRequest, *TransferRequest.descendants].map(&:name).map(&:inspect).join(',')}))"
               ]
 
               query_conditions = 'transfer_requests_as_target.state IN (?)'
@@ -116,7 +116,7 @@ class Transfer < ActiveRecord::Base
     def self.included(base)
       base.class_eval do
         serialize :transfers
-        validates_presence_of :transfers, :allow_blank => false
+        validates :transfers, :presence => true, :allow_blank => false
       end
     end
   end

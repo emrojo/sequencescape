@@ -17,7 +17,7 @@ class Qcable < ActiveRecord::Base
   has_one :stamp_qcable, :inverse_of => :qcable, :class_name => 'Stamp::StampQcable'
   has_one :stamp, :through => :stamp_qcable
 
-  validates_presence_of :lot, :asset, :state, :qcable_creator
+  validates :lot, :presence => true, :asset, :state, :qcable_creator
 
   before_validation :create_asset!
 
@@ -25,7 +25,7 @@ class Qcable < ActiveRecord::Base
 
   scope :include_for_json, includes([:asset,:lot,:stamp,:stamp_qcable])
 
-  scope :stamped, includes([:stamp_qcable, :stamp]).conditions('stamp_qcables.id IS NOT NULL').order('stamps.created_at ASC, stamp_qcables.order ASC')
+  scope :stamped, includes([:stamp_qcable, :stamp]).where('stamp_qcables.id IS NOT NULL').order('stamps.created_at ASC, stamp_qcables.order ASC')
 
   # We accept not only an individual barcode but also an array of them.  This builds an appropriate
   # set of conditions that can find any one of these barcodes.  We map each of the individual barcodes

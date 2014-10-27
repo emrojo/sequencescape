@@ -1,6 +1,6 @@
 class PresenterSkeleton
   class_attribute :attributes, :instance_writer => false
-  write_inheritable_attribute :attributes,  []
+  attributes =   []
 
   def initialize(user, submission_attributes = {})
     submission_attributes = {} if submission_attributes.blank?
@@ -65,7 +65,7 @@ class SubmissionCreater < PresenterSkeleton
   IncorrectParamsException = Class.new(SubmissionsCreaterError)
   InvalidInputException    = Class.new(SubmissionsCreaterError)
 
-  write_inheritable_attribute :attributes,  [
+  attributes =   [
     :id,
     :template_id,
     :sample_names_text,
@@ -336,7 +336,7 @@ class SubmissionCreater < PresenterSkeleton
 end
 
 class SubmissionPresenter < PresenterSkeleton
-  write_inheritable_attribute :attributes, [ :id ]
+  attributes =  [ :id ]
 
   def submission
     @submission ||= Submission.find(id)

@@ -4,7 +4,7 @@ module Core::Endpoint::BasicHandler::Actions::Standard
       include InstanceMethods
 
       class_attribute :standard_actions, :instance_writer => false
-      write_inheritable_attribute(:standard_actions, {})
+      standard_actions =  {}
     end
   end
 

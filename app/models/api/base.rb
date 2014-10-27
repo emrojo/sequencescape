@@ -119,7 +119,7 @@ class Api::Base
 
   # Contains the mapping from the ActiveRecord attribute to the key in the JSON hash
   class_attribute :attribute_to_json_attribute_mappings, :instance_writer => false
-  write_inheritable_attribute :attribute_to_json_attribute_mappings, {}
+  self.attribute_to_json_attribute_mappings =  {}
 
   # TODO[xxx]: Need to warn about 'id' not being 'internal_id'
   def self.map_attribute_to_json_attribute(attribute, json_attribute = attribute)
@@ -128,11 +128,11 @@ class Api::Base
 
   # Contains a list of resources that are related and should be exposed as URLs
   class_attribute :related_resources
-  write_inheritable_attribute :related_resources, []
+  self.related_resources =  []
 
   # Contains the mapping from the ActiveRecord association to the I/O object that can output it.
   class_attribute :associations, :instance_writer => false
-  write_inheritable_attribute :associations, {}
+  self.associations =  {}
 
   def self.newer_than(object, timestamp, &block)
     return if object.nil? or timestamp.nil?
@@ -173,8 +173,8 @@ class Api::Base
   end
 
   # Contains the mapping from the ActiveRecord attribute to the key in the JSON hash when listing objects
-  class_inheritable_accessor :attribute_to_json_attribute_mappings_for_list
-  write_inheritable_attribute :attribute_to_json_attribute_mappings_for_list, {}
+  class_attribute :attribute_to_json_attribute_mappings_for_list
+  attribute_to_json_attribute_mappings_for_list =  {}
 
   self.attribute_to_json_attribute_mappings_for_list = {
     :id   => 'id',
@@ -186,7 +186,7 @@ class Api::Base
   # Additional JSON attribute handling, that cannot be done with the simple stuff, should be passed
   # done through a block
   class_attribute :extra_json_attribute_handlers, :instance_writer => false
-  write_inheritable_attribute :extra_json_attribute_handlers, []
+  self.extra_json_attribute_handlers =  []
 
   def self.extra_json_attributes(&block)
     self.extra_json_attribute_handlers.push(block)

@@ -1,5 +1,5 @@
 class Rename::ChangeName
-  include Validateable
+  include include ActiveModel::Validations
 
   class ChangeNameError < ::StandardError
     attr_reader :object

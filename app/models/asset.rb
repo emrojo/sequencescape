@@ -1,3 +1,6 @@
+require 'lib/eventful_record'
+require 'lib/external_properties'
+
 class Asset < ActiveRecord::Base
   include StudyReport::AssetDetails
   include ModelExtensions::Asset
@@ -39,7 +42,7 @@ class Asset < ActiveRecord::Base
   has_many :submitted_assets
   has_many :orders, :through => :submitted_assets
 
- scope :requests_as_source_is_a?, lambda { |t| { :joins => :requests_as_source, :conditions => { :requests => { :sti_type => [ t, *Class.subclasses_of(t) ].map(&:name) } } } }
+ scope :requests_as_source_is_a?, lambda { |t| { :joins => :requests_as_source, :conditions => { :requests => { :sti_type => [ t, *t.descendants ].map(&:name) } } } }
 
   extend ContainerAssociation::Extension
 
@@ -60,7 +63,7 @@ class Asset < ActiveRecord::Base
   scope :get_by_type, lambda {|*args| {:conditions => { :sti_type => args[0]} } }
   scope :for_summary, includes([:map,:barcode_prefix])
 
- scope :of_type, lambda { |*args| { :conditions => { :sti_type => args.map { |t| [t, Class.subclasses_of(t)] }.flatten.map(&:name) } } }
+ scope :of_type, lambda { |*args| { :conditions => { :sti_type => args.map { |t| [t, *t.descendants] }.flatten.map(&:name) } } }
 
   def studies
     []

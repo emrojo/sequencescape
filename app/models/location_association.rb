@@ -3,7 +3,7 @@ class LocationAssociation < ActiveRecord::Base
   belongs_to :location
 
   validates_uniqueness_of :locatable_id
-  validates_presence_of :location_id, :locatable_id
+  validates :location_id, :locatable_id, :presence => true
 
   after_save :update_locatable
 

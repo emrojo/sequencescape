@@ -21,25 +21,23 @@ private
     # We now ensure that, if the metadata is not already created, that a blank instance is built.  We cannot
     # do this through the initialization of our model because we use the ActiveRecord::Base#becomes method in
     # our code, which would create a new default instance.
-    class_eval <<-END_OF_INITIALIZER
+    line = __LINE__ + 1
+    class_eval(%Q{
       def #{association_name}_with_initialization
-        #{association_name}_without_initialization || build_#{association_name}
+        #{association_name}_without_initialization ||
+        build_#{association_name}
       end
       alias_method_chain(:#{association_name}, :initialization)
-
-      before_validation { |record| record.#{association_name } }
-    END_OF_INITIALIZER
-
-    # TODO: This should be genericised if metadata attribute grouping is extended
-    class_eval <<-VALIDATING_METADATA_ATTRIBUTE_GROUPS
-      def validating_ena_required_fields?
-        @validating_ena_required_fields
-      end
 
       def validating_ena_required_fields=(state)
         @validating_ena_required_fields = !!state
         self.#{ association_name }.validating_ena_required_fields = state
       end
+
+      def validating_ena_required_fields?
+        @validating_ena_required_fields
+      end
+
 
       def tags
         self.class.tags.select{|tag| tag.for?(accession_service.provider)}
@@ -53,10 +51,13 @@ private
         @tags ||= []
       end
 
-      def self.required_tags
-        @required_tags ||= Hash.new {|h,k| h[k] = Array.new }
-      end
-    VALIDATING_METADATA_ATTRIBUTE_GROUPS
+      before_validation { |record| record.#{association_name } }
+
+    }, __FILE__, line)
+
+    def self.required_tags
+      @required_tags ||= Hash.new {|h,k| h[k] = Array.new }
+    end
   end
 
   def include_tag(tag,options=Hash.new)
@@ -109,11 +110,11 @@ private
     # This ensures that the default values are stored within the DB, meaning that this information will be
     # preserved for the future, unlike the original properties information which didn't store values when
     # nil which lead to us having to guess.
-    def initialize(attributes = {}, &block)
+    def initialize(attributes = {}, options=[], &block)
       super(self.class.defaults.merge(attributes.try(:symbolize_keys) || {}), &block)
     end
 
-    before_validation_on_create :merge_instance_defaults
+    before_validation :merge_instance_defaults, :on => :create
 
     def merge_instance_defaults
       # Replace attributes with the default if the value is nil

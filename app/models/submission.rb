@@ -38,9 +38,9 @@ class Submission < ActiveRecord::Base
          :user]}
   ])
 
- scope :building, conditions( :state => "building" )
- scope :pending, conditions( :state => "pending" )
- scope :ready, conditions( :state => "ready" )
+ scope :building, where( :state => "building" )
+ scope :pending, where( :state => "pending" )
+ scope :ready, where( :state => "ready" )
 
   before_destroy :building?, :empty_of_orders?
 

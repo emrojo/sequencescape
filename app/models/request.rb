@@ -54,7 +54,7 @@ class Request < ActiveRecord::Base
       :group => 'submissions.id',
       :conditions => [
         'requests.sti_type NOT IN (?) AND container_associations.container_id=?',
-        [TransferRequest,*Class.subclasses_of(TransferRequest)].map(&:name), plate.id
+        [TransferRequest,*TransferRequest.decendants].map(&:name), plate.id
       ]
     }
   }
@@ -80,7 +80,7 @@ class Request < ActiveRecord::Base
       :group => 'pre_capture_pool_pooled_requests.pre_capture_pool_id',
       :conditions => [
         'requests.sti_type NOT IN (?) AND container_associations.container_id=?',
-        [TransferRequest,*Class.subclasses_of(TransferRequest)].map(&:name), plate.id
+        [TransferRequest,*TransferRequest.descendants].map(&:name), plate.id
       ]
     }
   }
@@ -145,7 +145,7 @@ class Request < ActiveRecord::Base
     []
   end
 
-  #  validates_presence_of :study, :request_type#TODO, :submission
+  #  validates :study, :presence => true, :request_type#TODO, :submission
 
  scope :between, lambda { |source,target| { :conditions => { :asset_id => source.id, :target_asset_id => target.id } } }
  scope :into_by_id, lambda { |target_ids| { :conditions => { :target_asset_id => target_ids } } }
@@ -162,14 +162,14 @@ class Request < ActiveRecord::Base
     {:conditions => { :request_type_id => id} }
   }
 
-  scope :where_is_a?,     lambda { |clazz| { :conditions => [ 'sti_type IN (?)',     [ clazz, *Class.subclasses_of(clazz) ].map(&:name) ] } }
-  scope :where_is_not_a?, lambda { |clazz| { :conditions => [ 'sti_type NOT IN (?)', [ clazz, *Class.subclasses_of(clazz) ].map(&:name) ] } }
-  scope :where_has_a_submission, conditions('submission_id IS NOT NULL')
+  scope :where_is_a?,     lambda { |clazz| { :conditions => [ 'sti_type IN (?)',     [ clazz, *clazz.descendants ].map(&:name) ] } }
+  scope :where_is_not_a?, lambda { |clazz| { :conditions => [ 'sti_type NOT IN (?)', [ clazz, *clazz.descendants ].map(&:name) ] } }
+  scope :where_has_a_submission, where('submission_id IS NOT NULL')
 
- scope :full_inbox, conditions(:state => ["pending","hold"])
+ scope :full_inbox, where(:state => ["pending","hold"])
 
-  scope :with_asset,  conditions('asset_id is not null')
-  scope :with_target, conditions('target_asset_id is not null and (target_asset_id <> asset_id)')
+  scope :with_asset,  where('asset_id is not null')
+  scope :with_target, where('target_asset_id is not null and (target_asset_id <> asset_id)')
   scope :join_asset,  joins(:asset)
 
   #Asset are Locatable (or at least some of them)
@@ -191,11 +191,11 @@ class Request < ActiveRecord::Base
       :readonly => false
     }
   }
- scope :without_asset, conditions('asset_id is null')
- scope :without_target, conditions('target_asset_id is null')
+ scope :without_asset, where('asset_id is null')
+ scope :without_target, where('target_asset_id is null')
  scope :ordered, order("id ASC")
- scope :full_inbox, conditions(:state => ["pending","hold"])
- scope :hold, conditions(:state => "hold")
+ scope :full_inbox, where(:state => ["pending","hold"])
+ scope :hold, where(:state => "hold")
 
   scope :loaded_for_inbox_display, includes([{:submission => {:orders =>:study}, :asset => [:scanned_into_lab_event,:studies]}])
   scope :ordered_for_ungrouped_inbox, order('id DESC')
@@ -270,7 +270,7 @@ class Request < ActiveRecord::Base
   scope :for_studies, lambda { |*studies| { :conditions => { :initial_study_id => studies.map(&:id) } } }
 
   scope :with_assets_for_starting_requests, includes([:request_metadata,{:asset=>:aliquots,:target_asset=>:aliquots}])
-  scope :not_failed, conditions(['state != ?', 'failed'])
+  scope :not_failed, where(['state != ?', 'failed'])
 
   #------
   #TODO: use eager loading association

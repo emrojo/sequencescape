@@ -54,14 +54,14 @@ class PlateForInbox < ActiveRecord::Base
     :joins => [
       'INNER JOIN uuids AS pfiuu ON pfiuu.resource_id = assets.id AND pfiuu.resource_type = "Asset"',
       'STRAIGHT_JOIN container_associations AS pfica ON pfica.container_id = assets.id',
-      "LEFT OUTER JOIN requests AS pfir ON pfir.target_asset_id = pfica.content_id AND (pfir.`sti_type` IN (#{[TransferRequest, *Class.subclasses_of(TransferRequest)].map(&:name).map(&:inspect).join(',')}))",
+      "LEFT OUTER JOIN requests AS pfir ON pfir.target_asset_id = pfica.content_id AND (pfir.`sti_type` IN (#{[TransferRequest, *TransferRequest.descendants].map(&:name).map(&:inspect).join(',')}))",
       'INNER JOIN plate_purposes AS pfip ON assets.plate_purpose_id = pfip.id',
-      "LEFT OUTER JOIN requests AS pfilcr ON pfip.can_be_considered_a_stock_plate = TRUE AND pfilcr.asset_id = pfica.content_id AND (pfilcr.`sti_type` IN (#{[Request::LibraryCreation, *Class.subclasses_of(Request::LibraryCreation)].map(&:name).map(&:inspect).join(',')}))",
+      "LEFT OUTER JOIN requests AS pfilcr ON pfip.can_be_considered_a_stock_plate = TRUE AND pfilcr.asset_id = pfica.content_id AND (pfilcr.`sti_type` IN (#{[Request::LibraryCreation, *Request::LibraryCreation.descendants].map(&:name).map(&:inspect).join(',')}))",
       'LEFT OUTER JOIN submissions AS pfis ON pfis.id = pfir.submission_id OR pfis.id = pfilcr.submission_id'
     ],
     :conditions => [
       'assets.sti_type IN (?)',
-      ['Plate'] + Class.subclasses_of(Plate).map(&:name)
+      ['Plate'] + Plate.descendants.map(&:name)
     ],
     :group => 'assets.id',
     :readonly => true
@@ -106,7 +106,7 @@ class PlateForInbox < ActiveRecord::Base
   }
 
   scope with_no_outgoing_transfers, joins("LEFT OUTER JOIN `transfers` outgoing_transfers ON outgoing_transfers.`source_id`=assets.`id`").
-    conditions('outgoing_transfers.source_id IS NULL')
+    where('outgoing_transfers.source_id IS NULL')
 
   def state
     plate_purpose.state_of(self)

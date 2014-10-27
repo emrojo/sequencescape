@@ -11,7 +11,7 @@ class ::Sample
       'LEFT JOIN data_release_study_types AS trea_drst ON trea_drst.id = trea_sm.data_release_study_type_id'
     ]).
     readonly(false).
-    conditions([ %q{
+    where([ %q{
       (tcnan_sm.sample_ebi_accession_number IS NULL OR TRIM(tcnan_sm.sample_ebi_accession_number) = '') AND
       (tcnan_sm.sample_taxon_id IS NOT NULL) AND
       (tcnan_sm.sample_common_name IS NOT NULL AND TRIM(tcnan_sm.sample_common_name) != '') AND

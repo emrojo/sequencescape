@@ -55,14 +55,14 @@ class Well < Aliquot::Receptacle
   scope :pooled_as_target_by, lambda { |type|
     {
       :joins      => 'LEFT JOIN requests patb ON assets.id=patb.target_asset_id',
-      :conditions => [ '(patb.sti_type IS NULL OR patb.sti_type IN (?))', [ type, *Class.subclasses_of(type) ].map(&:name) ],
+      :conditions => [ '(patb.sti_type IS NULL OR patb.sti_type IN (?))', [ type, *type.descendants ].map(&:name) ],
       :select     => 'assets.*, patb.submission_id AS pool_id'
     }
   }
   scope :pooled_as_source_by, lambda { |type|
     {
       :joins      => 'LEFT JOIN requests pasb ON assets.id=pasb.asset_id',
-      :conditions => [ '(pasb.sti_type IS NULL OR pasb.sti_type IN (?))', [ type, *Class.subclasses_of(type) ].map(&:name) ],
+      :conditions => [ '(pasb.sti_type IS NULL OR pasb.sti_type IN (?))', [ type, *type.descendants ].map(&:name) ],
       :select     => 'assets.*, pasb.submission_id AS pool_id'
     }
   }
@@ -79,7 +79,7 @@ class Well < Aliquot::Receptacle
       "INNER JOIN aliquots ON aliquots.receptacle_id=assets.id",
       "INNER JOIN samples ON aliquots.sample_id=samples.id"
     ]).
-    conditions(['samples.empty_supplier_sample_name=?',true])
+    where(['samples.empty_supplier_sample_name=?',true])
 
   scope :with_contents,
     joins('INNER JOIN aliquots ON aliquots.receptacle_id=assets.id')

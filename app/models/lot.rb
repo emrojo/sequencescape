@@ -23,7 +23,7 @@ class Lot < ActiveRecord::Base
 
   has_many :stamps, :inverse_of => :lot
 
-  validates_presence_of :lot_number, :lot_type, :user, :template, :received_at
+  validates :lot_number, :lot_type, :user, :template, :received_at, :presence => true
   validates_uniqueness_of :lot_number
 
   validate :valid_template?
@@ -38,7 +38,7 @@ class Lot < ActiveRecord::Base
     return { :conditions => 'FALSE' } if qc_asset.nil?
     sibling = qc_asset.transfers_as_destination.first.source
 
-    {:include=>:qcables,:conditions=>['qcables.asset_id IN(?) AND qcables.state != ?',[qc_asset.id,sibling.id],'exhausted' ]}
+    includes(:qcables).where(['qcables.asset_id IN(?) AND qcables.state != ?',[qc_asset.id,sibling.id],'exhausted' ])
   }
 
   private

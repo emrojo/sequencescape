@@ -21,8 +21,8 @@ class SubmissionTemplate < ActiveRecord::Base
   LATEST_VERSION = -1
   SUPERCEDED_BY_UNKNOWN_TEMPLATE = -2
 
-  ]scope :hidden, order('product_line_id ASC').conditions([ 'superceded_by_id != ?', LATEST_VERSION ])
-  ]scope :visible, order('product_line_id ASC').conditions( :superceded_by_id => LATEST_VERSION )
+  scope :hidden, order('product_line_id ASC').where([ 'superceded_by_id != ?', LATEST_VERSION ])
+  scope :visible, order('product_line_id ASC').where( :superceded_by_id => LATEST_VERSION )
 
   def visible
     self.superceded_by_id == LATEST_VERSION

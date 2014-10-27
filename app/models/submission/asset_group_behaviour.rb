@@ -6,7 +6,7 @@ module Submission::AssetGroupBehaviour
       before_create :pull_assets_from_asset_group, :if     => :asset_group?
 
       # Required once out of the building state ...
-      validates_presence_of :assets, :if => :assets_need_validating?
+      validates :assets, :presence => true, :if => :assets_need_validating?
 #      validates_each(:assets, :unless => :building?) do |record, attr, value|
 #        record.errors.add(:assets, 'cannot be changed once built') if not record.new_record? and record.assets_was != value
 #      end

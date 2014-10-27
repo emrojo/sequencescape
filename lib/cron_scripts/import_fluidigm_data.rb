@@ -12,7 +12,7 @@ class ::Plate
       'INNER JOIN well_links AS stock_well_link ON stock_well_link.target_well_id = fluidigm_plate_association.content_id AND type= \'stock\'',
       'LEFT OUTER JOIN events ON eventful_id = stock_well_link.source_well_id AND eventful_type = "Asset" AND (family = "update_gender_markers" OR family = "update_sequenom_count") AND content = "FLUIDIGM" '
     ]).
-  conditions('events.id IS NULL')
+  where('events.id IS NULL')
 end
 
 

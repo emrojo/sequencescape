@@ -30,7 +30,7 @@ class Plate < Asset
   end
 
   def self.derived_classes
-    @derived_classes ||= [ self, *Class.subclasses_of(self) ].map(&:name)
+    @derived_classes ||= [ self, *self.descendants.map(&:name) ].map(&:name)
   end
 
   def prefix

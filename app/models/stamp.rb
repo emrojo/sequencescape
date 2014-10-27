@@ -13,7 +13,7 @@ class Stamp < ActiveRecord::Base
 
     belongs_to :stamp, :inverse_of => :stamp_qcables
     belongs_to :qcable, :inverse_of => :stamp_qcable
-    validates_presence_of :stamp, :qcable, :bed, :order
+    validates :stamp, :presence => true, :qcable, :bed, :order
 
   end
 
@@ -24,7 +24,7 @@ class Stamp < ActiveRecord::Base
   has_many :qcables, :through => :stamp_qcables
   has_many :stamp_qcables, :inverse_of => :stamp, :class_name => 'Stamp::StampQcable'
 
-  validates_presence_of :lot, :user, :robot, :tip_lot
+  validates :lot, :presence => true, :user, :robot, :tip_lot
 
   after_create :stamp!
 

@@ -14,7 +14,7 @@ class BillingEvent < ActiveRecord::Base
   belongs_to :project
   belongs_to :request
 
-  validates_presence_of :kind, :entry_date, :reference
+  validates :kind, :presence => true, :entry_date, :reference
   validates_presence_of :created_by
   validates_presence_of :project
   validates_presence_of :quantity
@@ -25,9 +25,9 @@ class BillingEvent < ActiveRecord::Base
 #  validates_uniqueness_of :reference, :if => :charge?
 #  validates_uniqueness_of :reference, :if => :charge_internally?
 
-  scope :charged_to_project,  conditions(:kind => 'charge' )
-  scope :charged_internally,  conditions(:kind => 'charge_internally' )
-  scope :refunded_to_project, conditions(:kind => 'refund' )
+  scope :charged_to_project,  where(:kind => 'charge' )
+  scope :charged_internally,  where(:kind => 'charge_internally' )
+  scope :refunded_to_project, where(:kind => 'refund' )
   scope :for_reference, lambda { |reference| { :conditions => { :reference => reference } } }
 
   scope :related_to_reference, lambda { |reference| { :conditions => [ 'reference LIKE ?', "#{reference}%" ] } }

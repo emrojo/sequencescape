@@ -14,7 +14,7 @@ module Validateable
     base.extend ClassMethods
 
     base.send :include, ActiveSupport::Callbacks
-    base.define_callbacks *ActiveRecord::Validations::VALIDATIONS
+    base.define_callbacks :validate
 
   end
 
