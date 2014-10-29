@@ -11,12 +11,11 @@ class Api::StudyIO < Api::Base
         extend ClassMethods
 
         scope :including_associations_for_json, includes([
-            :uuid_object, {
-              :study_metadata => [:faculty_sponsor, :reference_genome, :study_type, :data_release_study_type],
-              :roles => :users
-            }
-          ])
-        }
+          :uuid_object, {
+            :study_metadata => [:faculty_sponsor, :reference_genome, :study_type, :data_release_study_type],
+            :roles => :users
+          }
+        ])
       end
     end
 

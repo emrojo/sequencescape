@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 source 'http://gems.github.com'
 
-gem "rails", "~>3.2.19"
+gem "rails", '3.2.19'
 
 # Warehouse builder
 gem "log4r"
@@ -45,7 +45,7 @@ gem "irods_reader", '>=0.0.2', :git => 'git+ssh://git@github.com/sanger/irods_re
 
 # For the API level
 gem "uuidtools"
-gem "sinatra"
+gem "sinatra", "~>1.1.0"
 gem "rack-acceptable", :require => 'rack/acceptable'
 # gem "json_pure" #gem "yajl-ruby", :require => 'yajl'
 gem "json"
@@ -88,7 +88,7 @@ group :test do
   gem "launchy"
   gem "mocha", :require => false # avoids load order problems
   gem "nokogiri"
-  gem "shoulda", "~>2.10.0"
+  gem "shoulda", "~>3.4.0"
   gem "timecop"
   gem "treetop"
   gem 'parallel_tests'

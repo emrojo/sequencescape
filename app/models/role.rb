@@ -56,11 +56,9 @@ class Role < ActiveRecord::Base
       private :joins_through_to_users
 
       def role_relation(name, role_name)
-        named_scope name.to_sym, lambda { |user|
-          {
-            :joins      => joins_through_to_users,
-            :conditions => ['rj_r.name=? AND rj_u.id=?', role_name.to_s, user.id ]
-          }
+        scope name.to_sym, lambda { |user|
+          joins(joins_through_to_users).
+          where(['rj_r.name=? AND rj_u.id=?', role_name.to_s, user.id ])
         }
       end
 

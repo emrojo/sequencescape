@@ -130,14 +130,14 @@ class Study < ActiveRecord::Base
   private :set_default_ethical_approval
 
  scope :for_search_query, lambda { |query,with_includes|
-    { :conditions => [ 'name LIKE ? OR id=?', "%#{query}%", query ] }
+    where([ 'name LIKE ? OR id=?', "%#{query}%", query ])
   }
 
- scope :with_no_ethical_approval, where( :ethically_approved => false } )
+ scope :with_no_ethical_approval, where( :ethically_approved => false )
 
- scope :is_active, where( :state => 'active'   } )
- scope :is_inactive, where( :state => 'inactive' } )
- scope :is_pending, where( :state => 'pending'  } )
+ scope :is_active, where( :state => 'active' )
+ scope :is_inactive, where( :state => 'inactive' )
+ scope :is_pending, where( :state => 'pending' )
 
   scope :newest_first, order("#{ self.quoted_table_name }.created_at DESC" )
   scope :with_user_included, includes(:user)

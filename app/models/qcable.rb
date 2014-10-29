@@ -17,7 +17,7 @@ class Qcable < ActiveRecord::Base
   has_one :stamp_qcable, :inverse_of => :qcable, :class_name => 'Stamp::StampQcable'
   has_one :stamp, :through => :stamp_qcable
 
-  validates :lot, :presence => true, :asset, :state, :qcable_creator
+  validates :lot, :asset, :state, :qcable_creator, :presence => true
 
   before_validation :create_asset!
 

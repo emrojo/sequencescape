@@ -6,7 +6,11 @@ module Core::Service::ErrorHandling
       # We need hierarchical exception handling, so we rewrite the @errors Hash with our own implementation
       @errors = HierarchicalExceptionMap.new(@errors)
 
-      error([ ::IllegalOperation, ::Core::Service::Error, ActiveRecord::ActiveRecordError ]) do
+      error([
+        ::IllegalOperation,
+        ::Core::Service::Error,
+        ActiveRecord::ActiveRecordError
+      ]) do
         buffer = [ exception_thrown.message, exception_thrown.backtrace ].join("\n")
         Rails.logger.error("API[error]: #{buffer}")
 
