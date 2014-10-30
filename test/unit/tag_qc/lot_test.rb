@@ -4,21 +4,21 @@ class LotTest < ActiveSupport::TestCase
   context "A Lot" do
 
 
-    should_validate_presence_of :lot_number
+    should validate_presence_of :lot_number
 
-    should_have_many :qcables
-    should_belong_to :user
-    should_belong_to :lot_type
-    should_validate_presence_of :user
-    should_validate_presence_of :received_at
-    should_belong_to :template
+    should have_many :qcables
+    should belong_to :user
+    should belong_to :lot_type
+    should validate_presence_of :user
+    should validate_presence_of :received_at
+    should belong_to :template
 
     context "when validating" do
       setup do
         Factory :lot
       end
 
-      should_validate_uniqueness_of :lot_number
+      should validate_uniqueness_of :lot_number
     end
 
 

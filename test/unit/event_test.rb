@@ -5,7 +5,7 @@ class EventTest < ActiveSupport::TestCase
     setup do
       Study.destroy_all
     end
-    should_belong_to :eventful
+    should belong_to :eventful
 
     should_have_instance_methods :eventful_id, :eventful_type
     should_have_instance_methods :message, :family

@@ -1,9 +1,13 @@
 require "test_helper"
 
 class ApiApplicationTest < ActiveSupport::TestCase
-  context "#create" do
 
-    should_validate_presence_of :name, :contact, :key, :privilege
+  should validate_presence_of :name
+  should validate_presence_of :contact
+  should validate_presence_of :key
+  should validate_presence_of :privilege
+
+  context "#create" do
 
     setup do
       @app = ApiApplication.create(:name=>'test')

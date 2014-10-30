@@ -2,12 +2,13 @@ require "test_helper"
 
 class PipelineTest < ActiveSupport::TestCase
   context "Pipeline" do
-    should_have_one  :workflow
-    should_have_many :batches, :controls
-    should_have_many :request_information_types, :through => :pipeline_request_information_types
-    should_have_many :pipeline_request_information_types
+    should have_one  :workflow
+    should have_many :batches
+    should have_many :controls
+    should have_many :request_information_types#, :through => :pipeline_request_information_types
+    should have_many :pipeline_request_information_types
     #should_require_attributes :name
-    
+
     context "sequencing_pipeline#read length consistency among batch requests" do
       setup do
         @sample = Factory :sample
@@ -41,30 +42,30 @@ class PipelineTest < ActiveSupport::TestCase
           :pipeline     => @pipeline
         )
       end
-      
+
       should "return true if not any request was selected" do
         @batch = Factory :batch
         assert @pipeline.is_read_length_consistent_for_batch?(@batch)
       end
-      
+
       should "return true if the requests don't make use of the read_length attribute" do
         @batch = @pipeline.batches.create!(:requests => [ @request1, @request2 ])
         assert @pipeline.is_read_length_consistent_for_batch?(@batch)
       end
-      
+
       should "check that all the requests has the read_length attribute defined" do
-        @request2.request_metadata.read_length = nil        
+        @request2.request_metadata.read_length = nil
         @batch = @pipeline.batches.create(:requests => [ @request1, @request2 ])
         assert !@pipeline.is_read_length_consistent_for_batch?(@batch)
       end
-      
+
       should "check that the read_length attribute is the same in all the requests" do
         @request1.request_metadata.read_length = 76
         @request2.request_metadata.read_length = 100
         @batch = @pipeline.batches.create(:requests => [ @request1, @request2 ])
         assert !@pipeline.is_read_length_consistent_for_batch?(@batch)
       end
-      
+
       should "check that other pipelines are not affected by different read_length attributes" do
         @pipeline2 = Factory :pipeline, :name => "other pipeline", :request_types => [ @request_type ]
         @request1 = Factory(
@@ -88,14 +89,14 @@ class PipelineTest < ActiveSupport::TestCase
           :request_type => @request_type,
           :pipeline     => @pipeline2
         )
-          
+
         @request1.request_metadata.read_length = 76
         @request2.request_metadata.read_length = 100
         @batch = @pipeline2.batches.create(:requests => [ @request1, @request2 ])
-        assert @pipeline2.is_read_length_consistent_for_batch?(@batch)        
+        assert @pipeline2.is_read_length_consistent_for_batch?(@batch)
       end
     end
-    
+
     context "#QC related batches" do
       setup do
         @pipeline_next = Factory :pipeline, :name => "Next pipeline"

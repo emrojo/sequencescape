@@ -2,9 +2,9 @@ require "test_helper"
 
 class TaskTest < ActiveSupport::TestCase
   context "A Task" do
-    should_belong_to :workflow
-    should_have_many :families
-    should_have_many :descriptors
+    should belong_to :workflow
+    should have_many :families
+    should have_many :descriptors
   end
 
   context "A SetDescriptorsTask" do

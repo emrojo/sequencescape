@@ -7,7 +7,7 @@ end
 
 class ExternalPropertiedTest < ActiveSupport::TestCase
   context "A model using external properties" do
-    should_have_many :external_properties
+    should have_many :external_properties
 
     setup do
       @test_subject = ExternalPropertied.create(:name => "TestObject")

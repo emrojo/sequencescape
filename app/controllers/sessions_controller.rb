@@ -3,8 +3,6 @@ class SessionsController < ApplicationController
 
   skip_before_filter :login_required
 
-  filter_parameter_logging :password
-
   def index
     redirect_to :action => :login
   end

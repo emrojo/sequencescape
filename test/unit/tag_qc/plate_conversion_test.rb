@@ -3,9 +3,9 @@ require "test_helper"
 class PlateConversionTest < ActiveSupport::TestCase
   context "A Plate Conversion" do
 
-    should_belong_to :user
-    should_belong_to :target
-    should_belong_to :purpose
+    should belong_to :user
+    should belong_to :target
+    should belong_to :purpose
 
 
     context "#stamp" do

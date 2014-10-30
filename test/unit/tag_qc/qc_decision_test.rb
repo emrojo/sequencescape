@@ -4,12 +4,12 @@ class QcDecisionTest < ActiveSupport::TestCase
   context "A Qc Decision" do
 
 
-    should_belong_to :user
-    should_belong_to :lot
+    should belong_to :user
+    should belong_to :lot
 
-    should_have_many :qcables
+    should have_many :qcables
 
-    should_validate_presence_of :user
+    should validate_presence_of :user
 
     context "#qc_decision" do
       setup do

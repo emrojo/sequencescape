@@ -31,7 +31,7 @@ module ViewsSchema
       SELECT TABLE_NAME AS name
       FROM INFORMATION_SCHEMA.VIEWS
       WHERE TABLE_SCHEMA = '#{ActiveRecord::Base.connection.current_database}';}
-    ).map {|v| v['name']}
+    ).map {|v| v.first}
   end
 
   def self.create_view(name,definition)

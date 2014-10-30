@@ -8,14 +8,16 @@ class QcableTest < ActiveSupport::TestCase
       PlateBarcode.stubs(:create).returns(OpenStruct.new(:barcode => (Factory.next :barcode)))
     end
 
-    should_belong_to :lot
-    should_belong_to :asset
-    should_belong_to :qcable_creator
+    should belong_to :lot
+    should belong_to :asset
+    should belong_to :qcable_creator
 
-    should_have_one :stamp_qcable
-    should_have_one :stamp
+    should have_one :stamp_qcable
+    should have_one :stamp
 
-    should_validate_presence_of :lot, :asset, :qcable_creator
+    should validate_presence_of :lot
+    should validate_presence_of :asset
+    should validate_presence_of :qcable_creator
 
     should 'not let state be nil' do
       @qcable = Factory :qcable

@@ -14,7 +14,7 @@ class BillingEvent < ActiveRecord::Base
   belongs_to :project
   belongs_to :request
 
-  validates :kind, :presence => true, :entry_date, :reference
+  validates :kind, :entry_date, :reference, :presence => true
   validates_presence_of :created_by
   validates_presence_of :project
   validates_presence_of :quantity

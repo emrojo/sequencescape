@@ -2,10 +2,10 @@ require "test_helper"
 
 class RequestTypeTest < ActiveSupport::TestCase
   context RequestType do
-    should_have_many :requests
-#    should_belong_to :workflow, :class_name => "Submission::Workflow"
-    should_validate_presence_of :order
-    should_validate_numericality_of :order
+    should have_many :requests
+#    should belong_to :workflow, :class_name => "Submission::Workflow"
+    should validate_presence_of :order
+    should validate_numericality_of :order
 
     context '#for_multiplexing?' do
       context 'when it is for multiplexing' do

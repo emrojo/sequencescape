@@ -3,9 +3,9 @@ require "test_helper"
 class UserTest < ActiveSupport::TestCase
   context "A User" do
 if false
-    should_have_many :items
-    should_have_many :requests
-    should_have_many :comments
+    should have_many :items
+    should have_many :requests
+    should have_many :comments
     should_have_and_belong_to_many :roles
 
     context "authenticate" do
