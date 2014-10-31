@@ -18,11 +18,11 @@ class Well < Aliquot::Receptacle
   has_many :stock_wells, :through => :stock_well_links, :source => :source_well do
     def attach!(wells)
       attach(wells).tap do |_|
-        proxy_owner.save!
+        proxy_association.owner.save!
       end
     end
     def attach(wells)
-      proxy_owner.stock_well_links.build(wells.map { |well| { :type => 'stock', :source_well => well } })
+      proxy_association.owner.stock_well_links.build(wells.map { |well| { :type => 'stock', :source_well => well } })
     end
   end
 

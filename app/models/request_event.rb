@@ -2,7 +2,7 @@ class RequestEvent < ActiveRecord::Base
 
   belongs_to :request
 
-  validates :request, :presence => true, :to_state, :current_from, :event_name
+  validates :request, :to_state, :current_from, :event_name, :presence => true
 
   validates_inclusion_of :event_name, :in => ['created','state_changed','destroyed']
 

@@ -9,7 +9,7 @@ class Pipeline < ActiveRecord::Base
   has_many :batches do
     def build(attributes = nil)
       attributes ||= {}
-      attributes[:item_limit] = proxy_owner.workflow.item_limit
+      attributes[:item_limit] = proxy_association.owner.workflow.item_limit
       super(attributes)
     end
   end

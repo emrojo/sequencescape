@@ -7,7 +7,7 @@ module ModelExtensions::Batch
         # we redefine count to use the fast one.
         # the normal request.count is slow because of the eager load of requests in batch_request
         def count
-          proxy_owner.request_count
+          proxy_association.owner.request_count
         end
       end
 
