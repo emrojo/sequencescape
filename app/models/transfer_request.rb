@@ -88,4 +88,8 @@ class TransferRequest < Request
     # Don't remove assets for transfer requests as they are made on creation
   end
 
+  def self.should_well_not_be_transferred?(well)
+    false
+  end
+
 end

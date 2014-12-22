@@ -35,6 +35,14 @@ module IlluminaHtp::Requests
 
   end
 
+  class TransferFailedWells < TransferRequest
+    def self.should_well_not_be_transferred?(well)
+      return false if well.failed?
+      well.nil? or well.aliquots.empty? or well.cancelled?
+    end
+  end
+
+
   class LibraryCompletion < StdLibraryRequest
     module FailUpstream
       def on_failed
