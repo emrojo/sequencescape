@@ -86,13 +86,13 @@ class Sample < ActiveRecord::Base
   end
   private :safe_to_destroy
 
-  named_scope :with_name, lambda { |*names| { :conditions => { :name => names.flatten } } }
+  scope :with_name, lambda { |*names| where(:name => names.flatten) }
 
-  named_scope :for_search_query, lambda { |query,with_includes|
-    { :conditions => [ 'name LIKE ? OR id=?', "%#{query}%", query ] }
+  scope :for_search_query, lambda { |query,with_includes|
+    where(['name LIKE ? OR id=?', "%#{query}%", query ])
   }
 
-  named_scope :non_genotyped, :conditions => "samples.id not in (select propertied_id from external_properties where propertied_type = 'Sample' and `key` = 'genotyping_done'  )"
+  scope :non_genotyped, where("samples.id not in (select propertied_id from external_properties where propertied_type = 'Sample' and `key` = 'genotyping_done'  )")
 
   def self.by_name(sample_id)
     self.find_by_name(sample_id)

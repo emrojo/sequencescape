@@ -7,6 +7,18 @@ module Sanger
   module Testing
     module Controller
       module Macros
+
+        def should_change(*params,&block)
+           # TODO: Set this up
+        end
+
+        def should_not_change(*params,&block)
+           # TODO: Set this up
+        end
+
+        def should_have_instance_methods(*methods)
+        end
+
         def should_have_successful_submission
           # FIXME: routing doesnt work property
           #should_redirect_to("study workflow submission page"){ study_workflow_submission_url(@study, @workflow, @submission) }

@@ -17,14 +17,14 @@ module RequestType::Validation
         delegate_attribute(:"#{validator.request_option}", :to => :target, :default => validator.default, :type_cast => validator.type_cast)
       end
     end.tap do |sub_class|
-      sub_class.write_inheritable_attribute(:request_type, request_type)
+      sub_class.request_type =  request_type
     end
 
   end
 
   class RequestTypeValidator < DelegateValidation::Validator
-    class_inheritable_reader :request_type
-    write_inheritable_attribute :request_type, nil
+    class_attribute :request_type, :instance_writer => false
+    request_type =  nil
 
     def library_types_present?
       request_type.library_types.present?

@@ -13,11 +13,10 @@ module Batch::RequestBehaviour
 
 
       # Identifies all requests that are not part of a batch.
-      named_scope :unbatched, {
-        :joins      => 'LEFT OUTER JOIN batch_requests ubr ON `requests`.`id`=`ubr`.`request_id`',
-        :readonly   => false,
-        :conditions => '`ubr`.`request_id` IS NULL'
-      }
+      scope :unbatched,
+        joins('LEFT OUTER JOIN batch_requests ubr ON `requests`.`id`=`ubr`.`request_id`').
+        readonly(false).
+        where('`ubr`.`request_id` IS NULL')
       delegate :position, :to=>:batch_request, :allow_nil=>true
     end
   end

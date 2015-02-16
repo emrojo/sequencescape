@@ -7,7 +7,7 @@ class Barcode
     def self.included(base)
       base.class_eval do
         before_create :set_default_prefix
-        class_inheritable_accessor :prefix
+        class_attribute :prefix
         self.prefix = "NT"
       end
     end

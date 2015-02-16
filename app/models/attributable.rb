@@ -18,10 +18,10 @@ module Attributable
     base.extend(ClassMethods)
     base.class_eval do
       # NOTE: Do not use 'attributes' because that's an ActiveRecord internal name
-      class_inheritable_reader :attribute_details
-      write_inheritable_attribute(:attribute_details, [])
-      class_inheritable_reader :association_details
-      write_inheritable_attribute(:association_details, [])
+      class_attribute :attribute_details, :instance_writer => false
+      self.attribute_details =  []
+      class_attribute :association_details, :instance_writer => false
+      self.association_details =  []
     end
   end
 
@@ -60,15 +60,16 @@ module Attributable
   end
 
   module ClassMethods
+
     def attribute(name, options = {}, override_previous = false)
       attribute = Attribute.new(self, name, options)
       attribute.configure(self)
 
       if override_previous
-        attribute_details.delete_if { |a| a.name == name }
-        attribute_details.push(attribute)
-      elsif attribute_details.detect { |a| a.name == name }.nil?
-        attribute_details.push(attribute)
+        self.attribute_details = self.attribute_details.reject { |a| a.name == name }
+        self.attribute_details += [attribute]
+      elsif self.attribute_details.detect { |a| a.name == name }.nil?
+        self.attribute_details += [attribute]
       end
     end
 
@@ -286,16 +287,20 @@ module Attributable
       end
 
       unless save_blank_value
-        model.before_validation do |record|
-          value = record.send(name)
-          record.send("#{name}=", nil) if value and value.blank?
-        end
+        model.class_eval(%Q{
+          before_validation do |record|
+            value = record.#{name}
+            record.#{name}= nil if value and value.blank?
+          end
+        })
       end
 
       unless (condition = conditions[:if]).nil?
-        model.before_validation do |record|
-          record[name] = nil unless record.send(condition)
-        end
+        model.class_eval(%Q{
+          before_validation do |record|
+            record[#{name}] = nil unless record.#{condition}
+          end
+        })
       end
     end
 

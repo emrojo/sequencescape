@@ -180,7 +180,7 @@ class Map < ActiveRecord::Base
 
   end
 
-  named_scope :for_position_on_plate, lambda { |position,plate_size,asset_shape|
+ scope :for_position_on_plate, lambda { |position,plate_size,asset_shape|
     {
       :conditions => {
         :row_order    => position - 1,
@@ -190,10 +190,10 @@ class Map < ActiveRecord::Base
     }
   }
 
-  named_scope :where_description, lambda { |*descriptions| { :conditions => { :description => descriptions.flatten } } }
-  named_scope :where_plate_size,  lambda { |size| { :conditions => { :asset_size => size } } }
-  named_scope :where_plate_shape,  lambda { |asset_shape| { :conditions => { :asset_shape_id => asset_shape } } }
-  named_scope :where_vertical_plate_position, lambda { |*positions| { :conditions => { :column_order => positions.map {|v| v-1} } } }
+  scope :where_description, lambda { |*descriptions| { :conditions => { :description => descriptions.flatten } } }
+  scope :where_plate_size,  lambda { |size| { :conditions => { :asset_size => size } } }
+  scope :where_plate_shape,  lambda { |asset_shape| { :conditions => { :asset_shape_id => asset_shape } } }
+  scope :where_vertical_plate_position, lambda { |*positions| { :conditions => { :column_order => positions.map {|v| v-1} } } }
 
   belongs_to :asset_shape, :class_name => 'Map::AssetShape'
   delegate :standard?, :to => :asset_shape
@@ -305,10 +305,10 @@ class Map < ActiveRecord::Base
     map.description
   end
 
-  named_scope :in_row_major_order, { :order => 'row_order ASC' }
-  named_scope :in_reverse_row_major_order, { :order => 'row_order DESC' }
-  named_scope :in_column_major_order, { :order => 'column_order ASC' }
-  named_scope :in_reverse_column_major_order, { :order => 'column_order DESC' }
+   scope :in_row_major_order,            order('row_order ASC' )
+   scope :in_reverse_row_major_order,    order('row_order DESC' )
+   scope :in_column_major_order,         order('column_order ASC' )
+   scope :in_reverse_column_major_order, order('column_order DESC' )
 
   class << self
     # Caution! Only use for seeds. Not valid elsewhere

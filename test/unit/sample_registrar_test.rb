@@ -109,10 +109,10 @@ class SampleRegistrarTest < ActiveSupport::TestCase
       end
     end
 
-    should_belong_to :user
-    should_belong_to :study
-    should_belong_to :sample
-    should_belong_to :sample_tube
+    should belong_to :user
+    should belong_to :study
+    should belong_to :sample
+    should belong_to :sample_tube
 
     context '.register!' do
       context 'raises an error if no samples are specified' do

@@ -93,9 +93,9 @@ class AssetGroupTest < ActiveSupport::TestCase
 
   context "Validation" do
     setup do
+      @ag_count = AssetGroup.count
       Study.destroy_all
       @study = Factory :study
-
     end
     should "not allow an AssetGroup to be created without a study" do
       assert_raises ActiveRecord::RecordInvalid do
@@ -109,7 +109,9 @@ class AssetGroupTest < ActiveSupport::TestCase
       end
     end
 
-    should_not_change("AssetGroup.count") { AssetGroup.count }
+    should "not change AssetGroup.count" do
+      assert_equal AssetGroup.count, @ag_count
+    end
 
     should "only allow a name to be used once" do
       Factory :asset_group, :name => "Another-Name", :study_id => @study.id

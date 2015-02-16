@@ -2,8 +2,8 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2012,2013,2014,2015 Genome Research Ltd.
 class PresenterSkeleton
-  class_inheritable_reader :attributes
-  write_inheritable_attribute :attributes,  []
+  class_attribute :attributes, :instance_writer => false
+  attributes =   []
 
   def initialize(user, submission_attributes = {})
     submission_attributes = {} if submission_attributes.blank?
@@ -68,7 +68,7 @@ class SubmissionCreater < PresenterSkeleton
   IncorrectParamsException = Class.new(SubmissionsCreaterError)
   InvalidInputException    = Class.new(SubmissionsCreaterError)
 
-  write_inheritable_attribute :attributes,  [
+  attributes =   [
     :id,
     :template_id,
     :sample_names_text,
@@ -343,7 +343,7 @@ class SubmissionCreater < PresenterSkeleton
 end
 
 class SubmissionPresenter < PresenterSkeleton
-  write_inheritable_attribute :attributes, [ :id ]
+  attributes =  [ :id ]
 
   def submission
     @submission ||= Submission.find(id)

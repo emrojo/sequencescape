@@ -4,7 +4,7 @@
 class PlateBarcode < ActiveResource::Base
   self.site = configatron.plate_barcode_service
 
- if RAILS_ENV == 'development'
+ if Rails.env == 'development'
    def self.create
      if @barcode.nil?
        @barcode = Asset.first(

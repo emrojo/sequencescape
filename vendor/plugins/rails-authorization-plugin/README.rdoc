@@ -83,7 +83,7 @@ Installation of the Authorization plugin is quick and easy.
 === Step 1
 
 Open a terminal and change directory to the root of your
-Ruby on Rails application referred to here as 'RAILS_ROOT'. You
+Ruby on Rails application referred to here as 'Rails.root'. You
 can choose to install the plugin using the standard Ruby on Rails tools (recommended),
 as a Git sub-module, or by grabbing a tarball.
 
@@ -94,12 +94,12 @@ now has built in support for installing a plugin directly from a git repo.  This
 you have Git installed and working properly.  You can always use the manual install shown below
 if this is not true.
 
-Run the following command in your RAILS_ROOT:
+Run the following command in your Rails.root:
 
   ./script/plugin install git://github.com/DocSavage/rails-authorization-plugin.git
 
 This will install the latest version of the plugin from our GitHub master repo
-into your RAILS_ROOT/vendor/plugins/rails-authorization-plugin directory.
+into your Rails.root/vendor/plugins/rails-authorization-plugin directory.
 
 === Step 2b (Alternative install using Git sub-module, for advanced users of the Git SCM)
 
@@ -117,12 +117,12 @@ this method may cause issues if you are not careful (e.g. the code
 will be deployed but the sub-modules will not be updated or
 installed at all).
 
-From your RAILS_ROOT directory run:
+From your Rails.root directory run:
 
   git submodule add git://github.com/DocSavage/rails-authorization-plugin.git vendor/plugins/authorization
 
 You should be able to update this plugin in the future with
-the simple command (again from RAILS_ROOT):
+the simple command (again from Rails.root):
 
   git submodule update
 
@@ -134,7 +134,7 @@ latest master branch plugin code from:
 http://github.com/docsavage/rails-authorization-plugin/tarball/master
 
 Once downloaded, rename the top level dir to 'rails-authorization-plugin' and then
-you can stuff that directory in your RAILS_ROOT/vendor/plugins directory.
+you can stuff that directory in your Rails.root/vendor/plugins directory.
 
 
 == Configuration
@@ -174,7 +174,7 @@ Choose one of the installation types identified above and make sure your
 application provides a current_user method or something that returns the
 current user object (resful_authentication provides this out of the box).
 
-At the top of your RAILS_ROOT/config/environment.rb file add something
+At the top of your Rails.root/config/environment.rb file add something
 like the following (customized for your controllers and actions of course):
 
   ...
@@ -217,19 +217,19 @@ database tables. We have provided a database migration file
 If you plan to use the hardwired mixin, no extra database tables
 are required. and you can skip to the next step.
 
-Run the following command from your RAILS_ROOT (Note : The generator
+Run the following command from your Rails.root (Note : The generator
 takes a model name as its argument, which at this time must be 'Role'.):
 
   ./script/generate role_model Role
 
 This will create:
 
-  Model:      RAILS_ROOT/app/models/role.rb
-  Test:       RAILS_ROOT/test/unit/role_test.rb
-  Fixtures:   RAILS_ROOT/test/fixtures/roles.yml
-  Migration:  RAILS_ROOT/db/migrate/###_add_role.rb
+  Model:      Rails.root/app/models/role.rb
+  Test:       Rails.root/test/unit/role_test.rb
+  Fixtures:   Rails.root/test/fixtures/roles.yml
+  Migration:  Rails.root/db/migrate/###_add_role.rb
 
-And now you will need to run a database migration from your RAILS_ROOT:
+And now you will need to run a database migration from your Rails.root:
 
   rake db:migrate
 

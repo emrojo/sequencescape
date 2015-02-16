@@ -11,13 +11,13 @@ class LotTypeTest < ActiveSupport::TestCase
         Factory :lot
       end
 
-      should_validate_uniqueness_of :name
+      should validate_uniqueness_of :name
     end
-    should_validate_presence_of :name
-    should_validate_presence_of :template_class
+    should validate_presence_of :name
+    should validate_presence_of :template_class
 
-    should_have_many :lots
-    should_belong_to :target_purpose
+    should have_many :lots
+    should belong_to :target_purpose
 
     context "#lot" do
       setup do

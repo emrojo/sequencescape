@@ -23,6 +23,6 @@ module ApiRouting
   end
 end
 
-class ActionController::Routing::RouteSet::Mapper
-  include ApiRouting
-end
+# class ActionController::Routing::RouteSet::Mapper
+#   include ApiRouting
+# end

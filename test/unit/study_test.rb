@@ -6,9 +6,9 @@ require "test_helper"
 class StudyTest < ActiveSupport::TestCase
   context "Study" do
 
-    should_belong_to :user
+    should belong_to :user
 
-    should_have_many :samples, :through => :study_samples
+    should have_many :samples#, :through => :study_samples
 
     context "Request" do
       setup do

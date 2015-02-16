@@ -132,18 +132,18 @@ class Study < ActiveRecord::Base
   end
   private :set_default_ethical_approval
 
-  named_scope :for_search_query, lambda { |query,with_includes|
-    { :conditions => [ 'name LIKE ? OR id=?', "%#{query}%", query ] }
+ scope :for_search_query, lambda { |query,with_includes|
+    where([ 'name LIKE ? OR id=?', "%#{query}%", query ])
   }
 
-  named_scope :with_no_ethical_approval, { :conditions => { :ethically_approved => false } }
+ scope :with_no_ethical_approval, where( :ethically_approved => false )
 
-  named_scope :is_active,   { :conditions => { :state => 'active'   } }
-  named_scope :is_inactive, { :conditions => { :state => 'inactive' } }
-  named_scope :is_pending,  { :conditions => { :state => 'pending'  } }
+ scope :is_active, where( :state => 'active' )
+ scope :is_inactive, where( :state => 'inactive' )
+ scope :is_pending, where( :state => 'pending' )
 
-  named_scope :newest_first, { :order => "#{ self.quoted_table_name }.created_at DESC" }
-  named_scope :with_user_included, { :include => :user }
+  scope :newest_first, order("#{ self.quoted_table_name }.created_at DESC" )
+  scope :with_user_included, includes(:user)
 
   YES = 'Yes'
   NO  = 'No'
@@ -302,7 +302,7 @@ class Study < ActiveRecord::Base
 
     has_one :data_release_non_standard_agreement, :class_name => 'Document', :as => :documentable
     accepts_nested_attributes_for :data_release_non_standard_agreement
-    validates_presence_of :data_release_non_standard_agreement, :if => :non_standard_agreement?
+    validates :data_release_non_standard_agreement, :presence => true, :if => :non_standard_agreement?
     validates_associated  :data_release_non_standard_agreement, :if => :non_standard_agreement?
 
     validate :valid_policy_url?
@@ -510,35 +510,34 @@ class Study < ActiveRecord::Base
     end
   end
 
-  named_scope :awaiting_ethical_approval, {
-    :joins => :study_metadata,
-    :conditions => {
+  scope :awaiting_ethical_approval,
+    joins(:study_metadata).
+    where(
       :ethically_approved => false,
       :study_metadata => {
         :contains_human_dna => Study::YES,
         :contaminated_human_dna => Study::NO,
         :commercially_available => Study::NO
       }
-    }
-  }
+    )
 
-  named_scope :contaminated_with_human_dna, {
-    :joins => :study_metadata,
-    :conditions => {
+
+  scope :contaminated_with_human_dna,
+    joins(:study_metadata).
+    where(
       :study_metadata => {
         :contaminated_human_dna => Study::YES
       }
-    }
-  }
+    )
 
-  named_scope :with_remove_x_and_autosomes, {
-    :joins => :study_metadata,
-    :conditions => {
+  scope :with_remove_x_and_autosomes,
+    joins(:study_metadata).
+    where(
       :study_metadata => {
         :remove_x_and_autosomes => Study::YES
       }
-    }
-  }
+    )
+
 
   def self.all_awaiting_ethical_approval
     self.awaiting_ethical_approval

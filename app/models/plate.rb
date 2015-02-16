@@ -34,7 +34,7 @@ class Plate < Asset
   end
 
   def self.derived_classes
-    @derived_classes ||= [ self, *Class.subclasses_of(self) ].map(&:name)
+    @derived_classes ||= [ self, *self.descendants.map(&:name) ].map(&:name)
   end
 
   def prefix
@@ -101,7 +101,7 @@ WHERE c.container_id=?
 
   contains :wells do #, :order => '`assets`.map_id ASC' do
     def located_at(location)
-      super(proxy_owner, location)
+      super(proxy_association.owner, location)
     end
 
     # After importing wells we need to also create the AssetLink and WellAttribute information for them.
@@ -124,16 +124,16 @@ WHERE c.container_id=?
     private :post_import
 
     def post_connect(well)
-#      AssetLink.create!(:ancestor => proxy_owner, :descendant => well)
+#      AssetLink.create!(:ancestor => proxy_association.owner, :descendant => well)
     end
     private :post_connect
 
     def construct!
-      Map.where_plate_size(proxy_owner.size).where_plate_shape(proxy_owner.asset_shape).in_row_major_order.map do |location|
+      Map.where_plate_size(proxy_association.owner.size).where_plate_shape(proxy_association.owner.asset_shape).in_row_major_order.map do |location|
         build(:map => location)
       end.tap do |wells|
-        proxy_owner.save!
-        AssetLink::Job.create(proxy_owner, wells)
+        proxy_association.owner.save!
+        AssetLink::Job.create(proxy_association.owner, wells)
       end
     end
 
@@ -148,7 +148,7 @@ WHERE c.container_id=?
 
     # Returns the wells with their pool identifier included
     def with_pool_id
-      proxy_owner.plate_purpose.pool_wells(self)
+      proxy_association.owner.plate_purpose.pool_wells(self)
     end
 
     # Yields each pool and the wells that are in it
@@ -167,11 +167,11 @@ WHERE c.container_id=?
     end
 
     def in_preferred_order
-      proxy_owner.plate_purpose.in_preferred_order(self)
+      proxy_association.owner.plate_purpose.in_preferred_order(self)
     end
   end
 
-  named_scope :include_wells_and_attributes, { :include => { :wells => [ :map, :well_attribute ] } }
+  scope :include_wells_and_attributes, includes(:wells => [ :map, :well_attribute ])
 
   #has_many :wells, :as => :holder, :class_name => "Well"
   DEFAULT_SIZE = 96
@@ -181,7 +181,7 @@ WHERE c.container_id=?
 
   before_create :set_plate_name_and_size
 
-  named_scope :qc_started_plates, lambda {
+ scope :qc_started_plates, lambda {
     {
       :select => "distinct assets.*",
       :order => 'assets.id DESC',
@@ -191,7 +191,7 @@ WHERE c.container_id=?
     }
   }
 
-  named_scope :with_sample,    lambda { |sample|
+  scope :with_sample,    lambda { |sample|
     {
       :select => "distinct assets.*",
       :joins => "LEFT OUTER JOIN container_associations AS wscas ON wscas.container_id = assets.id
@@ -201,7 +201,7 @@ WHERE c.container_id=?
     }
   }
 
-  named_scope :with_requests, lambda { |requests|
+ scope :with_requests, lambda { |requests|
     {
       :select     => "DISTINCT assets.*",
       :joins      => [

@@ -12,7 +12,7 @@ class Pipeline < ActiveRecord::Base
   has_many :batches do
     def build(attributes = nil)
       attributes ||= {}
-      attributes[:item_limit] = proxy_owner.workflow.item_limit
+      attributes[:item_limit] = proxy_association.owner.workflow.item_limit
       super(attributes)
     end
   end
@@ -107,12 +107,12 @@ class Pipeline < ActiveRecord::Base
   belongs_to :next_pipeline,     :class_name => 'Pipeline'
   belongs_to :previous_pipeline, :class_name => 'Pipeline'
 
-  named_scope :externally_managed, :conditions => { :externally_managed => true }
-  named_scope :internally_managed, :conditions => { :externally_managed => false }
-  named_scope :active,   :conditions => { :active => true }
-  named_scope :inactive, :conditions => { :active => false }
+ scope :externally_managed, where( :externally_managed => true )
+ scope :internally_managed, where( :externally_managed => false )
+ scope :active, where(:active => true)
+ scope :inactive, where( :active => false )
 
-  named_scope :for_request_type, lambda { |rt|
+ scope :for_request_type, lambda { |rt|
     {
       :joins => [ 'LEFT JOIN pipelines_request_types prt ON prt.pipeline_id = pipelines.id' ],
       :conditions => ['prt.request_type_id = ?', rt.id]

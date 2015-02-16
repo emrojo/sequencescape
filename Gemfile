@@ -1,26 +1,26 @@
 source 'http://rubygems.org'
 source 'http://gems.github.com'
 
-gem "rails", "~>2.3"
+gem "rails", '3.2.19'
 
 # Warehouse builder
 gem "log4r"
-gem "db-charmer"
+# gem "db-charmer"
 
 gem "aasm", "~>2.4.0"
 gem "configatron"
 gem "rest-client" # curb substitute.
 gem "fastercsv", "~>1.4.0"
-gem "formtastic", "~>1.2.0"
+gem "formtastic", "~>2.3"
 gem "activerecord-jdbc-adapter", ">= 1.2.6", :platforms => :jruby
 gem "jdbc-mysql", :platforms => :jruby
 gem "mysql", :platforms => :mri
 gem "spreadsheet"
-gem "will_paginate", "~>2.3.15"
+gem "will_paginate"
 gem 'net-ldap'
-gem 'carrierwave', "~>0.4.0"
+gem 'carrierwave'
 gem 'jruby-openssl', :platforms => :jruby
-gem 'rdoc', '~>2.4.2'
+gem 'rdoc'
 
 gem 'trinidad', :platforms => :jruby
 
@@ -31,13 +31,13 @@ gem 'sanger_barcode', '~>0.1.0', :git => 'git+ssh://git@github.com/sanger/sanger
 # The graph library (1.x only because 2.x uses Rails 3).  This specific respository fixes an issue
 # seen in creating asset links during the assign_tags_handler (which blew up in rewire_crossing in the
 # gem code).
-gem "acts-as-dag", :git => "git+ssh://git@github.com/sanger/acts-as-dag.git", :branch => '38792421_add_dependent_destroy_to_links'
+gem "acts-as-dag", '~>3.0.0'
 
 # Better table alterations
-gem "alter_table", :git => "git+ssh://git@github.com/sanger/alter_table.git"
+# gem "alter_table", :git => "git+ssh://git@github.com/sanger/alter_table.git"
 
 # For background processing
-gem "delayed_job", '~>2.0.4'
+gem "delayed_job"
 
 gem "ruby_walk",  ">= 0.0.3",:git => "git+ssh://git@github.com/sanger/ruby_walk"
 
@@ -88,9 +88,9 @@ group :test do
   gem "launchy"
   gem "mocha", :require => false # avoids load order problems
   gem "nokogiri"
-  gem "shoulda", "~>2.10.0"
+  gem "shoulda", "~>3.4.0"
   gem "timecop"
-  gem "treetop", "~>1.2.5"
+  gem "treetop"
   gem 'parallel_tests'
 
   gem "timocratic-test_benchmark"

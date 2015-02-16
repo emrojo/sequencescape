@@ -14,8 +14,8 @@ class LinearSubmissionTest < ActiveSupport::TestCase
       @workflow = Factory :submission_workflow
     end
 
-    should_belong_to :study
-    should_belong_to :user
+    should belong_to :study
+    should belong_to :user
 
     context "build (Submission factory)" do
       setup do

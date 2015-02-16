@@ -13,12 +13,12 @@ class AssetGroup < ActiveRecord::Base
   has_many :asset_group_assets
   has_many :assets, :through => :asset_group_assets
 
-  validates_presence_of :name, :study
+  validates :name, :presence => true, :study
   validates_uniqueness_of :name
 
 
 
-  named_scope :for_search_query, lambda { |query,with_includes| { :conditions => [ 'name LIKE ?', "%#{query}%" ] } }
+ scope :for_search_query, lambda { |query,with_includes| { :conditions => [ 'name LIKE ?', "%#{query}%" ] } }
 
   def all_samples_have_accession_numbers?
     unaccessioned_samples.count == 0

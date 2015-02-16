@@ -9,7 +9,7 @@ class QcableCreator < ActiveRecord::Base
   belongs_to :lot
   has_many :qcables
 
-  validates_presence_of :user, :lot
+  validates :user, :presence => true, :lot
 
   attr_accessor :count
 

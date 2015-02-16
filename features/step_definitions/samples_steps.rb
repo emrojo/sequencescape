@@ -11,7 +11,7 @@ end
 
 
 When /^I attach a valid excel file$/ do
-  attach_file(:file, File.join(RAILS_ROOT, 'public', 'data', 'sample_information.xls'))
+  attach_file(:file, File.join(Rails.root, 'public', 'data', 'sample_information.xls'))
 end
 
 Then /^a "([^\"]*)" number of "([^\"]*)" should be created$/ do |num, records|
@@ -126,7 +126,7 @@ Given /^the sample "([^"]*)" should not have an accession number$/ do |sample_na
 end
 
 Given /^I run the "([^\"]+)" cron script$/ do |script_name|
-  eval File.read("#{RAILS_ROOT}/lib/cron_scripts/#{script_name}")
+  eval File.read("#{Rails.root}/lib/cron_scripts/#{script_name}")
 end
 
 GivenSampleMetadata(:sample_ebi_accession_number, /^the sample "([^\"]+)" has the accession number "([^\"]+)"$/)

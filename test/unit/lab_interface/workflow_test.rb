@@ -5,8 +5,8 @@ require "test_helper"
 
 class LabInterface::WorkflowTest < ActiveSupport::TestCase
   context "A Workflow" do
-    should_have_many :tasks
-    should_belong_to :pipeline
+    should have_many :tasks
+    should belong_to :pipeline
 
     setup do
       pipeline  = Factory :pipeline, :name => "Pipeline for LabInterface::WorkflowTest"

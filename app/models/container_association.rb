@@ -41,14 +41,14 @@ class ContainerAssociation < ActiveRecord::Base
               sub_query = #{class_name}.send(:construct_finder_sql, :select => 'id', :order => 'id DESC')
               records   = #{class_name}.connection.select_all(%Q{SELECT id FROM (\#{sub_query}) AS a LIMIT \#{records.size}})
               attach(records)
-              post_import(records.map { |r| [proxy_owner.id, r['id']] })
+              post_import(records.map { |r| [proxy_association.owner.id, r['id']] })
             end
           end
         }, __FILE__, line)
 
         def attach(records)
           ActiveRecord::Base.transaction do
-            records.each { |r| ContainerAssociation.create!(:container_id => proxy_owner.id, :content_id => r['id']) }
+            records.each { |r| ContainerAssociation.create!(:container_id => proxy_association.owner.id, :content_id => r['id']) }
           end
         end
 
@@ -59,7 +59,7 @@ class ContainerAssociation < ActiveRecord::Base
         end
 
         def connect(content)
-          ContainerAssociation.create!(:container => proxy_owner, :content => content)
+          ContainerAssociation.create!(:container => proxy_association.owner, :content => content)
           post_connect(content)
         end
         private :connect
@@ -67,7 +67,7 @@ class ContainerAssociation < ActiveRecord::Base
         class_eval(&block) if block_given?
       end
 
-      named_scope :"include_#{content_name}", :include => :contents  do
+      scope :"include_#{content_name}", includes(:contents)  do
         def to_include
           [:contents]
         end

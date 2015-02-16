@@ -10,8 +10,8 @@ class Core::Service < Sinatra::Base
     module Behaviour
       def self.included(base)
         base.class_eval do
-          class_inheritable_accessor :api_error_code
-          class_inheritable_accessor :api_error_message
+          class_attribute :api_error_code
+          class_attribute :api_error_message
           alias_method :api_error_message, :message
           self.api_error_code = 500
         end

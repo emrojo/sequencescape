@@ -6,7 +6,7 @@ require "test_helper"
 class ProjectTest < ActiveSupport::TestCase
   context "Project" do
 
-    should_validate_presence_of :name
+    should validate_presence_of :name
 
     context "#metadata" do
       setup do

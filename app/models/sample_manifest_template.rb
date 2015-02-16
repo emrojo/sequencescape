@@ -37,7 +37,7 @@ class SampleManifestTemplate < ActiveRecord::Base
         :asset_type => '1dtube'
       )
 
-      unless RAILS_ENV == "production"
+      unless Rails.env == "production"
         SampleManifestTemplate.create!(
           :name => "test layout",
           :path => "/data/base2_manifest.xls",
@@ -79,7 +79,7 @@ class SampleManifestTemplate < ActiveRecord::Base
   private :set_value
 
   def generate(manifest)
-    spreadsheet = Spreadsheet.open(RAILS_ROOT + (self.path || '/data/base_manifest.xls'))
+    spreadsheet = Spreadsheet.open(Rails.root + (self.path || '/data/base_manifest.xls'))
     worksheet   = spreadsheet.worksheets.first
 
     @column_position_map = read_column_position(manifest, worksheet)

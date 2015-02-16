@@ -12,8 +12,8 @@ end
 class SampleTest < ActiveSupport::TestCase
   context "A Sample" do
 
-    should_have_many :study_samples
-    should_have_many :studies, :through => :study_samples
+    should have_many :study_samples
+    should have_many :studies#, :through => :study_samples
 
     context "when used in older assets" do
 

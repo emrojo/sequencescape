@@ -8,7 +8,7 @@ class ChangeCherrypickStrategyToFilterListInPlatePurpose < ActiveRecord::Migrati
 
     serialize :cherrypick_strategy
 
-    named_scope :with_strategy, { :conditions => 'cherrypick_strategy IS NOT NULL' }
+    scope :with_strategy, where('cherrypick_strategy IS NOT NULL')
   end
 
   def self.up

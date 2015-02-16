@@ -1,16 +1,21 @@
 #This file is part of SEQUENCESCAPE is distributed under the terms of GNU General Public License version 1 or later;
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2007-2011,2011,2012,2014 Genome Research Ltd.
-ENV["RAILS_ENV"] = "test"
+ENV["Rails.env"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
-#TODO: for rails 3 replace with rails/test_help
-require "test_help"
+
+require 'shoulda'
+require 'rails/test_help'
 require 'test_benchmark'
 
 require File.expand_path(File.join(Rails.root, %w{test factories.rb}))
- Dir.glob(File.expand_path(File.join(Rails.root, %w{test factories ** *.rb}))) do |factory_filename|
-   require factory_filename
- end
+Dir.glob(File.expand_path(File.join(Rails.root, %w{test factories ** *.rb}))) do |factory_filename|
+ require factory_filename
+end
+
+Dir.glob(File.expand_path(File.join(Rails.root, %w{test shoulda_macros *.rb}))) do |macro_filename|
+  require macro_filename
+end
 
 require "#{Rails.root}/test/unit/task_test_base"
 
@@ -73,7 +78,7 @@ class ActiveSupport::TestCase
 
   # Used by Quiet Backtrace pluging to reduce testing noise
   #self.backtrace_silencers << :rails_vendor
-  #self.backtrace_filters   << :rails_root
+  #self.backtrace_filters   << :Rails.root
   # Add more helper methods to be used by all tests here...
 end
 

@@ -11,8 +11,8 @@ class Purpose < ActiveRecord::Base
 
     belongs_to :transfer_request_type, :class_name => 'RequestType'
 
-    named_scope :with_parent, lambda { |plate_purpose| { :conditions => { :parent_id => plate_purpose.id } } }
-    named_scope :with_child,  lambda { |plate_purpose| { :conditions => { :child_id  => plate_purpose.id } } }
+   scope :with_parent, lambda { |plate_purpose| { :conditions => { :parent_id => plate_purpose.id } } }
+   scope :with_child,  lambda { |plate_purpose| { :conditions => { :child_id  => plate_purpose.id } } }
 
     module Associations
       def self.included(base)
@@ -52,7 +52,7 @@ class Purpose < ActiveRecord::Base
   validates_uniqueness_of :name, :message => "already in use"
   validates_inclusion_of :barcode_for_tecan, :in => ['ean13_barcode','fluidigm_barcode']
 
-  named_scope :where_is_a?, lambda { |clazz| { :conditions => { :type => [clazz,*Class.subclasses_of(clazz)].map(&:name) } } }
+ scope :where_is_a?, lambda { |clazz| where(:type => [clazz,*clazz.descendants].map(&:name)) }
 
   def target_class
     @target_class ||= target_type.constantize

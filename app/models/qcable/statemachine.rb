@@ -68,10 +68,10 @@ module Qcable::Statemachine
       end
 
       # new version of combinable named_scope
-      named_scope :for_state, lambda { |state| { :conditions => { :state => state } } }
+     scope :for_state, lambda { |state| { :conditions => { :state => state } } }
 
-      named_scope :available, :conditions => {:state => :available}
-      named_scope :unavailable, :conditions => {:state => [:created,:pending,:failed,:passed,:destroyed,:qc_in_progress,:exhausted]}
+     scope :available, where(:state => :available)
+     scope :unavailable, where(:state => [:created,:pending,:failed,:passed,:destroyed,:qc_in_progress,:exhausted])
 
     end
   end
