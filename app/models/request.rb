@@ -27,7 +27,7 @@ class Request < ActiveRecord::Base
   def self.delegate_validator
     DelegateValidation::AlwaysValidValidator
   end
- 
+
   scope :for_pipeline, lambda { |pipeline|
     {
       joins => [ 'LEFT JOIN pipelines_request_types prt ON prt.request_type_id=requests.request_type_id' ],
@@ -35,7 +35,7 @@ class Request < ActiveRecord::Base
       :readonly => false
     }
   }
-  
+
   def validator_for(request_option)
     request_type.request_type_validators.find_by_request_option!(request_option.to_s)
   end
@@ -152,7 +152,6 @@ class Request < ActiveRecord::Base
     []
   end
 
-  #  validates :study, :presence => true, :request_type#TODO, :submission
 
  scope :between, lambda { |source,target| { :conditions => { :asset_id => source.id, :target_asset_id => target.id } } }
  scope :into_by_id, lambda { |target_ids| { :conditions => { :target_asset_id => target_ids } } }

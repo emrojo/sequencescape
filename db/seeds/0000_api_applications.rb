@@ -7,4 +7,4 @@
     :contact     => configatron.sequencescape_email,
     :description => %Q{Import of the original authorisation code and privileges to maintain compatibility while systems are migrated.},
     :privilege   => 'full'
-  ).save(false)
+  ).save

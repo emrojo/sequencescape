@@ -146,8 +146,8 @@ class Api::Base
   self.associations =  {}
 
     # Contains the mapping from the ActiveRecord association to the I/O object that can output it.
-  class_inheritable_reader :nested_has_many_associations
-  write_inheritable_attribute :nested_has_many_associations, {}
+  class_attribute :nested_has_many_associations
+  self.nested_has_many_associations = {}
 
   def self.newer_than(object, timestamp, &block)
     return if object.nil? or timestamp.nil?

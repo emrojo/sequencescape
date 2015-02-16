@@ -12,7 +12,9 @@ class QcDecision < ActiveRecord::Base
     belongs_to :qcable
     belongs_to :qc_decision, :inverse_of=>:qc_decision_qcables
 
-    validates :qcable, :presence => true, :qc_decision, :decision
+    validates :qcable, :presence => true
+    validates :qc_decision, :presence => true
+    validates :decision, :presence => true
 
     validates_inclusion_of :decision, :in => Qcable.aasm_events.map {|i,j| i.to_s }
 
