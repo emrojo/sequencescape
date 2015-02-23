@@ -42,7 +42,7 @@ MODELS = MODEL_TABLES.map do |class_name, table_name|
   model = eval <<-CODE
     class #{class_name} < ActiveRecord::Base
       db_magic :connection => WAREHOUSE_DB_CONF
-      set_table_name :"#{table_name}#{LOADING_SUFFIX}"
+      self.table_name = :"#{table_name}#{LOADING_SUFFIX}"
     end
     #{class_name}
   CODE

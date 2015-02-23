@@ -1,3 +1,4 @@
+$LOAD_PATH << File.dirname(__FILE__) # Ugh
 # Widgets
 require 'widgets/core'
 require 'widgets/css_template'

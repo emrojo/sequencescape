@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/lib/authorization'
+require Rails.root + '/lib/rails-authorization-plugin/lib/authorization'
 
 ActionController::Base.send( :include, Authorization::Base )
 ActionView::Base.send( :include, Authorization::Base::ControllerInstanceMethods )
@@ -15,13 +15,13 @@ end
 
 case AUTHORIZATION_MIXIN
   when "hardwired"
-    require File.dirname(__FILE__) + '/lib/publishare/hardwired_roles'
+    require Rails.root + '/lib/rails-authorization-plugin//lib/publishare/hardwired_roles'
     ActiveRecord::Base.send( :include,
       Authorization::HardwiredRoles::UserExtensions,
       Authorization::HardwiredRoles::ModelExtensions
     )
   when "object roles"
-    require File.dirname(__FILE__) + '/lib/publishare/object_roles_table'
+    require Rails.root + '/lib/rails-authorization-plugin//lib/publishare/object_roles_table'
     ActiveRecord::Base.send( :include,
       Authorization::ObjectRolesTable::UserExtensions,
       Authorization::ObjectRolesTable::ModelExtensions
