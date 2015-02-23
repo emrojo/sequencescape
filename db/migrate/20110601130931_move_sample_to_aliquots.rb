@@ -3,13 +3,13 @@
 #Copyright (C) 2011 Genome Research Ltd.
 class MoveSampleToAliquots < ActiveRecord::Migration
   class AssetLink < ActiveRecord::Base
-    set_table_name('asset_links')
+    self.table_name =('asset_links')
 
     acts_as_dag_links :node_class_name => 'MoveSampleToAliquots::Asset'
   end
 
   class Aliquot < ActiveRecord::Base
-    set_table_name('aliquots')
+    self.table_name =('aliquots')
 
     # NOTE: validations are not here as they are DB constraints and we're not UI based
     belongs_to :receptacle, :class_name => 'MoveSampleToAliquots::Asset'
@@ -19,10 +19,10 @@ class MoveSampleToAliquots < ActiveRecord::Migration
 
   class Request < ActiveRecord::Base
     class Metadata < ActiveRecord::Base
-      set_table_name('request_metadata')
+      self.table_name =('request_metadata')
     end
 
-    set_table_name('requests')
+    self.table_name =('requests')
 
     # More sensible names for the assets
     belongs_to :source_asset, :class_name => 'MoveSampleToAliquots::Asset', :foreign_key => :asset_id
@@ -98,7 +98,7 @@ class MoveSampleToAliquots < ActiveRecord::Migration
       end
     end
 
-    set_table_name('assets')
+    self.table_name =('assets')
 
     has_many :requests_as_source, :class_name => 'MoveSampleToAliquots::Request', :foreign_key => :asset_id, :conditions => 'sti_type != "CreateAssetRequest"'
     has_many :requests_as_target, :class_name => 'MoveSampleToAliquots::Request', :foreign_key => :target_asset_id, :conditions => 'sti_type != "CreateAssetRequest"'

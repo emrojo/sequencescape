@@ -3,11 +3,11 @@
 #Copyright (C) 2012 Genome Research Ltd.
 class BuildStockWellLinksForAllPulldownPlates < ActiveRecord::Migration
   class PlatePurpose < ActiveRecord::Base
-    set_table_name('plate_purposes')
+    self.table_name =('plate_purposes')
     set_inheritance_column(nil)
 
     class Relationship < ActiveRecord::Base
-      set_table_name('plate_purpose_relationships')
+      self.table_name =('plate_purpose_relationships')
       belongs_to :parent, :class_name => 'BuildStockWellLinksForAllPulldownPlates::PlatePurpose'
       belongs_to :child,  :class_name => 'BuildStockWellLinksForAllPulldownPlates::PlatePurpose'
     end

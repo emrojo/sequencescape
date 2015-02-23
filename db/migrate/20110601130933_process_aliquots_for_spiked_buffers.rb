@@ -3,13 +3,13 @@
 #Copyright (C) 2011 Genome Research Ltd.
 class ProcessAliquotsForSpikedBuffers < ActiveRecord::Migration
   class AssetLink < ActiveRecord::Base
-    set_table_name('asset_links')
+    self.table_name =('asset_links')
 
     acts_as_dag_links :node_class_name => 'ProcessAliquotsForSpikedBuffers::Asset'
   end
 
   class Aliquot < ActiveRecord::Base
-    set_table_name('aliquots')
+    self.table_name =('aliquots')
 
     # NOTE: validations are not here as they are DB constraints and we're not UI based
     belongs_to :receptacle, :class_name => 'ProcessAliquotsForSpikedBuffers::Asset'
@@ -18,7 +18,7 @@ class ProcessAliquotsForSpikedBuffers < ActiveRecord::Migration
   end
 
   class Asset < ActiveRecord::Base
-    set_table_name('assets')
+    self.table_name =('assets')
 
     belongs_to :sample
     has_dag_links :link_class_name => 'ProcessAliquotsForSpikedBuffers::AssetLink'

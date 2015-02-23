@@ -3,11 +3,11 @@
 #Copyright (C) 2012 Genome Research Ltd.
 class SetDefaultLocationForIlluminaBPlatePurposes < ActiveRecord::Migration
   class Location < ActiveRecord::Base
-    set_table_name('locations')
+    self.table_name =('locations')
   end
 
   class Purpose < ActiveRecord::Base
-    set_table_name('plate_purposes')
+    self.table_name =('plate_purposes')
     set_inheritance_column(nil)
   end
 

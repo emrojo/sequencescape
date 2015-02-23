@@ -3,7 +3,7 @@
 #Copyright (C) 2012 Genome Research Ltd.
 class AddSpeciesFilteringToIlluminaCherrypickFilters < ActiveRecord::Migration
   class PlatePurpose < ActiveRecord::Base
-    set_table_name('plate_purposes')
+    self.table_name =('plate_purposes')
     set_inheritance_column(nil)
     serialize :cherrypick_filters
    scope :with_name, lambda { |*names| { :conditions => { :name => names } } }

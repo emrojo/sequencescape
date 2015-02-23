@@ -3,7 +3,7 @@
 #Copyright (C) 2012 Genome Research Ltd.
 class ReattachGeneratedSampleManifests < ActiveRecord::Migration
   class Document < ActiveRecord::Base
-    set_table_name('documents')
+    self.table_name =('documents')
     set_inheritance_column(nil)
 
    scope :unattached, where( :documentable_id => nil )

@@ -4,21 +4,21 @@
 class AddIlbStdPcrrxpPlatePurpose < ActiveRecord::Migration
   class Purpose < ActiveRecord::Base
     class Relationship < ActiveRecord::Base
-      set_table_name('plate_purpose_relationships')
+      self.table_name =('plate_purpose_relationships')
       belongs_to :child, :class_name => 'AddIlbStdPcrrxpPlatePurpose::Purpose'
       belongs_to :transfer_request_type, :class_name => 'AddIlbStdPcrrxpPlatePurpose::RequestType'
 
       scope :with_child,  lambda { |plate_purpose| { :conditions => { :child_id  => plate_purpose.id } } }
     end
 
-    set_table_name('plate_purposes')
+    self.table_name =('plate_purposes')
     set_inheritance_column(nil)
 
     has_many :child_relationships, :class_name => 'AddIlbStdPcrrxpPlatePurpose::Purpose::Relationship', :foreign_key => :parent_id, :dependent => :destroy
   end
 
   class RequestType < ActiveRecord::Base
-    set_table_name('request_types')
+    self.table_name =('request_types')
     set_inheritance_column(nil)
   end
 

@@ -3,7 +3,7 @@
 #Copyright (C) 2012 Genome Research Ltd.
 class SetIlluminaPipelinesToOptimumPackingStrategy < ActiveRecord::Migration
   class PlatePurpose < ActiveRecord::Base
-    set_table_name('plate_purposes')
+    self.table_name =('plate_purposes')
     set_inheritance_column(nil)
 
     scope :illumina_plate_purposes, where(

@@ -3,7 +3,7 @@
 #Copyright (C) 2012 Genome Research Ltd.
 class ClearOutDuplicateAssetLocations < ActiveRecord::Migration
   class LocationAssociation < ActiveRecord::Base
-    set_table_name('location_associations')
+    self.table_name =('location_associations')
    scope :for_asset, lambda { |x| { :conditions => { :locatable_id => details['locatable_id'] } } }
 
     def self.duplicated(&block)
