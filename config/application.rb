@@ -81,6 +81,9 @@ module Sequencescape
   # Run "rake -D time" for a list of tasks for finding time zone names. Uncomment to use default local time.
   config.time_zone = 'London'
 
+  # We disable sprockets, at least for the moment
+  config.assets.enabled = false
+
   # Your secret key for verifying cookie session data integrity.
   # If you change this key, all old sessions will become invalid!
   # Make sure the secret is at least 30 characters and all random,
