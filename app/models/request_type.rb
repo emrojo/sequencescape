@@ -8,7 +8,7 @@ class RequestType < ActiveRecord::Base
   class DeprecatedError < RuntimeError; end
 
   class RequestTypePlatePurpose < ActiveRecord::Base
-    set_table_name('request_type_plate_purposes')
+    self.table_name =('request_type_plate_purposes')
 
     belongs_to :request_type
     validates_presence_of :request_type

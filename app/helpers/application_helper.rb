@@ -55,7 +55,7 @@ module ApplicationHelper
 
   def render_flashes
     output = ""
-    flash.merge(action_flash).each do |key, message|
+    flash.merge!(action_flash).each do |key, message|
       content = message
       content = message.map { |m| content_tag(:div, m) }.join if message.is_a?(Array)
       output << content_tag(:div, content, :class => 'flash', :id => "message_#{ key }")

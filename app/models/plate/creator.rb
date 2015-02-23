@@ -3,13 +3,13 @@
 #Copyright (C) 2011,2012,2013 Genome Research Ltd.
 class Plate::Creator < ActiveRecord::Base
   class PurposeRelationship < ActiveRecord::Base
-    set_table_name('plate_creator_purposes')
+    self.table_name =('plate_creator_purposes')
 
     belongs_to :plate_purpose
     belongs_to :plate_creator, :class_name => 'Plate::Creator'
   end
 
-  set_table_name('plate_creators')
+  self.table_name =('plate_creators')
 
   # These are the plate purposes that will be created when this creator is used.
   has_many :plate_creator_purposes, :class_name => 'Plate::Creator::PurposeRelationship', :dependent => :destroy, :foreign_key => :plate_creator_id

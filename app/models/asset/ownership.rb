@@ -37,7 +37,7 @@ module Asset::Ownership
     # Currently only plates can be owned.
 
     class Owner < ActiveRecord::Base
-      set_table_name('plate_owners')
+      self.table_name =('plate_owners')
       belongs_to :user
       belongs_to :plate
       belongs_to :eventable, :polymorphic => true

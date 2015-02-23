@@ -13,10 +13,8 @@ class AssetGroup < ActiveRecord::Base
   has_many :asset_group_assets
   has_many :assets, :through => :asset_group_assets
 
-  validates :name, :presence => true, :study
-  validates_uniqueness_of :name
-
-
+  validates :name, :presence => true, :uniqueness => true
+  validates :study, :presence => true
 
  scope :for_search_query, lambda { |query,with_includes| { :conditions => [ 'name LIKE ?', "%#{query}%" ] } }
 

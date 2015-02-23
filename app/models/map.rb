@@ -4,7 +4,7 @@
 class Map < ActiveRecord::Base
 
   class AssetShape < ActiveRecord::Base
-    set_table_name('asset_shapes')
+    self.table_name =('asset_shapes')
 
     def self.default_id
       @default ||= Map::AssetShape.find_by_name('Standard').id

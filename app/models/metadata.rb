@@ -97,7 +97,7 @@ private
     # Ensure that it is correctly associated back to the owner model and that the table name
     # is correctly set.
     metadata.instance_eval %Q{
-      set_table_name('#{table_name}')
+      self.table_name =('#{table_name}')
       belongs_to :#{as_name}, :class_name => #{ self.name.inspect }, :validate => false, :autosave => false
       belongs_to :owner, :foreign_key => :#{as_name}_id, :class_name => #{self.name.inspect}, :validate => false, :autosave => false, :inverse_of => :#{as_name}_metadata
     }

@@ -7,7 +7,7 @@
 # or without any specification at all.
 class Role < ActiveRecord::Base
   class UserRole < ActiveRecord::Base
-    set_table_name('roles_users')
+    self.table_name =('roles_users')
     belongs_to :role
     belongs_to :user
   end

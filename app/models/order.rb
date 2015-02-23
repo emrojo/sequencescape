@@ -3,7 +3,7 @@
 #Copyright (C) 2011,2012,2013,2014 Genome Research Ltd.
 class Order < ActiveRecord::Base
   class OrderRole < ActiveRecord::Base
-    set_table_name('order_roles')
+    self.table_name =('order_roles')
   end
 
   module InstanceMethods

@@ -34,7 +34,7 @@ class PlateForInbox < ActiveRecord::Base
     ['cancelled','failed']
   end
 
-  set_table_name('assets')
+  self.table_name =('assets')
   default_scope(
     :select => ['assets.id AS id, ',
       'assets.name AS name, ',

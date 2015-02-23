@@ -7,7 +7,7 @@ class QcDecision < ActiveRecord::Base
 
   class QcDecisionQcable < ActiveRecord::Base
 
-    set_table_name('qc_decision_qcables')
+    self.table_name =('qc_decision_qcables')
 
     belongs_to :qcable
     belongs_to :qc_decision, :inverse_of=>:qc_decision_qcables

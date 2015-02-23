@@ -22,7 +22,7 @@ class Transfer::BetweenPlateAndTubes < Transfer
   }
 
   class WellToTube < ActiveRecord::Base
-    set_table_name('well_to_tube_transfers')
+    self.table_name =('well_to_tube_transfers')
 
     belongs_to :transfer, :class_name => 'Transfer::BetweenPlateAndTubes'
     validates_presence_of :transfer
