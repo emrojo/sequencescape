@@ -13,6 +13,7 @@
     <div id="everything">
     <script>
     Event.observe(window, 'load', function() {
+      <% def remote_function(*args); end %>
       <%= remote_function(:url => show_summary_study_workflow_path(@study, @workflow, { :summary => summary}.merge(@extra_params)),
         :update => {:success => "everything"},
         :method => :get,
