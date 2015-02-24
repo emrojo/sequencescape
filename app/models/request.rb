@@ -29,11 +29,11 @@ class Request < ActiveRecord::Base
   end
 
   scope :for_pipeline, lambda { |pipeline|
-    {
-      joins => [ 'LEFT JOIN pipelines_request_types prt ON prt.request_type_id=requests.request_type_id' ],
-      :conditions => [ 'prt.pipeline_id=?', pipeline.id],
-      :readonly => false
-    }
+
+      joins('LEFT JOIN pipelines_request_types prt ON prt.request_type_id=requests.request_type_id' ).
+      where([ 'prt.pipeline_id=?', pipeline.id]).
+      readonly(false)
+
   }
 
   def validator_for(request_option)

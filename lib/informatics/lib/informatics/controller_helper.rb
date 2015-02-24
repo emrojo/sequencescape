@@ -1,3 +1,9 @@
+
+require File.dirname(__FILE__)+'/view/menu/item'
+require File.dirname(__FILE__)+'/view/menu/list'
+require File.dirname(__FILE__)+'/view/tabs/item'
+require File.dirname(__FILE__)+'/view/tabs/list'
+
 module ApplicationHelper
 
   include Informatics::Globals
@@ -17,7 +23,7 @@ module ApplicationHelper
       when :lab_option
         @lab_menu = add_link(@lab_menu, l, o, options)
       when :lab_manager_option
-        @lab_manager_menu = add_link(@lab_manager_menu, l, o, options)        
+        @lab_manager_menu = add_link(@lab_manager_menu, l, o, options)
       when :admin_option
         @admin_menu = add_link(@admin_menu, l, o, options)
       when :manager_option
@@ -38,7 +44,7 @@ module ApplicationHelper
     menu = Informatics::View::Menu::List.new unless menu
     unless options.nil?
       if o.key_is_present?(:confirm)
-        if o.key_is_present?(:method)            
+        if o.key_is_present?(:method)
           menu.add_item :text => l.first_key, :link => l.first_value, :confirm => o.value_for(:confirm), :method => o.value_for(:method)
         else
           menu.add_item :text => l.first_key, :link => l.first_value, :confirm => o.value_for(:confirm)

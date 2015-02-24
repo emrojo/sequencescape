@@ -13,8 +13,8 @@ module ApplicationHelper
         }
       )
 
-      RAILS_DEFAULT_LOGGER.debug
-        "No custom text found for #{identifier} #{differential}." if custom_text.nil?
+      #.debug
+      #  "No custom text found for #{identifier} #{differential}." if custom_text.nil?
 
       custom_text.try(:content) || ""
     end
@@ -251,7 +251,7 @@ module ApplicationHelper
   end
 
   def horizontal_tab(name, key, related_div, tab_no, selected = false)
-     link_to "#{name}", "javascript:void(0);", :onclick => %Q{swap_tab("#{key}", "#{related_div}", "#{tab_no}");}, :id => "#{key}", :class => "#{selected ? "selected " : ""}tab#{tab_no}"
+     link_to "#{name}".html_safe, "javascript:void(0);", :onclick => %Q{swap_tab("#{key}", "#{related_div}", "#{tab_no}");}, :id => "#{key}", :class => "#{selected ? "selected " : ""}tab#{tab_no}"
   end
 
   def item_status(item)

@@ -8,7 +8,7 @@ class EventfulEntry < ActiveRecord::Base
   has_many_events
   has_many_lab_events
 
-  set_table_name :requests
+  self.table_name = :requests
 end
 
 class EventfulEntryTest < ActiveSupport::TestCase

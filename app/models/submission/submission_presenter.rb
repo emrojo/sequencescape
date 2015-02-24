@@ -2,15 +2,16 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2012,2013,2014,2015 Genome Research Ltd.
 class PresenterSkeleton
+
   class_attribute :attributes, :instance_writer => false
-  attributes =   []
+  self.attributes = []
 
   def initialize(user, submission_attributes = {})
     submission_attributes = {} if submission_attributes.blank?
 
     @user = user
 
-    attributes.each do |attribute|
+    self.attributes.each do |attribute|
       send("#{attribute}=", submission_attributes[attribute])
     end
 
@@ -68,7 +69,7 @@ class SubmissionCreater < PresenterSkeleton
   IncorrectParamsException = Class.new(SubmissionsCreaterError)
   InvalidInputException    = Class.new(SubmissionsCreaterError)
 
-  attributes =   [
+  self.attributes =   [
     :id,
     :template_id,
     :sample_names_text,
@@ -84,7 +85,7 @@ class SubmissionCreater < PresenterSkeleton
     :asset_group_id,
     :pre_capture_plex_group,
     :gigabases_expected,
-	:priority
+    :priority
   ]
 
 
@@ -343,7 +344,7 @@ class SubmissionCreater < PresenterSkeleton
 end
 
 class SubmissionPresenter < PresenterSkeleton
-  attributes =  [ :id ]
+  self.attributes =  [ :id ]
 
   def submission
     @submission ||= Submission.find(id)

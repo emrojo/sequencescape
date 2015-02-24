@@ -12,6 +12,8 @@ Sequencescape::Application.configure do
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 
+  config.serve_static_assets = true
+
   # Show full error reports and disable caching
   # config.action_controller.consider_all_requests_local = true
   # config.action_view.debug_rjs                         = true
@@ -30,6 +32,8 @@ Sequencescape::Application.configure do
   config.log_level = :debug
 
   config.active_record.observers = [ :request_observer ]
+
+  config.active_support.deprecation = :log
 
   # Use the response timer middleware
   config.middleware.insert_after(ActionController::Failsafe, "ResponseTimer", File.new(ENV['LOG_TO'], 'w+')) unless ENV['LOG_TO'].nil?

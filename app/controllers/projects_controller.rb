@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
  #TODO: before_filter :redirect_if_not_owner_or_admin, :only => [:create, :update, :destroy, :edit, :new]
 
   def index
-    @projects = Project.all(:order => 'name ASC').paginate(:page => params[:page])
+    @projects = Project.order('name ASC').paginate(:page => params[:page])
 
     respond_to do |format|
       format.html
