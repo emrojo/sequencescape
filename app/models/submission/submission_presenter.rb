@@ -65,6 +65,7 @@ class PresenterSkeleton
 end
 
 class SubmissionCreater < PresenterSkeleton
+
   SubmissionsCreaterError  = Class.new(StandardError)
   IncorrectParamsException = Class.new(SubmissionsCreaterError)
   InvalidInputException    = Class.new(SubmissionsCreaterError)
@@ -93,13 +94,13 @@ class SubmissionCreater < PresenterSkeleton
     begin
       submission.built!
     rescue AASM::InvalidTransition
-      submission.errors.add_to_base("Submissions can not be edited once they are submitted for building.")
+      submission.errors.add(:base,"Submissions can not be edited once they are submitted for building.")
     rescue ActiveRecord::RecordInvalid => exception
       exception.record.errors.full_messages.each do |message|
-        submission.errors.add_to_base(message)
+        submission.errors.add(:base,message)
       end
     rescue Submission::ProjectValidation::Error => exception
-      submission.errors.add_to_base(exception.message)
+      submission.errors.add(:base,exception.message)
     end
   end
 
@@ -184,14 +185,14 @@ class SubmissionCreater < PresenterSkeleton
       end
 
     rescue Submission::ProjectValidation::Error => project_exception
-      order.errors.add_to_base(project_exception.message)
+      order.errors.add(:base,project_exception.message)
     rescue InvalidInputException => input_exception
-      order.errors.add_to_base(input_exception.message)
+      order.errors.add(:base,input_exception.message)
     rescue IncorrectParamsException => exception
-      order.errors.add_to_base(exception.message)
+      order.errors.add(:base,exception.message)
     rescue ActiveRecord::RecordInvalid => exception
       exception.record.errors.full_messages.each do |message|
-        order.errors.add_to_base(message)
+        order.errors.add(:base,message)
       end
     end
 

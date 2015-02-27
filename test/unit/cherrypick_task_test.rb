@@ -20,7 +20,7 @@ class CherrypickTaskTest < ActiveSupport::TestCase
 
   context CherrypickTask do
     setup do
-      @asset_shape = Map::AssetShape.create!(:name=>'mini',:horizontal_ratio=>4,:vertical_ratio=>3,:description_strategy=>'Map::Coordinate')
+      @asset_shape = AssetShape.create!(:name=>'mini',:horizontal_ratio=>4,:vertical_ratio=>3,:description_strategy=>'Map::Coordinate')
 
       ('A'..'C').map {|r| (1..4).map {|c| "#{r}#{c}"}}.flatten.each_with_index do |m,i|
         Map.create!(:description=>m,:asset_size=>12,:asset_shape_id=>@asset_shape.id,:location_id =>i+1,:row_order=>i,:column_order=>((i/4)+3*(i%4)) )
@@ -52,7 +52,7 @@ class CherrypickTaskTest < ActiveSupport::TestCase
           plate.wells.build(maps_for(12).map {|m| {:map=>m} })
         end
         # TODO: This is very slow, and could do with improvements
-        @requests = plate.wells.in_column_major_order.map { |w| Factory(:well_request, :asset => w) }
+        @requests = plate.wells.sort_by {|w| w.map.column_order }.map { |w| Factory(:well_request, :asset => w) }
       end
 
       should 'error when the robot has no beds' do
@@ -158,7 +158,9 @@ class CherrypickTaskTest < ActiveSupport::TestCase
 
         should 'not pick on top of any wells that are already present' do
           plate    = @mini_plate_purpose.create!(:barcode => (@barcode += 1))
-          requests = plate.wells.in_column_major_order.map { |w| Factory(:well_request, :asset => w) }
+          requests = plate.wells.in_column_major_order.map do |w|
+            Factory(:well_request, :asset => w)
+          end
 
           expected_partial = []
           expected_partial.concat([CherrypickTask::TEMPLATE_EMPTY_WELL] * 3) # Column 1

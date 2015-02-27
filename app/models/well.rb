@@ -12,7 +12,7 @@ class Well < Aliquot::Receptacle
 
   class Link < ActiveRecord::Base
     self.table_name =('well_links')
-    set_inheritance_column(nil)
+    self.inheritance_column =
     belongs_to :target_well, :class_name => 'Well'
     belongs_to :source_well, :class_name => 'Well'
   end
@@ -31,8 +31,8 @@ class Well < Aliquot::Receptacle
 
   scope :include_stock_wells, includes(:stock_wells => :requests_as_source)
 
-  scope :located_at, lambda { |plate, location|
-    { :joins => :map, :conditions => { :maps => { :description => location, :asset_size => plate.size } } }
+  scope :located_at, lambda { |location|
+    joins(:map).where(:maps => { :description => location })
   }
 
   has_many :target_well_links, :class_name => 'Well::Link', :foreign_key => :source_well_id, :conditions => { :type => 'stock' }
@@ -46,7 +46,7 @@ class Well < Aliquot::Receptacle
       }
     }}
 
-  scope :located_at_position, lambda { |position| { :joins => :map, :readonly => false, :conditions => { :maps => { :description => position } } } }
+  scope :located_at_position, lambda { |position| joins(:map).readonly(false).where(:maps => { :description => position }) }
 
   contained_by :plate
   delegate :location, :location_id, :location_id=, :to => :container , :allow_nil => true

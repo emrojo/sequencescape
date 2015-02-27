@@ -42,7 +42,7 @@ class PlatePurpose < Purpose
     r[:cherrypick_filters] ||= [ 'Cherrypick::Strategy::Filter::ShortenPlexesToFit' ]
   end
 
-  belongs_to :asset_shape, :class_name => 'Map::AssetShape'
+  belongs_to :asset_shape, :class_name => 'AssetShape'
 
   def source_plate(plate)
     plate.stock_plate

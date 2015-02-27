@@ -28,7 +28,7 @@ class BillingEventTest < ActiveSupport::TestCase
     should validate_numericality_of :quantity
 
     should "Set date and quantity on create" do
-      assert_valid @billing_event
+      assert @billing_event.valid?
       assert_not_nil @billing_event.entry_date
       assert_equal 1, @billing_event.quantity
     end

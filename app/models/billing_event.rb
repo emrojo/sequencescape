@@ -51,13 +51,13 @@ class BillingEvent < ActiveRecord::Base
 
   def unique_charge_reference
     match = self.class.charge_for_reference(self.reference)
-    errors.add_to_base("Reference #{reference} as already a charge billing event") if match and match != self
+    errors.add(:base,"Reference #{reference} as already a charge billing event") if match and match != self
   end
   private :unique_charge_reference
 
   def unique_internal_charge_reference
     match = self.class.charge_internally_for_reference(reference)
-    errors.add_to_base("Reference #{reference} as already a charge_internally billing event") if match and match != self
+    errors.add(:base,"Reference #{reference} as already a charge_internally billing event") if match and match != self
   end
   private :unique_internal_charge_reference
 
@@ -65,18 +65,18 @@ class BillingEvent < ActiveRecord::Base
   def prevent_invalid_refunds
     # Do not allow refunds for non-existent charges
     matching_charge = BillingEvent.charge_for_reference(self.reference)
-    errors.add_to_base("billing_events.exceptions.uncharged_refund") if matching_charge.nil?
+    errors.add(:base,"billing_events.exceptions.uncharged_refund") if matching_charge.nil?
     raise BillingException::UnchargedRefund.new(I18n.t("billing_events.exceptions.uncharged_refund")) if matching_charge.nil?
 
     # Do not allow refunding more if all the refunds are in
     if matching_charge.quantity_left_to_refund <= 0
-      errors.add_to_base("billing_events.exceptions.duplicate_refund")
+      errors.add(:base,"billing_events.exceptions.duplicate_refund")
       raise BillingException::DuplicateRefund.new(I18n.t("billing_events.exceptions.duplicate_refund"))
     end
 
     # Do not allow refunding a quantity more than amount available to refund
     if matching_charge.quantity_left_to_refund < self.quantity
-      errors.add_to_base("billing_events.exceptions.over_refund")
+      errors.add(:base,"billing_events.exceptions.over_refund")
       raise BillingException::OverRefund.new(I18n.t("billing_events.exceptions.over_refund", :refunds => matching_charge.quantity_left_to_refund))
     end
   end

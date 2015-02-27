@@ -111,8 +111,8 @@ class SampleRegistrarTest < ActiveSupport::TestCase
 
     should belong_to :user
     should belong_to :study
-    should belong_to :sample
-    should belong_to :sample_tube
+    should belong_to(:sample).validate(true)
+    should belong_to(:sample_tube).validate(true)
 
     context '.register!' do
       context 'raises an error if no samples are specified' do

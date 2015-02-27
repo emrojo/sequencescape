@@ -121,7 +121,7 @@ class Project < ActiveRecord::Base
 
   def submittable?
     return true if project_metadata.project_funding_model.present?
-    errors.add_to_base("No funding model specified")
+    errors.add(:base,"No funding model specified")
     false
   end
 

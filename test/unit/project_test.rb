@@ -88,7 +88,7 @@ class ProjectTest < ActiveSupport::TestCase
       end
 
       should "Be valid" do
-        assert_valid @project
+        assert @project.valid?
       end
 
       should "Calculate correctly" do

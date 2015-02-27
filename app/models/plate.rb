@@ -100,9 +100,6 @@ WHERE c.container_id=?
   end
 
   contains :wells do #, :order => '`assets`.map_id ASC' do
-    def located_at(location)
-      super(proxy_association.owner, location)
-    end
 
     # After importing wells we need to also create the AssetLink and WellAttribute information for them.
     def post_import(links_data)

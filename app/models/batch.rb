@@ -22,20 +22,20 @@ class Batch < ActiveRecord::Base
 
   def all_requests_are_ready?
     # Checks that SequencingRequests have at least one LibraryCreationRequest in passed status before being processed (as refered by #75102998)
-    unless @requests.all?(&:ready?)
-      errors.add_to_base "All requests must be ready? to be added to a batch"
+    unless requests.all?(&:ready?)
+      errors.add :base, "All requests must be ready? to be added to a batch"
     end
   end
 
   def cluster_formation_requests_must_be_over_minimum
-    if (!@pipeline.min_size.nil?) && (@requests.size < @pipeline.min_size)
-      errors.add_to_base "You must create batches of at least " + @pipeline.min_size.to_s+" requests in the pipeline " + @pipeline.name
+    if (!pipeline.min_size.nil?) && (@requests.size < pipeline.min_size)
+      errors.add :base, "You must create batches of at least " + pipeline.min_size.to_s+" requests in the pipeline " + pipeline.name
     end
   end
 
   def requests_have_same_read_length
-    unless @pipeline.is_read_length_consistent_for_batch?(self)
-      errors.add_to_base "The selected requests must have the same values in their 'Read length' field."
+    unless pipeline.is_read_length_consistent_for_batch?(self)
+      errors.add :base, "The selected requests must have the same values in their 'Read length' field."
     end
   end
 
@@ -140,7 +140,7 @@ class Batch < ActiveRecord::Base
   end
 
   def underrun
-    self.has_limit? ? (self.item_limit - self.requests.size) : 0
+    self.has_limit? ? (self.item_limit - self.batch_requests.size) : 0
   end
 
   def control
@@ -211,15 +211,6 @@ class Batch < ActiveRecord::Base
   def output_plates
     holder_ids = Request.get_target_holder_asset_id_map(request_ids).values
     Plate.find(holder_ids, :group => :barcode)
-
-
-    #TODO: replace output_plates SQL with proper rails way of doing things with equal speed
-    #Plate.find_by_sql("select plate_assets.* from batch_requests batch_requests, requests requests, assets assets,
-      #assets plate_assets where batch_requests.batch_id = #{self.id} and
-      #batch_requests.request_id = requests.id and
-      #requests.target_asset_id is not null and
-      #requests.target_asset_id = assets.id and
-      #assets.holder_id = plate_assets.id group by plate_assets.barcode")
   end
 
   # Returns the plate_purpose of the first output plate associated with the batch,
@@ -235,15 +226,12 @@ class Batch < ActiveRecord::Base
   # Set the plate_purpose of all output plates associated with this batch
   def set_output_plate_purpose(plate_purpose)
     raise "This batch has no output plates to assign a purpose to!" if output_plates.blank?
-
     output_plates.each { |plate|
       plate.plate_purpose = plate_purpose
       plate.save!
     }
-
     true
   end
-
 
 
   def output_plate_in_batch?(barcode)
@@ -318,7 +306,7 @@ class Batch < ActiveRecord::Base
       barcode = barcodes["#{request.position}"]
       unless barcode.blank? || barcode == "0"
         unless barcode.to_i == request.asset.barcode.to_i
-          self.errors.add_to_base("The tube at position #{request.position} is incorrect.")
+          self.errors.add(:base,"The tube at position #{request.position} is incorrect.")
         end
       end
     end

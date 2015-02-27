@@ -19,7 +19,7 @@ class Stamp < ActiveRecord::Base
     validates :stamp, :presence => true
     validates :qcable,  :presence => true
     validates :bed,  :presence => true
-    validates :order :presence => true
+    validates :order, :presence => true
 
   end
 

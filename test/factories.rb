@@ -94,6 +94,7 @@ end
 
 Factory.define :item do |i|
   i.name              {|a| Factory.next :item_name }
+  i.version           {|a| Factory.next :item_version }
   i.workflow          {|workflow| workflow.association(:submission_workflow)}
   i.count             nil
   i.closed            false
@@ -269,13 +270,18 @@ Factory.define :request_with_submission, :class => Request do |request|
 end
 
 Factory.define :sequencing_request, :class => SequencingRequest do |request|
-  request.request_type { |rt| rt.association(:request_type) }
+  request.request_type     { |rt| rt.association(:request_type) }
 
   # Ensure that the request metadata is correctly setup based on the request type
   request.after_build do |request|
     next if request.request_type.nil?
-    request.request_metadata = Factory.build(:"request_metadata_for_standard_sequencing_with_read_length") if request.request_metadata.new_record?
+    request.request_metadata = Factory.build(:"request_metadata_for_standard_sequencing_with_read_length", :request=>request, :owner=>request) if request.request_metadata.new_record?
+    # request.request_metadata.owner = request
     request.sti_type = request.request_type.request_class_name
+  end
+
+  request.after_create do |request|
+    request.request_metadata.owner = request
   end
 end
 

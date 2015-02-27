@@ -60,7 +60,7 @@ module SampleManifest::InputBehaviour
 
         # You cannot create a sample through updating the sample manifest
         validates_each(:id, :on => :create, :if => :updating_from_manifest?) do |record, attr, value|
-          record.errors.add_to_base("Could not find sample #{record.sanger_sample_id}") if value.blank?
+          record.errors.add(:base,"Could not find sample #{record.sanger_sample_id}") if value.blank?
         end
 
         # We ensure that certain fields are updated properly if we're doing so through a manifest

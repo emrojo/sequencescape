@@ -7,7 +7,7 @@ module Core::Endpoint::BasicHandler::Actions::Standard
       include InstanceMethods
 
       class_attribute :standard_actions, :instance_writer => false
-      standard_actions =  {}
+      self.standard_actions =  {}
     end
   end
 

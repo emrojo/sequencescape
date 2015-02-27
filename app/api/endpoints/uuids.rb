@@ -42,7 +42,7 @@ class ::Endpoints::Uuids < ::Core::Endpoint::Base
 
     attr_reader :lookup
     protected :lookup
-    validates :lookup, :presence => true, :message => 'should be a tuple'
+    validates_presence_of :lookup, :message => 'should be a tuple'
     validates_each(:lookup, :allow_blank => true) do |record, field, value|
       record.errors.add(field, 'should be a tuple') unless value.is_a?(Hash)
     end

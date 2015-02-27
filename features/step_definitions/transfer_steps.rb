@@ -50,7 +50,7 @@ Given /^the plate "(.*?)" has additional wells$/ do |name|
   Plate.find_by_name(name).tap do |plate|
     plate.wells.import(
       [ 'C1', 'D1' ].map do |location|
-        map = Map.where_description(location).where_plate_size(plate.size).where_plate_shape(Map::AssetShape.find_by_name('Standard')).first or raise StandardError, "No location #{location} on plate #{plate.inspect}"
+        map = Map.where_description(location).where_plate_size(plate.size).where_plate_shape(AssetShape.find_by_name('Standard')).first or raise StandardError, "No location #{location} on plate #{plate.inspect}"
         Factory(:tagged_well, :map => map)
       end
     )

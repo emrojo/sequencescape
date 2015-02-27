@@ -4,7 +4,7 @@
 class ReattachGeneratedSampleManifests < ActiveRecord::Migration
   class Document < ActiveRecord::Base
     self.table_name =('documents')
-    set_inheritance_column(nil)
+    self.inheritance_column =
 
    scope :unattached, where( :documentable_id => nil )
    scope :for, lambda { |m| { :conditions => { :documentable_type => m } } }

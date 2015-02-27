@@ -3,71 +3,8 @@
 #Copyright (C) 2007-2011,2011,2012,2013 Genome Research Ltd.
 class Map < ActiveRecord::Base
 
-  class AssetShape < ActiveRecord::Base
-    self.table_name =('asset_shapes')
-
-    def self.default_id
-      @default ||= Map::AssetShape.find_by_name('Standard').id
-    end
-
-    def self.default
-      Map::AssetShape.find_by_name('Standard')
-    end
-
-    def standard?
-      horizontal_ratio == 3 && vertical_ratio == 2
-    end
-
-    def multiplier(size)
-      ((size/(vertical_ratio*horizontal_ratio))**0.5).to_i
-    end
-    private :multiplier
-
-    def plate_height(size)
-      multiplier(size)*vertical_ratio
-    end
-
-    def plate_width(size)
-      multiplier(size)*horizontal_ratio
-    end
-
-    def horizontal_to_vertical(well_position,plate_size)
-      alternate_position(well_position, plate_size, :width, :height)
-    end
-
-    def vertical_to_horizontal(well_position,plate_size)
-      alternate_position(well_position, plate_size, :height, :width)
-    end
-
-    def interlaced_vertical_to_horizontal(well_position,plate_size)
-      alternate_position(interlace(well_position,plate_size), plate_size, :height, :width)
-    end
-
-    def vertical_to_interlaced_vertical(well_position,plate_size)
-      interlace(well_position,plate_size)
-    end
-
-    def interlace(i,size)
-      m,d = (i-1).divmod(size/2)
-      2*d+1+m
-    end
-    private :interlace
-
-    def alternate_position(well_position, size, *dimensions)
-      return nil unless Map.valid_well_position?(well_position)
-      divisor, multiplier = dimensions.map { |n| send("plate_#{n}", size) }
-      column, row = (well_position-1).divmod(divisor)
-      return nil unless (0...multiplier).include?(column)
-      return nil unless (0...divisor).include?(row)
-      alternate = (row * multiplier) + column + 1
-    end
-    private :alternate_position
-
-    def location_from_row_and_column(row, column, size=96)
-      description_strategy.constantize.location_from_row_and_column(row, column,plate_width(size),size)
-    end
-
-  end
+  validates_presence_of :description, :asset_size, :location_id, :row_order, :column_order, :asset_shape
+  validates_numericality_of :asset_size, :row_order, :column_order
 
   module Coordinate
 
@@ -190,12 +127,12 @@ class Map < ActiveRecord::Base
     }
   }
 
-  scope :where_description, lambda { |*descriptions| { :conditions => { :description => descriptions.flatten } } }
-  scope :where_plate_size,  lambda { |size| { :conditions => { :asset_size => size } } }
-  scope :where_plate_shape,  lambda { |asset_shape| { :conditions => { :asset_shape_id => asset_shape } } }
-  scope :where_vertical_plate_position, lambda { |*positions| { :conditions => { :column_order => positions.map {|v| v-1} } } }
+  scope :where_description, lambda { |*descriptions| where(:description => descriptions.flatten) }
+  scope :where_plate_size,  lambda { |size| where(:asset_size => size) }
+  scope :where_plate_shape,  lambda { |asset_shape| where(:asset_shape_id => asset_shape)}
+  scope :where_vertical_plate_position, lambda { |*positions| where(:column_order => positions.map {|v| v-1}) }
 
-  belongs_to :asset_shape, :class_name => 'Map::AssetShape'
+  belongs_to :asset_shape, :class_name => 'AssetShape'
   delegate :standard?, :to => :asset_shape
 
   def self.valid_plate_size?(plate_size)
@@ -281,7 +218,7 @@ class Map < ActiveRecord::Base
     Map.find(:first,:conditions=>{
       :asset_size  => plate_size,
       :row_order   => snp_map_id.to_i+1,
-      :asset_shape => Map::AssetShape.default_id
+      :asset_shape => AssetShape.default_id
     }).id
   end
 
@@ -322,7 +259,7 @@ class Map < ActiveRecord::Base
 
     # Walking in column major order goes by the columns: A1, B1, C1, ... A2, B2, ...
     def walk_plate_in_column_major_order(size, asset_shape=nil, &block)
-      asset_shape ||= Map::AssetShape.default_id
+      asset_shape ||= AssetShape.default_id
       self.all(:conditions => { :asset_size => size, :asset_shape_id => asset_shape }, :order => 'column_order ASC').each do |position|
         yield(position, position.column_order)
       end
@@ -331,7 +268,7 @@ class Map < ActiveRecord::Base
 
     # Walking in row major order goes by the rows: A1, A2, A3, ... B1, B2, B3 ....
     def walk_plate_in_row_major_order(size, asset_shape=nil, &block)
-      asset_shape ||= Map::AssetShape.default_id
+      asset_shape ||= AssetShape.default_id
       self.all(:conditions => { :asset_size => size, :asset_shape_id => asset_shape }, :order => 'row_order ASC').each do |position|
         yield(position, position.row_order)
       end

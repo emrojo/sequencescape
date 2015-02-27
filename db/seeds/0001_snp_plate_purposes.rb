@@ -277,19 +277,19 @@ plate_purposes = <<-EOS
   target_type: PulldownQpcrPlate
 EOS
 
-Map::AssetShape.create!(
+AssetShape.create!(
   :name => 'Standard',
   :horizontal_ratio => 3,
   :vertical_ratio   => 2,
   :description_strategy => 'Map::Coordinate'
 )
-Map::AssetShape.create!(
+AssetShape.create!(
   :name => 'Fluidigm96',
   :horizontal_ratio => 3,
   :vertical_ratio   => 8,
   :description_strategy => 'Map::Sequential'
 )
-Map::AssetShape.create!(
+AssetShape.create!(
   :name => 'Fluidigm192',
   :horizontal_ratio => 3,
   :vertical_ratio   => 4,
@@ -297,7 +297,7 @@ Map::AssetShape.create!(
 )
 
 YAML::load(plate_purposes).each do |plate_purpose|
-  attributes = plate_purpose.reverse_merge('type' => 'PlatePurpose', 'cherrypickable_target' => false, 'asset_shape_id'=>Map::AssetShape.find_by_name('Standard').id)
+  attributes = plate_purpose.reverse_merge('type' => 'PlatePurpose', 'cherrypickable_target' => false, 'asset_shape_id'=>AssetShape.find_by_name('Standard').id)
   attributes.delete('type').constantize.new(attributes) do |purpose|
     purpose.id = attributes['id']
   end.save!
@@ -356,7 +356,7 @@ ActiveRecord::Base.transaction do
   :barcode_printer_type=>BarcodePrinterType.find_by_name('96 Well Plate'),
   :cherrypickable_target => true,
   :cherrypick_direction => 'column',
-  :asset_shape => Map::AssetShape.find_by_name('Standard')
+  :asset_shape => AssetShape.find_by_name('Standard')
 )
 PlatePurpose.create!(
   :name=>'STA2',
@@ -364,7 +364,7 @@ PlatePurpose.create!(
   :barcode_printer_type=>BarcodePrinterType.find_by_name('96 Well Plate'),
   :cherrypickable_target => true,
   :cherrypick_direction => 'column',
-  :asset_shape => Map::AssetShape.find_by_name('Standard')
+  :asset_shape => AssetShape.find_by_name('Standard')
 )
 PlatePurpose.create!(
   :name=>'SNP Type',
@@ -372,7 +372,7 @@ PlatePurpose.create!(
   :barcode_printer_type=>BarcodePrinterType.find_by_name('96 Well Plate'),
   :cherrypickable_target => true,
   :cherrypick_direction => 'column',
-  :asset_shape => Map::AssetShape.find_by_name('Standard')
+  :asset_shape => AssetShape.find_by_name('Standard')
 )
 PlatePurpose.create!(
   :name=>'Fluidigm 96-96',
@@ -380,7 +380,7 @@ PlatePurpose.create!(
   :cherrypickable_target => true,
   :cherrypick_direction => 'interlaced_column',
   :size => 96,
-  :asset_shape => Map::AssetShape.find_by_name('Fluidigm96')
+  :asset_shape => AssetShape.find_by_name('Fluidigm96')
 )
 PlatePurpose.create!(
   :name=>'Fluidigm 192-24',
@@ -388,7 +388,7 @@ PlatePurpose.create!(
   :cherrypickable_target => true,
   :cherrypick_direction => 'interlaced_column',
   :size => 192,
-  :asset_shape => Map::AssetShape.find_by_name('Fluidigm192')
+  :asset_shape => AssetShape.find_by_name('Fluidigm192')
 )
 end
 PlatePurpose.create!(
@@ -399,6 +399,6 @@ PlatePurpose.create!(
   :cherrypickable_target => false,
   :cherrypickable_source => false,
   :size => 96,
-  :asset_shape => Map::AssetShape.find_by_name('Standard'),
+  :asset_shape => AssetShape.find_by_name('Standard'),
   :barcode_for_tecan => 'ean13_barcode'
 )

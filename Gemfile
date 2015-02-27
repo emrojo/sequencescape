@@ -37,7 +37,8 @@ gem "acts-as-dag", '~>3.0.0'
 # gem "alter_table", :git => "git+ssh://git@github.com/sanger/alter_table.git"
 
 # For background processing
-gem "delayed_job"
+# Locked for ruby version
+gem "delayed_job_active_record", "~> 0.4.4"
 
 gem "ruby_walk",  ">= 0.0.3",:git => "git+ssh://git@github.com/sanger/ruby_walk"
 

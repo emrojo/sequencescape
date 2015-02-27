@@ -109,7 +109,7 @@ module Sanger
                     local_params[resource_name] = @create_options
                     post :create, local_params
                   end
-                  #assert_valid eval "@#{resource_name}"
+                  #assert eval "@#{resource_name}".valid?
                   should_redirect_to("show page"){ eval(show_url) }
                 end
               end

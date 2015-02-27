@@ -25,11 +25,11 @@ class Uuid < ActiveRecord::Base
     # UUIDs.
     if ['test', 'cucumber'].include?(Rails.env)
       def ensure_uuid_created
-        self.uuid_object = Uuid.create!(:resource => self) if self.uuid_object(true).nil?
+        self.create_uuid_object!(:resource => self) unless self.uuid_object(true).present?
       end
     else
       def ensure_uuid_created
-        self.uuid_object = Uuid.create!(:resource => self)
+        self.create_uuid_object!(:resource => self)
       end
     end
     private :ensure_uuid_created
@@ -96,11 +96,11 @@ class Uuid < ActiveRecord::Base
     self.resource
   end
 
- scope :with_resource_type, lambda { |type| { :conditions => { :resource_type => type.to_s } } }
+  scope :with_resource_type, lambda { |type| where(:resource_type => type.to_s ) }
 
   scope :include_resource, includes(:resource)
- scope :with_external_id, lambda { |external_id| { :conditions => { :external_id => external_id } } }
- scope :with_resource_by_type_and_id, lambda { |t,id| { :conditions => { :resource_type => t, :resource_id => id } } }
+  scope :with_external_id, lambda { |external_id| where(:external_id => external_id) }
+  scope :with_resource_by_type_and_id, lambda { |t,id| where(:resource_type => t, :resource_id => id ) }
 
   before_validation do |record|
     record.external_id = Uuid.generate_uuid if record.new_record? and record.external_id.blank?

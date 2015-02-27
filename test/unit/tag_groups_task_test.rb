@@ -32,7 +32,7 @@ class TagGroupsTaskTest < TaskTestBase
     context '#render_task' do
       should 'call render_tag_groups_task on workflow' do
         @controller  = WorkflowsController.new
-        @user = Factory :user
+        @user = Factory.build :user
         @controller.stubs(:current_user).returns(@user)
         @workflow = Factory :lab_workflow_for_pipeline
         params = {:batch_id => @batch.id, :workflow_id => @workflow.id}

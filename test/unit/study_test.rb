@@ -45,7 +45,7 @@ class StudyTest < ActiveSupport::TestCase
       end
 
       should "Calculate correctly and be valid" do
-        assert_valid @study
+        assert @study.valid?
         assert_equal 3, @study.cancelled_requests(@request_type)
         assert_equal 4, @study.completed_requests(@request_type)
         assert_equal 1, @study.completed_requests(@request_type_2)

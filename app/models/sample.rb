@@ -80,8 +80,8 @@ class Sample < ActiveRecord::Base
 
   def safe_to_destroy
     return true unless receptacles.present? || has_submission?
-    errors.add_to_base("Remove '#{name}' from assets before destroying") if receptacles.present?
-    errors.add_to_base("You can't delete '#{name}' because is linked to a submission.") if has_submission?
+    errors.add(:base,"Remove '#{name}' from assets before destroying") if receptacles.present?
+    errors.add(:base,"You can't delete '#{name}' because is linked to a submission.") if has_submission?
     return false
   end
   private :safe_to_destroy
@@ -375,7 +375,7 @@ class Sample < ActiveRecord::Base
 
   # Together these two validations ensure that the first study exists and is valid for the ENA submission.
   validates_each(:ena_study, :if => :validating_ena_required_fields?) do |record, attr, value|
-    record.errors.add_to_base('Sample has no study') if value.blank?
+    record.errors.add(:base,'Sample has no study') if value.blank?
   end
   validates_associated(:ena_study, :allow_blank => true, :if => :validating_ena_required_fields?)
 
@@ -395,7 +395,7 @@ class Sample < ActiveRecord::Base
     self.valid? or raise ActiveRecord::RecordInvalid, self
   rescue ActiveRecord::RecordInvalid => exception
     @ena_study.errors.full_messages.each do |message|
-      self.errors.add_to_base("#{ message } on study")
+      self.errors.add(:base,"#{ message } on study")
     end unless @ena_study.nil?
     raise
   ensure

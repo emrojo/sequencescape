@@ -15,7 +15,7 @@
 
 <% unless @workflow.nil? %>
   <p>Uploading a spreadsheet uses the data supplied to pre-fill the normal registration form.</p>
-  <p>An spreadsheet template in the format required is <%= link_to "available to download", root_path + "data/#{@workflow.key}/sample_information.xls" %></p>
+  <p>An spreadsheet template in the format required is <%= link_to "available to download",'root' + "data/#{@workflow.key}/sample_information.xls" %></p>
 <% end %>
 
 <%= display_user_guide "Only #{configatron.uploaded_spreadsheet.max_number_of_samples.to_s} samples in one spreadsheet are currently allowed" %>

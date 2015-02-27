@@ -44,6 +44,8 @@ class PlateTemplate < Plate
     return 0 == descriptor_value('control_well').to_i
   end
 
-  named_scope :with_sizes, lambda {|sizes| {:conditions => ["size IN (?)", sizes]}}
+  scope :with_sizes, lambda {|sizes|
+    where(["size IN (?)", sizes])
+  }
 
 end

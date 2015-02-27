@@ -12,10 +12,11 @@ require 'rexml/text'
 # Rails 3, and we need some of those above-and-beyond just validation.  If required, the after_create
 # callback could be removed to keep track of sample registrations.
 #++
-require 'rexml/text'
 class SampleRegistrar < ActiveRecord::Base
-  def initialize(attributes = {})
-    super({ :sample_attributes => {}, :sample_tube_attributes => {} }.merge(attributes.symbolize_keys))
+
+  # UPGRADE TODO: This hack is horrible! Find out what its doing and fix it!
+  def initialize(attributes = {},what = {})
+    super({ :sample_attributes => {}, :sample_tube_attributes => {} }.merge(attributes.symbolize_keys),what)
   end
 
   # Raised if the call to SampleRegistrar.register! fails for any reason, and so that calling code
@@ -105,9 +106,11 @@ class SampleRegistrar < ActiveRecord::Base
   validates_each(:asset_group_name, :if => :new_record?) do |record, attr, value|
     record.errors.add(:asset_group, "#{value} already exists, please enter another name") if record.asset_group_helper.existing_asset_group?(value)
   end
+
   before_create do |record|
-    record.asset_group = create_asset_group_by_name(record.asset_group_name, record.study)
+    record.asset_group = SampleRegistrar.create_asset_group_by_name(record.asset_group_name, record.study)
   end
+
   after_create do |record|
     record.asset_group.assets.concat(record.sample_tube) unless record.asset_group.blank?
   end

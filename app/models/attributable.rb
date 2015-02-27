@@ -25,6 +25,15 @@ module Attributable
     end
   end
 
+
+    class CustomValidator < ActiveModel::EachValidator
+      def validate_each(record, attribute, value)
+        valid = record.validator_for(attribute).valid_options.include?(value)
+        record.errors.add(attribute,"is not a valid option") unless valid
+        valid
+      end
+    end
+
   def attribute_details_for(*args)
     self.class.attribute_details_for(*args)
   end
@@ -277,11 +286,7 @@ module Attributable
           required.validates_numericality_of(name, :greater_than => 0) if self.float?
           required.validates_inclusion_of(name, :in => self.selection_values, :allow_false => true) if self.fixed_selection?
           required.validates_format_of(name, :with => self.valid_format) if self.valid_format?
-          required.validate do |record|
-            valid = record.validator_for(name).valid_options.to_a.include?(record.send(name))
-            record.errors.add(name,"is not in the list") unless valid
-            valid
-          end if self.validator?
+          required.validates name, :custom => true if self.validator?
           required.validate(self.validate_method) if self.method?
         end
       end

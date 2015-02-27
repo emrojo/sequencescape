@@ -135,7 +135,7 @@ class RequestTest < ActiveSupport::TestCase
         end
 
         should "have request as valid" do
-          assert_valid @request
+          assert @request.valid?
         end
       end
 
