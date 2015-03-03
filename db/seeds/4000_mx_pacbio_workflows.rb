@@ -36,17 +36,7 @@ end.tap do |pipeline|
   create_request_information_types(pipeline, "sequencing_type", "insert_size")
 end
 
-PacBioSequencingPipeline.create!(:name => 'PacBio Multiplexed Sequencing') do |pipeline|
-  pipeline.sorter               = 14
-  pipeline.automated            = false
-  pipeline.active               = true
-  pipeline.max_size             = 96
-  pipeline.asset_type           = 'Well'
-  pipeline.group_by_parent = false
-
-  pipeline.location = Location.first(:conditions => { :name => 'PacBio sequencing freezer' }) or raise StandardError, "Cannot find 'PacBio sequencing freezer' location"
-
-  pipeline.request_types << RequestType.create!(:workflow => next_gen_sequencing, :key => 'pacbio_multiplexed_sequencing', :name => 'PacBio Multiplexed Sequencing') do |request_type|
+PacBioSequencingPipeline.find_by_name('PacBio Sequencing').request_types << RequestType.create!(:workflow => next_gen_sequencing, :key => 'pacbio_multiplexed_sequencing', :name => 'PacBio Multiplexed Sequencing') do |request_type|
     request_type.initial_state     = 'pending'
     request_type.asset_type        = 'PacBioLibraryTube'
     request_type.morphology        = RequestType::CONVERGENT
@@ -64,36 +54,16 @@ PacBioSequencingPipeline.create!(:name => 'PacBio Multiplexed Sequencing') do |p
     ])
   end
 
-  pipeline.workflow = LabInterface::Workflow.create!(:name => 'PacBio Multiplexed Sequencing').tap do |workflow|
-    [
-
-      { :class => BindingKitBarcodeTask,                 :name => 'Binding Kit Box Barcode', :sorted => 1, :batched => true, :lab_activity => true },
-      { :class => MovieLengthTask,                       :name => 'Movie Lengths',           :sorted => 2, :batched => true, :lab_activity => true },
-      { :class => AssignTubesToMultiplexedWellsTask,     :name => 'Layout tubes on a plate', :sorted => 4, :batched => true, :lab_activity => true },
-      { :class => ValidateSampleSheetTask,               :name => 'Validate Sample Sheet',   :sorted => 5, :batched => true, :lab_activity => true }
-    ].each do |details|
-      details.delete(:class).create!(details.merge(:workflow => workflow))
-    end
-  end
-
-  pipeline.workflow.tasks.find_by_name('Movie Lengths').descriptors.create!(
-      :name => 'Movie length',
-      :kind => 'Selection',
-      :selection => [30, 60, 90, 120, 180,210,240],
-      :value => 180
-    )
-
-end.tap do |pipeline|
-  create_request_information_types(pipeline, "sequencing_type", "insert_size")
-end
 
 
-set_pipeline_flow_to('PacBio Tagged Library Prep' => 'PacBio Multiplexed Sequencing')
+set_pipeline_flow_to('PacBio Tagged Library Prep' => 'PacBio Sequencing')
 
 SubmissionTemplate.create!( {
     :name => "PacBio Tagged Library Preparation",
     :submission_class_name => 'LinearSubmission',
-    :submission_parameters => { :request_type_ids_list=>['pacbio_tagged_library_prep','pacbio_sequencing'].map{|key| RequestType.find_by_key(key).id},
+    :submission_parameters => { :request_type_ids_list=> ['pacbio_tagged_library_prep','pacbio_sequencing'].map{|key| [ RequestType.find_by_key(key).id ]},
                                 :workflow_id => 1 }
   })
+
+
 

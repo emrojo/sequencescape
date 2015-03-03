@@ -1003,7 +1003,7 @@ PacBioSequencingPipeline.create!(:name => 'PacBio Sequencing') do |pipeline|
 
       { :class => BindingKitBarcodeTask,      :name => 'Binding Kit Box Barcode', :sorted => 1, :batched => true, :lab_activity => true },
       { :class => MovieLengthTask,            :name => 'Movie Lengths',           :sorted => 2, :batched => true, :lab_activity => true },
-      { :class => AssignTubesToWellsTask,     :name => 'Layout tubes on a plate', :sorted => 4, :batched => true, :lab_activity => true },
+      { :class => AssignTubesToMultiplexedWellsTask,     :name => 'Layout tubes on a plate', :sorted => 4, :batched => true, :lab_activity => true },
       { :class => ValidateSampleSheetTask,    :name => 'Validate Sample Sheet',   :sorted => 5, :batched => true, :lab_activity => true }
     ].each do |details|
       details.delete(:class).create!(details.merge(:workflow => workflow))
