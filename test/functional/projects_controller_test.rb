@@ -34,8 +34,8 @@ class ProjectsControllerTest < ActionController::TestCase
         get :new
       end
 
-      should_respond_with :success
-      should_render_template :new
+      should respond_with :success
+      should render_template :new
 
 
     end
@@ -57,8 +57,8 @@ class ProjectsControllerTest < ActionController::TestCase
           }
         end
 
-        should_set_the_flash_to "Your project has been created"
-        should_redirect_to("last project page") { project_path(Project.last) }
+        should set_the_flash.to( "Your project has been created")
+        should redirect_to("last project page") { project_path(Project.last) }
         should_change('Project.count', 1) { Project.count }
       end
 
@@ -73,7 +73,7 @@ class ProjectsControllerTest < ActionController::TestCase
           }
         end
 
-        should_render_template :new
+        should render_template :new
         should_not_change('Project.count') { Project.count }
 
         should 'set a message for the error' do
@@ -92,8 +92,8 @@ class ProjectsControllerTest < ActionController::TestCase
           }
         end
 
-        should_redirect_to("last project added page") { project_path(Project.last) }
-        should_set_the_flash_to "Your project has been created"
+        should redirect_to("last project added page") { project_path(Project.last) }
+        should set_the_flash.to( "Your project has been created")
         should_change('Project.count', 1) { Project.count }
       end
 
@@ -126,7 +126,7 @@ class ProjectsControllerTest < ActionController::TestCase
         post :create, ActiveSupport::JSON.decode(@json_data)
       end
 
-      should_set_the_flash_to "Your project has been created"
+      should set_the_flash.to( "Your project has been created")
     end
   end
 end

@@ -45,7 +45,7 @@ class SamplesControllerTest < ActionController::TestCase
           put :add_to_study, :id => @sample.id, :study => { :id => @study.id }
         end
         should_change("StudySample.count", :from => 0, :to => 1) { StudySample.count }
-        should_redirect_to("sample path") { sample_path(@sample) }
+        should redirect_to("sample path") { sample_path(@sample) }
       end
 
       context "#move" do

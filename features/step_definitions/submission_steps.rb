@@ -58,7 +58,7 @@ def submission_in_state(state, attributes = {})
   workflow = Submission::Workflow.first or raise StandardError, "There are no workflows!"
   submission = Factory::submission({ :asset_group_name => 'Faked to prevent empty asset errors' }.merge(attributes).merge(:study => study, :workflow => workflow))
   submission.state = state
-  submission.save(false)
+  submission.save(:validate => false)
 end
 
 Given /^I have a submission in the "([^\"]+)" state$/ do |state|

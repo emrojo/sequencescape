@@ -27,8 +27,8 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
           get :index, :project_id => @project.id
         end
 
-        should_respond_with :success
-        should_render_template "index"
+        should respond_with :success
+        should render_template "index"
       end
 
       context "requesting xml" do
@@ -36,8 +36,8 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
           get :index, :project_id => @project.id, :format => "xml"
         end
 
-        should_respond_with :success
-        should_respond_with_content_type :xml
+        should respond_with :success
+        should respond_with_content_type :xml
       end
 
       context "requesting json" do
@@ -45,8 +45,8 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
           get :index, :project_id => @project.id, :format => "json"
         end
 
-        should_respond_with :success
-        should_respond_with_content_type :json
+        should respond_with :success
+        should respond_with_content_type :json
       end
     end
 
@@ -55,8 +55,8 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
         get :new, :project_id => @project.id
       end
 
-      should_respond_with :success
-      should_render_template "new"
+      should respond_with :success
+      should render_template "new"
     end
 
     context "#show" do
@@ -68,8 +68,8 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
           get :show, :project_id => @project, :id => @billing_event
         end
 
-        should_respond_with :success
-        should_render_template "show"
+        should respond_with :success
+        should render_template "show"
       end
 
       context "requesting xml" do
@@ -77,8 +77,8 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
           get :show, :project_id => @project, :id => @billing_event, :format => "xml"
         end
 
-        should_respond_with :success
-        should_respond_with_content_type :xml
+        should respond_with :success
+        should respond_with_content_type :xml
       end
 
       context "requesting json" do
@@ -86,8 +86,8 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
           get :show, :project_id => @project, :id => @billing_event, :format => "json"
         end
 
-        should_respond_with :success
-        should_respond_with_content_type :json
+        should respond_with :success
+        should respond_with_content_type :json
       end
     end
 
@@ -102,8 +102,8 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
               @billing_attributes["created_by"] = "other@example.com"
               post :create, :project_id => @project.id, :billing_event => @billing_attributes
             end
-            should_set_the_flash_to Regexp.new("#{I18n.t('projects.billing_events.created', :ref => '')}")
-            should_respond_with :redirect
+            should set_the_flash.to( Regexp.new("#{I18n.t('projects.billing_events.created', :ref => '')}"))
+            should respond_with :redirect
             should "still set the created_at to the logged in user" do
               assert_equal @logged_in_users_email, assigns(:billing_event).created_by
             end
@@ -113,8 +113,8 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
               @billing_attributes.delete(:created_by)
               post :create, :project_id => @project.id, :billing_event => @billing_attributes
             end
-            should_set_the_flash_to Regexp.new("#{I18n.t('projects.billing_events.created', :ref => '')}")
-            should_respond_with :redirect
+            should set_the_flash.to( Regexp.new("#{I18n.t('projects.billing_events.created', :ref => '')}"))
+            should respond_with :redirect
             should "still set the created_at to the logged in user" do
               assert_equal @logged_in_users_email, assigns(:billing_event).created_by
             end
@@ -126,7 +126,7 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
             @billing_event = assigns(:billing_event)
           end
 
-          should_respond_with :created
+          should respond_with :created
           should "return location header to new resource" do
             assert_equal project_billing_event_url(@project.id, @billing_event.id), @response.location
           end
@@ -140,7 +140,7 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
             @billing_event = assigns(:billing_event)
           end
 
-          should_respond_with :created
+          should respond_with :created
           should "return location header to new resource" do
             assert_equal project_billing_event_url(@project.id, @billing_event.id), @response.location
           end
@@ -157,25 +157,25 @@ class Projects::BillingEventsControllerTest < ActionController::TestCase
             post :create, :project_id => @project.id, :billing_event => @billing_attributes
           end
 
-          should_set_the_flash_to I18n.t("projects.billing_events.not_created")
-          should_respond_with :success
-          should_render_template :new
+          should set_the_flash.to( I18n.t("projects.billing_events.not_created"))
+          should respond_with :success
+          should render_template :new
         end
         context "POSTed as XML" do
           setup do
             post :create, :project_id => @project.id, :format => "xml", :billing_event => @billing_attributes
           end
 
-          should_respond_with :bad_request
-          should_respond_with_content_type :xml
+          should respond_with :bad_request
+          should respond_with_content_type :xml
         end
         context "POSTed as JSON" do
           setup do
             post :create, :project_id => @project.id, :format => "json", :billing_event => @billing_attributes
           end
 
-          should_respond_with :bad_request
-          should_respond_with_content_type :json
+          should respond_with :bad_request
+          should respond_with_content_type :json
         end
       end
     end

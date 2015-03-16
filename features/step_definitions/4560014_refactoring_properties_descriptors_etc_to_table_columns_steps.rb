@@ -31,7 +31,7 @@ def create_request(request_type, study, project, asset, target_asset, additional
   Request.find_all_by_initial_study_id(study.id, :order => :id).each_with_index do |request, index|
     request.uuid_object.tap do |uuid|
       uuid.external_id = "#{uuid_root}-%012x" % (uuid_index + 1 + index)
-      uuid.save(false)
+      uuid.save(:validate => false)
     end
   end
 end
@@ -96,7 +96,7 @@ Given /^the study "([^\"]+)" has an asset group of (\d+) samples in "([^\"]+)" c
     param = asset_type == 'well' ? {:id=>90+i} : {:name => "#{ group_name }, #{ asset_type } #{ i }"}
     Factory(asset_type.gsub(/[^a-z0-9_-]+/, '_'), param ).tap do |asset|
       if asset.primary_aliquot.present?
-        asset.primary_aliquot.sample.tap { |s| s.name = sample_name ; s.save(false) }
+        asset.primary_aliquot.sample.tap { |s| s.name = sample_name ; s.save(:validate => false) }
       else
         asset.aliquots.create!(:sample => Factory(:sample, :name => sample_name), :study=>study)
         asset.aliquots.each {|a| study.samples << a.sample}

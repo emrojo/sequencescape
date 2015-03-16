@@ -25,24 +25,24 @@ class AdminControllerTest < ActionController::TestCase
         setup do
           get :index
         end
-        should_respond_with :success
-        should_render_template :index
+        should respond_with :success
+        should render_template :index
       end
 
       context "#filter" do
         setup do
           get :filter
         end
-        should_respond_with :success
-        should_render_template "admin/users/_users"
+        should respond_with :success
+        should render_template "admin/users/_users"
       end
 
       context "#filter with query" do
         setup do
           get :filter, :q => "abc123"
         end
-        should_respond_with :success
-        should_render_template "admin/users/_users"
+        should respond_with :success
+        should render_template "admin/users/_users"
       end
 
     end

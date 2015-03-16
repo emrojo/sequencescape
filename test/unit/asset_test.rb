@@ -90,7 +90,6 @@ class AssetTest < ActiveSupport::TestCase
       @request_multiplex   = Factory :request, :study => @study, :request_type => @request_type, :asset => @multiplex_tube, :submission => @submission, :workflow => @workflow
       @request_lane        = Factory :request, :study => @study, :request_type => @request_type, :asset => @lane, :submission => @submission, :workflow => @workflow
 
-
       #Create TransfertRequest to create 'missing' aliquots
       RequestType.transfer.create!(:asset => @sample_tube, :target_asset => @multiplex_tube)
       RequestType.transfer.create!(:asset => @sample_tube_2, :target_asset => @multiplex_tube)
@@ -98,6 +97,7 @@ class AssetTest < ActiveSupport::TestCase
       @new_assets_name = ""
 
       @sample_to = Factory :sample
+
       @asset_to  = Factory(:empty_sample_tube, :name => @sample_to.name).tap  { |sample_tube|  sample_tube.aliquots.create!(:sample => @sample_to)  }
       @asset_group_to_new = Factory :asset_group, :name => "Asset_Exist_To", :study => @study_to
       @asset_group_asset_to = Factory :asset_group_asset, :asset => @asset_to , :asset_group => @asset_group_to_new
@@ -108,6 +108,7 @@ class AssetTest < ActiveSupport::TestCase
       assert_equal true, @result
 
       @request_sampletube.reload
+
       assert_equal @request_sampletube.study_id, @study_to.id
 
       @request_librarytube.reload

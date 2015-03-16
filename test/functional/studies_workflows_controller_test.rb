@@ -27,8 +27,8 @@ class Studies::WorkflowsControllerTest < ActionController::TestCase
           @controller.stubs(:current_user).returns(@user)
           get :show, :id => @workflow.id, :study_id => @study.id
         end
-        should_respond_with :success
-        should_render_template :show
+        should respond_with :success
+        should render_template :show
       end
   end
 end

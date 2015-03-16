@@ -236,7 +236,7 @@ class CherrypickTask < Task
     #Request.create(:state => "pending", :sample => well.sample, :asset => well, :target_asset => Well.create(:sample => well.sample, :name => well.sample.name))
     workflow.pipeline.control_request_type.create_control!(
       :asset => well,
-      :target_asset => Well.create!(:aliquots => well.aliquots.map(&:clone))
+      :target_asset => Well.create!(:aliquots => well.aliquots.map(&:dup))
     )
   end
   private :generate_control_request

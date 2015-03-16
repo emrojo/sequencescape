@@ -25,8 +25,8 @@ class Studies::EventsControllerTest < ActionController::TestCase
           @controller.stubs(:current_user).returns(Factory(:user))
           get :index, :study_id => @study.id
         end
-        should_respond_with :success
-        should_render_template :index
+        should respond_with :success
+        should render_template :index
       end
   end
 end

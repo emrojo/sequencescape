@@ -59,8 +59,8 @@ class Plate::Creator < ActiveRecord::Base
         child_plate.name          = "#{target_plate_purpose.name} #{child_plate.barcode}"
       end.tap do |child_plate|
           child_plate.wells << plate.wells.map do |well|
-            well.clone.tap do |child_well|
-              child_well.aliquots = well.aliquots.map(&:clone)
+            well.dup.tap do |child_well|
+              child_well.aliquots = well.aliquots.map(&:dup)
               child_well.stock_wells.attach(stock_well_picker.call(well))
             end
           end

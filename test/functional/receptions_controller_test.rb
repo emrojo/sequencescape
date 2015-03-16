@@ -4,7 +4,7 @@
 require "test_helper"
 class ReceptionsControllerTest < ActionController::TestCase
   def self.view_page_with_no_updates
-    should_respond_with :success
+    should respond_with :success
     should_change("Asset.count", :by => 0) { Asset.count }
   end
 
@@ -28,8 +28,8 @@ class ReceptionsControllerTest < ActionController::TestCase
           post :import_from_snp, :snp_plates => {"1" => "1234"}, :asset => {:location_id => @location.id}
         end
         should_change("Plate.count", :by => 1) { Plate.count }
-        should_respond_with :redirect
-        should_set_the_flash_to /queued to be imported/
+        should respond_with :redirect
+        should set_the_flash.to( /queued to be imported/)
       end
 
       context "with 3 plates" do
@@ -37,8 +37,8 @@ class ReceptionsControllerTest < ActionController::TestCase
           post :import_from_snp, :snp_plates => {"1" => "1234", "5"=> "7654", "10"=> "3456"}, :asset => {:location_id => @location.id}
         end
         should_change("Plate.count", :by => 3) { Plate.count }
-        should_respond_with :redirect
-        should_set_the_flash_to /queued to be imported/
+        should respond_with :redirect
+        should set_the_flash.to( /queued to be imported/)
       end
 
       context "with 3 plates plus blanks" do
@@ -46,8 +46,8 @@ class ReceptionsControllerTest < ActionController::TestCase
           post :import_from_snp, :snp_plates => {"1" => "1234", "7" => "", "5"=> "7654", "2" => "", "10"=> "3456"}, :asset => {:location_id => @location.id}
         end
         should_change("Plate.count", :by => 3) { Plate.count }
-        should_respond_with :redirect
-        should_set_the_flash_to /queued to be imported/
+        should respond_with :redirect
+        should set_the_flash.to( /queued to be imported/)
       end
     end
 
@@ -57,14 +57,14 @@ class ReceptionsControllerTest < ActionController::TestCase
           post :confirm_reception, :asset_id => @plate.id, :asset => { :location_id => @location.id }
         end
         should_change("Asset.count", :by => 0) { Asset.count }
-        should_respond_with :success
+        should respond_with :success
       end
       context "where asset doesnt exist" do
         setup do
           post :confirm_reception, :asset_id => 999999, :asset => { :location_id => @location.id }
         end
         should_change("Asset.count", :by => 0) { Asset.count }
-        should_set_the_flash_to /not found/
+        should set_the_flash.to( /not found/)
       end
 
       context "create an event" do
@@ -72,7 +72,7 @@ class ReceptionsControllerTest < ActionController::TestCase
           post :confirm_reception, :asset_id => @sample_tube.id, :asset => { :location_id => @location.id }
         end
         should_change("Event.count", :by => 0) { Event.count }
-        should_respond_with :success
+        should respond_with :success
       end
     end
 

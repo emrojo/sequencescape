@@ -25,7 +25,7 @@ class AssetsControllerTest < ActionController::TestCase
       post :create, ActiveSupport::JSON.decode(@json_data)
     end
 
-    should_set_the_flash_to  /Asset was successfully created/
+    should set_the_flash.to(  /Asset was successfully created/)
     should_change("Asset.count", :by => 1) { Asset.count }
   end
 

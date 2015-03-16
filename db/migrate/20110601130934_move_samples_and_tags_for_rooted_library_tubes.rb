@@ -72,7 +72,7 @@ class MoveSamplesAndTagsForRootedLibraryTubes < ActiveRecord::Migration
       # Returns a list of Aliquot instances that can be attached to another asset.  It also ensures that
       # the aliquots on the asset are maintained correctly.
       def for_attachment
-        parent_aliquots = self.map(&:clone)
+        parent_aliquots = self.map(&:dup)
         if parent_aliquots.empty?
           return [] if proxy_association.owner.sample_id.nil?   # This is an empty receptacle so no point going any further
 
@@ -81,7 +81,7 @@ class MoveSamplesAndTagsForRootedLibraryTubes < ActiveRecord::Migration
           aliquot.library_id = proxy_association.owner.id if proxy_association.owner.is_library_tube?
           parent_aliquots    = [ aliquot ]
 
-          self << aliquot.clone    # This is our own aliquot too
+          self << aliquot.dup    # This is our own aliquot too
         elsif parent_aliquots.size == 1 and proxy_association.owner.tag_instance.present?
           if parent_aliquots.first.tag_id.present? and parent_aliquots.first.tag_id != proxy_association.owner.tag_instance.tag_id
             raise StandardError, "Asset #{proxy_association.owner.id} has mismatching tags"
@@ -99,7 +99,7 @@ class MoveSamplesAndTagsForRootedLibraryTubes < ActiveRecord::Migration
       def attach_missing_from(aliquots)
         return if aliquots.empty?
 
-        missing_aliquots = aliquots.map(&:clone)
+        missing_aliquots = aliquots.map(&:dup)
         self.each do |aliquot|
           missing_aliquots.delete_if do |parent_aliquot|
             (parent_aliquot.sample == aliquot.sample) and (parent_aliquot.tag == aliquot.tag)

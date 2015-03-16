@@ -43,8 +43,8 @@ class ApiRoutingTest < ActionController::TestCase
     def read_only_routes(*resources)
       context 'read only resources' do
         resource_routes(*resources) do |context, core_path|
-          context.should_route :get, core_path,            :action => :index
-          context.should_route :get, "#{core_path}/12345", :action => :show, :id => '12345'
+          context.should route(:get, core_path).to(            :action => :index)
+          context.should route(:get, "#{core_path}/12345").to( :action => :show, :id => '12345')
 
           context.should_not_route :post, core_path,            :action => :create
           context.should_not_route :put,  "#{core_path}/12345", :action => :update, :id => '12345'
@@ -55,10 +55,10 @@ class ApiRoutingTest < ActionController::TestCase
     def crud_routes(*resources)
       context 'CRUD resources' do
         resource_routes(*resources) do |context, core_path|
-          context.should_route :get,  core_path,            :action => :index
-          context.should_route :get,  "#{core_path}/12345", :action => :show, :id => '12345'
-          context.should_route :post, core_path,            :action => :create
-          context.should_route :put,  "#{core_path}/12345", :action => :update, :id => '12345'
+          context.should route(:get,  core_path).to(            :action => :index)
+          context.should route(:get,  "#{core_path}/12345").to( :action => :show, :id => '12345')
+          context.should route(:post, core_path).to(            :action => :create)
+          context.should route(:put,  "#{core_path}/12345").to( :action => :update, :id => '12345')
         end
       end
     end
@@ -102,8 +102,8 @@ class ApiRoutingTest < ActionController::TestCase
         :wells,
         :samples => [ :sample_tubes ]
       ) do |context, core_path|
-        context.should_route :get, "#{core_path}/12345/parents",  :action => :parents,  :id => '12345'
-        context.should_route :get, "#{core_path}/12345/children", :action => :children, :id => '12345'
+        context.should route(:get, "#{core_path}/12345/parents").to(  :action => :parents,  :id => '12345')
+        context.should route(:get, "#{core_path}/12345/children").to( :action => :children, :id => '12345')
 
         # No other method should be allowed to these resources:
         [ :put, :post, :delete ].each do |method|

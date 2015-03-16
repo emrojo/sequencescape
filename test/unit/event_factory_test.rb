@@ -27,15 +27,13 @@ class EventFactoryTest < ActiveSupport::TestCase
 
       should_change("Event.count", :by => 1) { Event.count }
 
-      should "send 1 email to 1 recipient" do
-        assert_sent_email do |email|
-          email.subject =~ /Project/ \
-            && email.bcc.include?("abc123@example.com") \
-            && email.bcc.size == 1 \
-            && email.body =~ /Project registered/
-        end
-
-        assert_did_not_send_email { |email| "#{email.bcc}" ==  "" }
+      context "send 1 email to 1 recipient" do
+        should have_sent_email.
+          with_subject(/Project/).
+          bcc("abc123@example.com").
+          with_body(/Project registered/)
+        # should have_sent_email.bcc.size == 1
+        should_not have_sent_email.bcc("")
       end
     end
 
@@ -54,13 +52,11 @@ class EventFactoryTest < ActiveSupport::TestCase
 
         should_change("Event.count", :by => 1) { Event.count }
 
-        should "send an email to one recipient" do
-          assert_sent_email do |email|
-            email.subject =~ /Sample/ \
-              && email.bcc.include?("abc123@example.com") \
-              && email.bcc.size == 1 \
-              && email.body =~ /New '#{@sample.name}' registered by #{@user.login}/
-          end
+        context "send an email to one recipient" do
+          should have_sent_email.
+            with_subject(/Sample/).
+            bcc("abc123@example.com").
+            with_body(/New 'NewSample' registered by south/)
         end
       end
 
@@ -71,22 +67,21 @@ class EventFactoryTest < ActiveSupport::TestCase
 
         should_change("Event.count", :by => 2) { Event.count }
 
-        should "send 2 emails each to one recipient" do
-          assert_sent_email do |email|
-            email.subject =~ /Sample/ \
-              && email.bcc.include?("abc123@example.com") \
-              && email.bcc.size == 1 \
-              && email.body =~ /New '#{@sample.name}' registered by #{@user.login}/
-          end
+        context "send 2 emails each to one recipient" do
+          should have_sent_email.
+            with_subject(/Sample/).
+            bcc("abc123@example.com").
+            # && email.bcc.size == 1 \
+            with_body(/New 'NewSample' registered by south/)
 
-          assert_sent_email do |email|
-            email.subject =~ /Project/ \
-              && email.bcc.include?("abc123@example.com") \
-              && email.bcc.size == 1 \
-              && email.body =~ /New '#{@sample.name}' registered by #{@user.login}: #{@sample.name}. This sample was assigned to the '#{@project.name}' project./
-          end
 
-          assert_did_not_send_email { |email| "#{email.bcc}" ==  "" }
+          should have_sent_email.
+            with_subject(/Project/).
+            bcc("abc123@example.com").
+            # && email.bcc.size == 1 \
+            with_body(/New 'NewSample' registered by south: NewSample. This sample was assigned to the 'hello world' project./)
+
+          should_not have_sent_email.bcc("")
         end
       end
     end
@@ -104,15 +99,13 @@ class EventFactoryTest < ActiveSupport::TestCase
 
       should_change("Event.count", :by => 1) { Event.count }
 
-      should "send email to project manager" do
-        assert_sent_email do |email|
-          email.subject =~ /Project/ \
-            && email.subject =~ /Project approved/ \
-            && email.bcc.include?("#{@user.login}@example.com") \
-            && email.bcc.size == 1 \
-            && email.body =~ /Project approved/
-        end
-        assert_did_not_send_email { |email| "#{email.bcc}" ==  "" }
+      context "send email to project manager" do
+        should have_sent_email.
+          with_subject(/Project approved/).
+          bcc("south@example.com").
+          with_body(/Project approved/)
+
+        should_not have_sent_email.bcc("")
       end
     end
 
@@ -131,34 +124,17 @@ class EventFactoryTest < ActiveSupport::TestCase
 
       should_change("Event.count", :by => 1) { Event.count }
 
-      should ": send emails to the (two) administrators" do
-        assert_sent_email do |email|
-          email.subject =~ /Project/ \
-            && email.subject =~ /Project approved/ \
-            && email.bcc.include?("#{@user1.login}@example.com") \
-            && email.bcc.size == 3 \
-            && email.body =~ /Project approved/
-        end
-        assert_sent_email do |email|
-          email.subject =~ /Project/ \
-            && email.subject =~ /Project approved/ \
-            && email.bcc.include?("#{@user2.login}@example.com") \
-            && email.bcc.size == 3 \
-            && email.body =~ /Project approved/
-        end
-        assert_did_not_send_email { |email| "#{email.bcc}" ==  "" }
+      context ": send emails to everyone administrators" do
+        should have_sent_email.
+          with_subject(/Project approved/).
+          bcc("west@example.com").
+          bcc("north@example.com").
+          bcc("south@example.com").
+          with_body(/Project approved/)
+
+        should_not have_sent_email.bcc("")
       end
 
-      should ": send email to project manager" do
-        assert_sent_email do |email|
-          email.subject =~ /Project/ \
-            && email.subject =~ /Project approved/ \
-            && email.bcc.include?("#{@user.login}@example.com") \
-            && email.bcc.size == 3 \
-            && email.body =~ /Project approved/
-        end
-        assert_did_not_send_email { |email| "#{email.bcc}" ==  "" }
-      end
     end
 
     context "#project_approved but not by administrator" do
@@ -177,21 +153,20 @@ class EventFactoryTest < ActiveSupport::TestCase
 
       should_change("Event.count", :by => 1) { Event.count }
 
-      should ": send email to project manager" do
-        assert_sent_email do |email|
-          email.subject =~ /Project/ \
-            && email.subject =~ /Project approved/ \
-            && email.bcc.include?("#{@user.login}@example.com") \
-            && email.bcc.size == 1 \
-            && email.body =~ /Project approved/
-        end
-        assert_did_not_send_email { |email| "#{email.bcc}" ==  "" }
+      context ": send email to project manager" do
+        should have_sent_email.
+          with_subject(/Project/).
+          with_subject(/Project approved/).
+          bcc("south@example.com").
+          with_body(/Project approved/)
+
+       should_not have_sent_email.bcc("")
       end
 
-      should "send no email to adminstrator nor to approver" do
-        assert_did_not_send_email { |email| "#{email.bcc}" ==  "#{@user1.login}@example.com" }
-        assert_did_not_send_email { |email| "#{email.bcc}" ==  "#{@user2.login}@example.com" }
-        assert_did_not_send_email { |email| "#{email.bcc}" ==  "" }
+      context "send no email to adminstrator nor to approver" do
+        should_not have_sent_email.bcc("west@example.com")
+        should_not have_sent_email.bcc("north@example.com")
+        should_not have_sent_email.bcc("")
       end
     end
 
@@ -215,14 +190,11 @@ class EventFactoryTest < ActiveSupport::TestCase
 
       should_change("Event.count", :by => 1) { Event.count }
 
-      should "send email to project manager" do
-        assert_sent_email do |email|
-          email.subject =~ /Sample/ \
-            && email.subject =~ /registered/ \
-            && email.bcc \
-            && email.bcc.include?("#{@user.email}") \
-            && email.bcc.size == 1
-        end
+      context "send email to project manager" do
+        should have_sent_email.
+          with_subject(/Sample/).
+          with_subject(/registered/).
+          bcc("south@example.com")
       end
 
     end
@@ -247,14 +219,11 @@ class EventFactoryTest < ActiveSupport::TestCase
 
       should_change("Event.count", :by => 1) { Event.count }
 
-      should "send email to project manager" do
-        assert_sent_email do |email|
-          email.subject =~ /Request update/ \
-            && email.subject =~ /failed/ \
-            && email.bcc \
-            && email.bcc.include?("#{@user.email}") \
-            && email.bcc.size == 1
-        end
+      context "send email to project manager" do
+        should have_sent_email.
+          with_subject(/Request update/).
+          with_subject(/failed/).
+          bcc("south@example.com")
       end
     end
   end

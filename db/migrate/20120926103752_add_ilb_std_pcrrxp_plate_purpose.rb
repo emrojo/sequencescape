@@ -25,11 +25,11 @@ class AddIlbStdPcrrxpPlatePurpose < ActiveRecord::Migration
   def self.up
     ActiveRecord::Base.transaction do
       pcr_xp   = Purpose.find_by_name('ILB_STD_PCRXP') or raise "Cannot find ILB_STD_PCRXP"
-      pcr_r_xp = pcr_xp.clone.tap { |p| p.name = 'ILB_STD_PCRRXP' ; p.save! }
+      pcr_r_xp = pcr_xp.dup.tap { |p| p.name = 'ILB_STD_PCRRXP' ; p.save! }
 
       # Ensure the child transfers are correctly setup
       pcr_xp.child_relationships.each do |relationship|
-        request_type = relationship.transfer_request_type.clone.tap do |r|
+        request_type = relationship.transfer_request_type.dup.tap do |r|
           r.name = r.name.sub(pcr_xp.name, pcr_r_xp.name)
           r.key  = r.name.gsub(/\W+/, '_')
           r.save!

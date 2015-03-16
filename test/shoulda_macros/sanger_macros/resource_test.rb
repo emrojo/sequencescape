@@ -88,8 +88,8 @@ module Sanger
                   setup do
                     get :index, @input_params
                   end
-                  should_respond_with :success
-                  should_render_template :index
+                  should respond_with :success
+                  should render_template :index
                 end
               end
 
@@ -98,7 +98,7 @@ module Sanger
                   setup do
                     get :new, @input_params
                   end
-                  should_respond_with :success
+                  should respond_with :success
                 end
               end
 
@@ -110,7 +110,7 @@ module Sanger
                     post :create, local_params
                   end
                   #assert eval "@#{resource_name}".valid?
-                  should_redirect_to("show page"){ eval(show_url) }
+                  should redirect_to("show page"){ eval(show_url) }
                 end
               end
 
@@ -122,7 +122,7 @@ module Sanger
                     local_params[:id] = @object.id
                     get :show, local_params
                   end
-                  should_respond_with :success
+                  should respond_with :success
                 end
               end
 
@@ -134,7 +134,7 @@ module Sanger
                     local_params[:id] = @object.id
                     get :edit, local_params
                   end
-                  should_respond_with :success
+                  should respond_with :success
                 end
               end
 
@@ -147,7 +147,7 @@ module Sanger
                     local_params[:id] = @object.id
                     put :update, local_params
                   end
-                  should_redirect_to("show page"){ eval(show_url) }
+                  should redirect_to("show page"){ eval(show_url) }
                 end
               end
 
@@ -159,7 +159,7 @@ module Sanger
                     local_params[:id] = @object.id
                     delete :destroy, local_params
                   end
-                  should_redirect_to("index page"){ eval(index_url) }
+                  should redirect_to("index page"){ eval(index_url) }
                 end
 
                 # context "destroy without object in database" do
@@ -169,7 +169,7 @@ module Sanger
                 #       delete :destroy, :id => -1
                 #     end
                 #   end
-                #   should_not_set_the_flash
+                #   should_not set_the_flash
                 # end
               end
 
@@ -191,7 +191,7 @@ module Sanger
                       @object = Factory resource_name
                       get :status, :id => @object.id
                     end
-                    should_respond_with :success
+                    should respond_with :success
                   end
                 end
               end
@@ -205,7 +205,7 @@ module Sanger
                         local_params = @input_params
                         get :index, local_params
                       end
-                      should_respond_with :success
+                      should respond_with :success
                       should "have api version attribute on root object" do
                         assert_tag :tag => "#{resource_name.to_s.pluralize}", :attributes => {:api_version => "0.6"}
                         assert_tag :tag => "#{resource_name.to_s.pluralize}"
@@ -221,7 +221,7 @@ module Sanger
                         local_params[:id] = @object.id
                         get :show, local_params
                       end
-                      should_respond_with :success
+                      should respond_with :success
                       should "show xml" do
                         assert_tag :tag => "#{resource_name}", :attributes => {:api_version => RELEASE.api_version}
                         assert_tag :tag => "#{resource_name}"
@@ -238,7 +238,7 @@ module Sanger
                         local_params = @input_params
                         get :index, local_params
                       end
-                      should_respond_with :success
+                      should respond_with :success
                       should "be JSON" do
                         assert ActiveSupport::JSON.decode(@response.body).size > 0
                       end
@@ -253,7 +253,7 @@ module Sanger
                         local_params[:id] = @object.id
                         get :show, local_params
                       end
-                      should_respond_with :success
+                      should respond_with :success
                       should "be JSON" do
                         assert_equal @object.to_json, @response.body
                       end

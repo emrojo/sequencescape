@@ -22,7 +22,7 @@ class LocationsControllerTest < ActionController::TestCase
         get :index
       end
 
-      should_render_template :index
+      should render_template :index
     end
 
     context "#show" do
@@ -30,7 +30,7 @@ class LocationsControllerTest < ActionController::TestCase
         get :show, :id => @location.id
       end
 
-      should_render_template :show
+      should render_template :show
     end
 
     context "#new" do

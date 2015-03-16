@@ -50,7 +50,7 @@ class BatchesControllerTest < ActionController::TestCase
           get :show, :id => batch.id, :format => "xml"
         end
 
-        should_respond_with_content_type :xml
+        should respond_with_content_type :xml
 
         should "have api version attribute on root object" do
           assert_response :success

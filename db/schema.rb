@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150226214815) do
+ActiveRecord::Schema.define(:version => 20150312223051) do
 
   create_table "aliquots", :force => true do |t|
     t.integer  "receptacle_id",    :null => false
@@ -1479,7 +1479,7 @@ ActiveRecord::Schema.define(:version => 20150226214815) do
     t.string   "contact_name"
     t.string   "phone_number"
     t.string   "fax"
-    t.string   "url"
+    t.string   "supplier_url"
     t.string   "abbreviation"
   end
 

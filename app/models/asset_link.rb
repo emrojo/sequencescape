@@ -57,10 +57,15 @@ class AssetLink < ActiveRecord::Base
 
     module ClassMethods
       def has_one_as_child(name, options = {})
-        has_one(name, options.merge(:through => :links_as_child, :source => :ancestor))
+        # has_one(name, options.merge(:through => :links_as_child, :source => :ancestor))
 
         line = __LINE__ + 1
         class_eval(%Q{
+
+          def #{name}
+            ancestors.find(:first,#{options.inspect})
+          end
+
           def #{name}=(value)
             raise RuntimeError, 'Value for #{name} must be saved' if value.new_record?
             old_value = self.#{name}

@@ -1128,7 +1128,7 @@ SequencingPipeline.create!(:name => "MiSeq sequencing") do |pipeline|
 
       LabInterface::Workflow.find_by_name('Cherrypick').tasks.each do |task|
         # next if task.name == 'Set Location'
-        new_task = task.clone
+        new_task = task.dup
         new_task.workflow = liw
         new_task.save!
       end

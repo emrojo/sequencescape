@@ -44,8 +44,8 @@ class StudiesControllerTest < ActionController::TestCase
         get :new
       end
 
-      should_respond_with :success
-      should_render_template :new
+      should respond_with :success
+      should render_template :new
     end
 
     context "#new_plate_submission" do
@@ -57,8 +57,8 @@ class StudiesControllerTest < ActionController::TestCase
         get :new_plate_submission, :id => @study.id
       end
 
-      should_respond_with :success
-      should_render_template :new_plate_submission
+      should respond_with :success
+      should render_template :new_plate_submission
     end
 
     context "#create" do
@@ -84,8 +84,8 @@ class StudiesControllerTest < ActionController::TestCase
           }
         end
 
-        should_set_the_flash_to "Your study has been created"
-        should_redirect_to("study path") { study_path(Study.last) }
+        should set_the_flash.to( "Your study has been created")
+        should redirect_to("study path") { study_path(Study.last) }
         should_change('Study.count', 1) { Study.count }
       end
 
@@ -94,7 +94,7 @@ class StudiesControllerTest < ActionController::TestCase
           post :create, "study" => { "name" => "hello 2" }
         end
 
-        should_render_template :new
+        should render_template :new
         should_not_change('Study.count') { Study.count }
 
         should 'set a message for the error' do
@@ -121,8 +121,8 @@ class StudiesControllerTest < ActionController::TestCase
         end
 
         should_change('Study.count', 1) { Study.count }
-        should_redirect_to("study path") { study_path(Study.last) }
-        should_set_the_flash_to "Your study has been created"
+        should redirect_to("study path") { study_path(Study.last) }
+        should set_the_flash.to( "Your study has been created")
       end
 
     end

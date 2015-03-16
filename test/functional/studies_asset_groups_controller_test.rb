@@ -9,7 +9,7 @@ class Studies::AssetGroupsController; def rescue_action(e) raise e end; end
 class Studies::AssetGroupsControllerTest < ActionController::TestCase
 
   def self.view_page_with_no_updates
-    should_respond_with :success
+    should respond_with :success
     should_change("AssetGroup.count", :by => 0) { AssetGroup.count }
     should_change("Study.count", :by => 0) { Study.count }
   end
@@ -52,7 +52,7 @@ class Studies::AssetGroupsControllerTest < ActionController::TestCase
           get :search, :study_id => @study.id, :id => @asset_group.id
         end
 
-        should_respond_with :redirect
+        should respond_with :redirect
       end
 
       context "should redirect if it is given a blank query" do
@@ -60,7 +60,7 @@ class Studies::AssetGroupsControllerTest < ActionController::TestCase
           get :search, :study_id => @study.id, :id => @asset_group.id, :q => ""
         end
 
-        should_respond_with :redirect
+        should respond_with :redirect
       end
 
       context "should redirect if too small a query is passed" do
@@ -68,7 +68,7 @@ class Studies::AssetGroupsControllerTest < ActionController::TestCase
           get :search, :study_id => @study.id, :id => @asset_group.id, :q => "a"
         end
 
-        should_respond_with :redirect
+        should respond_with :redirect
       end
 
       context "should suceed with a query longer than 1" do
@@ -76,7 +76,7 @@ class Studies::AssetGroupsControllerTest < ActionController::TestCase
           get :search, :study_id => @study.id, :id => @asset_group.id, :q => "ab"
         end
 
-        should_respond_with :success
+        should respond_with :success
       end
     end
 
@@ -86,17 +86,17 @@ class Studies::AssetGroupsControllerTest < ActionController::TestCase
       end
       should_change("AssetGroup.count", :by => -1) { AssetGroup.count }
       should_change("Study.count", :by => 0) { Study.count }
-      should_respond_with :redirect
+      should respond_with :redirect
     end
 
     context "#update" do
       setup do
         put :update, :study_id => @study.id, :id => @asset_group.id, :name=>"update name"
       end
-      should_set_the_flash_to /updated/
+      should set_the_flash.to( /updated/)
       should_change("AssetGroup.count", :by => 0) { AssetGroup.count }
       should_change("Study.count", :by => 0) { Study.count }
-      should_respond_with :redirect
+      should respond_with :redirect
       should "set name" do
         assert "update name", AssetGroup.find(@asset_group.id).name
       end

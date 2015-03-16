@@ -121,7 +121,7 @@ class AssetsController < ApplicationController
             end
 
             # We must copy the aliquots of the 'extract' to the asset, otherwise the asset remains empty.
-            asset.aliquots = parent_used.aliquots.map(&:clone) unless parent_used.nil?
+            asset.aliquots = parent_used.aliquots.map(&:dup) unless parent_used.nil?
             asset.add_parent(parent_used)
           else
             # All new assets are assumed to have a phiX sample in them as that's the only asset that

@@ -37,7 +37,7 @@ GIT
     psd_logger (0.1.6)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   remote: http://gems.github.com/
   specs:
     Platform (0.4.0)

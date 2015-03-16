@@ -5,7 +5,7 @@ def set_uuid_for(object, uuid_value)
   uuid   = object.uuid_object
   uuid ||= object.build_uuid_object
   uuid.external_id = uuid_value
-  uuid.save(false)
+  uuid.save(:validate => false)
 end
 
 ALL_MODELS_THAT_CAN_HAVE_UUIDS_BASED_ON_NAME = [
@@ -162,7 +162,7 @@ Given /^the UUID of the next (#{SINGULAR_MODELS_BASED_ON_ID_REGEXP}) created wil
   # Unforunately we need to find the root of the tree
   root_class = model_class
   root_class = root_class.superclass until root_class.superclass == ActiveRecord::Base
-  Uuid.new(:resource_type => root_class.sti_name, :resource_id => next_id, :external_id => uuid_value).save(false)
+  Uuid.new(:resource_type => root_class.sti_name, :resource_id => next_id, :external_id => uuid_value).save(:validate => false)
 end
 
 Given /^the UUID of the last (#{SINGULAR_MODELS_BASED_ON_ID_REGEXP}) created is "([^\"]+)"$/ do |model,uuid_value|

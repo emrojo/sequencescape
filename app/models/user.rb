@@ -29,7 +29,8 @@ class User < ActiveRecord::Base
   validates_presence_of :login
   validates_confirmation_of :password, :if => :password_required?
 
- scope :with_login, lambda { |*logins| { :conditions => { :login => logins.flatten } } }
+  scope :with_login, lambda { |*logins| { :conditions => { :login => logins.flatten } } }
+  scope :all_administrators, joins(:roles).where(:roles=>{:name=>'administrator'})
 
   acts_as_authorized_user
 
@@ -177,12 +178,6 @@ class User < ActiveRecord::Base
     self.is_administrator?
   end
 
-  # returns all administrator users
-  def self.all_administrators
-    role = Role.find_by_name_and_authorizable_type('administrator')
-    role ? role.users : []
-  end
-
   # returns emails of all admins
   def self.all_administrators_emails
     self.all_administrators.map(&:email).compact.uniq
@@ -212,13 +207,13 @@ class User < ActiveRecord::Base
   def remember_me
     self.remember_token_expires_at = 2.weeks.from_now.utc
     self.remember_token            = encrypt("#{email}--#{remember_token_expires_at}")
-    save(false)
+    save(:validate => false)
   end
 
   def forget_me
     self.remember_token_expires_at = nil
     self.remember_token            = nil
-    save(false)
+    save(:validate => false)
   end
 
   # User has a relationship by role to these studies

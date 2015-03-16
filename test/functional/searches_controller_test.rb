@@ -35,7 +35,7 @@ class SearchesControllerTest < ActionController::TestCase
           get :index, :q => "FindMe"
         end
 
-        should_respond_with :success
+        should respond_with :success
 
         context "results" do
           define_method(:assert_link_to) do |url|

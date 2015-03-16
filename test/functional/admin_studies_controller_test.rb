@@ -37,7 +37,7 @@ class Admin::StudiesControllerTest < ActionController::TestCase
           assert_equal [], @emails
         end
 
-        should_redirect_to("admin studies path") { "/admin/studies/#{@study.id}" }
+        should redirect_to("admin studies path") { "/admin/studies/#{@study.id}" }
       end
 
     end

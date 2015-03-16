@@ -86,7 +86,11 @@ class Aliquot < ActiveRecord::Base
 
         has_many :aliquots
         has_many :receptacles, :through => :aliquots, :uniq => true
-        has_one :primary_receptacle, :through => :aliquots, :source => :receptacle, :order => 'aliquots.created_at, aliquots.id ASC'
+        # has_one :primary_receptacle, :through => :aliquots, :source => :receptacle, :order => 'aliquots.created_at, aliquots.id ASC'
+
+        def primary_receptacle
+          receptacles.order('aliquots.created_at, aliquots.id ASC').first
+        end
 
         # Unfortunately we cannot use has_many :through because it ends up being a through through a through.  Really we want:
         #   has_many :requests, :through => :assets
@@ -163,7 +167,7 @@ class Aliquot < ActiveRecord::Base
 
   # Cloning an aliquot should unset the receptacle ID because otherwise it won't get reassigned.  We should
   # also reset the timestamp information as this is a new aliquot really.
-  def clone
+  def dup
     super.tap do |cloned_aliquot|
       cloned_aliquot.receptacle_id = nil
       cloned_aliquot.created_at = nil

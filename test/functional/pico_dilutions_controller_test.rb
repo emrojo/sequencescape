@@ -37,15 +37,15 @@ class PicoDilutionsControllerTest < ActionController::TestCase
           setup do
             get :index
           end
-          should_respond_with :success
-          should_respond_with_content_type :json
+          should respond_with :success
+          should respond_with_content_type :json
         end
         context "page passed in" do
           setup do
             get :index, :page => 3
           end
-          should_respond_with :success
-          should_respond_with_content_type :json
+          should respond_with :success
+          should respond_with_content_type :json
         end
       end
     end

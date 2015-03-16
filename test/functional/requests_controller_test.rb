@@ -85,7 +85,7 @@ class RequestsControllerTest < ActionController::TestCase
         setup do
           put :update, :id => @our_request.id, :request => @params
         end
-        should_redirect_to("login page") { login_path }
+        should redirect_to("login page") { login_path }
       end
 
       context "when logged in" do
@@ -96,7 +96,7 @@ class RequestsControllerTest < ActionController::TestCase
           put :update, :id => @our_request.id, :request => @params
         end
 
-        should_redirect_to("request path") { request_path(@our_request) }
+        should redirect_to("request path") { request_path(@our_request) }
 
         should 'set the read length of the associated properties' do
           assert_equal 37, Request.find(@our_request.id).request_metadata.read_length
@@ -119,7 +119,7 @@ class RequestsControllerTest < ActionController::TestCase
           @params = { :request_metadata_attributes => { :read_length => "37" }, :state => 'invalid' }
           put :update, :id => @reqwest.id, :request => @params
         end
-        should_redirect_to("request path") { request_path(@reqwest) }
+        should redirect_to("request path") { request_path(@reqwest) }
       end
 
 

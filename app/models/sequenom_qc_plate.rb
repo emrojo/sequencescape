@@ -119,10 +119,10 @@ class SequenomQcPlate < Plate
     source_well = plate.find_well_by_rowcol(row, col)
     return nil if source_well.nil?
 
-    source_well.clone.tap do |cloned_well|
+    source_well.dup.tap do |cloned_well|
       cloned_well.plate    = self
       cloned_well.map      = destination_map_based_on_source_row_col_and_quadrant(quadrant, row, col)
-      cloned_well.aliquots = source_well.aliquots.map(&:clone)
+      cloned_well.aliquots = source_well.aliquots.map(&:dup)
       cloned_well.save!
 
       # FIXME: This fix seems a bit dirty but it works

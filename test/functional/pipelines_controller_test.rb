@@ -20,7 +20,7 @@ class PipelinesControllerTest < ActionController::TestCase
         get :index
       end
 
-      should_respond_with :success
+      should respond_with :success
     end
 
     context "#batches" do
@@ -32,7 +32,7 @@ class PipelinesControllerTest < ActionController::TestCase
           get :batches, :id => @pipeline.id.to_s
         end
 
-        should_respond_with :success
+        should respond_with :success
       end
 
       context "with 1 batch" do
@@ -41,7 +41,7 @@ class PipelinesControllerTest < ActionController::TestCase
           get :batches, :id => @pipeline.id.to_s
         end
 
-        should_respond_with :success
+        should respond_with :success
       end
     end
 
@@ -51,14 +51,14 @@ class PipelinesControllerTest < ActionController::TestCase
         get :show, :id => @pipeline
       end
 
-      should_respond_with :success
+      should respond_with :success
       context "and no batches" do
         setup do
           @pipeline = Factory :pipeline
           get :show, :id => @pipeline
         end
 
-        should_respond_with :success
+        should respond_with :success
       end
     end
 
@@ -68,7 +68,7 @@ class PipelinesControllerTest < ActionController::TestCase
         get :setup_inbox, :id => @pipeline.id.to_s
       end
 
-      should_respond_with :success
+      should respond_with :success
     end
 
     context "#training_batch" do
@@ -77,7 +77,7 @@ class PipelinesControllerTest < ActionController::TestCase
         get :training_batch, :id => @pipeline.id.to_s
       end
 
-      should_respond_with :success
+      should respond_with :success
     end
 
     context "#activate" do
@@ -86,7 +86,7 @@ class PipelinesControllerTest < ActionController::TestCase
         get :activate, :id => @pipeline.id.to_s
       end
 
-      should_respond_with :redirect
+      should respond_with :redirect
     end
 
     context "#deactivate" do
@@ -95,7 +95,7 @@ class PipelinesControllerTest < ActionController::TestCase
         get :deactivate, :id => @pipeline.id.to_s
       end
 
-      should_respond_with :redirect
+      should respond_with :redirect
     end
 
     context "#destroy" do
@@ -104,7 +104,7 @@ class PipelinesControllerTest < ActionController::TestCase
         get :destroy, :id => @pipeline.id.to_s
       end
 
-      should_respond_with :redirect
+      should respond_with :redirect
     end
   end
 end

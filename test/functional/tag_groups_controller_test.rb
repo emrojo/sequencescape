@@ -27,8 +27,8 @@ class TagGroupsControllerTest < ActionController::TestCase
         end
         should_change("TagGroup count", :by => 1) { TagGroup.count }
         should_change("Tag.count", :by => 0) { Tag.count }
-        should_respond_with :redirect
-        should_set_the_flash_to /created/
+        should respond_with :redirect
+        should set_the_flash.to( /created/)
       end
       context "with 2 tag" do
         setup do
@@ -36,8 +36,8 @@ class TagGroupsControllerTest < ActionController::TestCase
         end
         should_change("TagGroup.count", :by => 1) { TagGroup.count }
         should_change("Tag.count", :by => 2) { Tag.count }
-        should_respond_with :redirect
-        should_set_the_flash_to /created/
+        should respond_with :redirect
+        should set_the_flash.to( /created/)
       end
 
       context "with 4 tags where 2 have empty oligos" do
@@ -46,8 +46,8 @@ class TagGroupsControllerTest < ActionController::TestCase
         end
         should_change("TagGroup.count", :by => 1) { TagGroup.count }
         should_change("Tag.count", :by => 2) { Tag.count }
-        should_respond_with :redirect
-        should_set_the_flash_to /created/
+        should respond_with :redirect
+        should set_the_flash.to( /created/)
       end
     end
 
@@ -55,7 +55,7 @@ class TagGroupsControllerTest < ActionController::TestCase
       setup do
         get :edit, :id => @tag_group.id
       end
-      should_respond_with :success
+      should respond_with :success
       should_change("TagGroup.count", :by => 0) { TagGroup.count }
       should_change("Tag.count", :by => 0) { Tag.count }
     end
@@ -64,10 +64,10 @@ class TagGroupsControllerTest < ActionController::TestCase
       setup do
         put :update, :id => @tag_group.id, :name=>"update name"
       end
-      should_set_the_flash_to /updated/
+      should set_the_flash.to( /updated/)
       should_change("TagGroup.count", :by => 0) { TagGroup.count }
       should_change("Tag.count", :by => 0) { Tag.count }
-      should_respond_with :redirect
+      should respond_with :redirect
       should "set name" do
         assert "update name", TagGroup.find(@tag_group.id).name
       end

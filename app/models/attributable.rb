@@ -85,7 +85,7 @@ module Attributable
     def association(name, instance_method, options = {})
       association = Association.new(self, name, instance_method, options)
       association.configure(self)
-      association_details.push(association)
+      self.association_details += [association]
     end
 
     def defaults
@@ -279,7 +279,7 @@ module Attributable
 
       model.with_options(conditions) do |object|
         # false.blank? == true, so we exclude booleans here, they handle themselves further down.
-        object.validates_presence_of(name) if self.required? && ! self.boolean?
+        object.validates_presence_of(name) if self.required? && !self.boolean?
         object.with_options(:allow_nil => self.optional?, :allow_blank => allow_blank) do |required|
           required.validates_inclusion_of(name, :in => [true, false]) if self.boolean?
           required.validates_numericality_of(name, :only_integer => true) if self.numeric?

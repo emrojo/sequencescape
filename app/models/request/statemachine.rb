@@ -133,7 +133,7 @@ module Request::Statemachine
   # and updated with the project and study information from the request itself.
   def on_started
     target_asset.aliquots << asset.aliquots.map do |aliquot|
-      aliquot.clone.tap do |clone|
+      aliquot.dup.tap do |clone|
         clone.study_id   = initial_study_id   || aliquot.study_id
         clone.project_id = initial_project_id || aliquot.project_id
       end

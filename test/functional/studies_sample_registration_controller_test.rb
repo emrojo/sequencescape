@@ -27,8 +27,8 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
           get :index, :study_id => @study
         end
 
-        should_respond_with :success
-        should_render_template :index
+        should respond_with :success
+        should render_template :index
       end
 
       context "#new" do
@@ -69,8 +69,8 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
             post :new, :study_id => @study, :file => File.open(Rails.root + '/config/environment.rb')
           end
 
-          should_set_the_flash_to "Problems processing your file. Only Excel spreadsheets accepted"
-          should_redirect_to("upload study sample registration") { upload_study_sample_registration_path }
+          should set_the_flash.to( "Problems processing your file. Only Excel spreadsheets accepted")
+          should redirect_to("upload study sample registration") { upload_study_sample_registration_path }
         end
       end
 
@@ -79,8 +79,8 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
           get :upload, :study_id => @study
         end
 
-        should_respond_with :success
-        should_render_template :upload
+        should respond_with :success
+        should render_template :upload
       end
 
       context "#create" do
@@ -89,8 +89,8 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
             post :create, :study_id => @study, :sample_registrars => {}
           end
 
-          should_set_the_flash_to 'You do not appear to have specified any samples'
-          should_render_template :new
+          should set_the_flash.to( 'You do not appear to have specified any samples')
+          should render_template :new
         end
 
         context "one sample with values given" do
@@ -104,7 +104,7 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
               }
           end
 
-          should_respond_with :redirect
+          should respond_with :redirect
           should_change('@study.samples.count', :by => 1) { @study.samples.count }
         end
 
@@ -123,7 +123,7 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
               }
           end
 
-          should_respond_with :redirect
+          should respond_with :redirect
           should_change('@study.samples.count', :by => 2) { @study.samples.count }
         end
 
@@ -147,7 +147,7 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
               }
           end
 
-          should_respond_with :redirect
+          should respond_with :redirect
           should_change('@study.samples.count', :by => 2) { @study.samples.count }
 
           should 'not have registered sample 2' do
@@ -172,7 +172,7 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
                 }
           end
 
-          should_respond_with :redirect
+          should respond_with :redirect
           should_change('@study.samples.count', :by => 2) { @study.samples.count }
           should_change('Asset.count', :by => 2) { Asset.count }
 
@@ -206,7 +206,7 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
             post :create, :study_id => @study,
               :sample_registrars => { '1' => { } }
           end
-          should_render_template :new
+          should render_template :new
         end
 
         # TODO: samples with duplicate well IDs

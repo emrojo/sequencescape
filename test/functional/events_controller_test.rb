@@ -24,13 +24,13 @@ class EventsControllerTest < ActionController::TestCase
           @controller.stubs(:login_required).returns(true)
           put :create, :event => {:key => 'blah'}
         end
-        should_respond_with :success
+        should respond_with :success
       end
       context "XML" do
         setup do
           get :create, :format => :xml
         end
-        should_respond_with :not_acceptable
+        should respond_with :not_acceptable
       end
     end
   end

@@ -38,7 +38,7 @@ class SubmissionTemplate < ActiveRecord::Base
 
   def supercede(&block)
     ActiveRecord::Base.transaction do
-      self.clone.tap do |cloned|
+      self.dup.tap do |cloned|
         yield(cloned) if block_given?
         name, cloned.name = cloned.name, "Superceding #{cloned.name}"
         cloned.save!

@@ -14,8 +14,10 @@ class ProjectTest < ActiveSupport::TestCase
       end
 
       should "require cost-code and project funding model" do
-        assert_equal false, @project.save
-        assert  @project.errors.full_messages.include?("Project cost code can't be blank")
+        assert_equal false, @project.project_metadata.valid?, "Validation not working"
+        assert_equal false, @project.valid?, "Validation not delegating"
+        assert_equal false, @project.save, "Save behaving badly"
+        assert  @project.errors.full_messages.include?("Project metadata project cost code can't be blank")
       end
 
     end

@@ -38,8 +38,8 @@ end
 
 Given /^I have a plate for PacBio$/ do
   PlatePurpose.stock_plate_purpose.create!(:without_wells, :barcode=>1234567) do |plate|
-    plate.wells.create!(:map=>Map.find_by_asset_size_and_description(96,'A1'),:aliquots => SampleTube.find_by_barcode(111).aliquots.map(&:clone))
-    plate.wells.create!(:map=>Map.find_by_asset_size_and_description(96,'B1'),:aliquots => SampleTube.find_by_barcode(222).aliquots.map(&:clone)) if  SampleTube.find_by_barcode(222).present?
+    plate.wells.create!(:map=>Map.find_by_asset_size_and_description(96,'A1'),:aliquots => SampleTube.find_by_barcode(111).aliquots.map(&:dup))
+    plate.wells.create!(:map=>Map.find_by_asset_size_and_description(96,'B1'),:aliquots => SampleTube.find_by_barcode(222).aliquots.map(&:dup)) if  SampleTube.find_by_barcode(222).present?
     plate.location = Location.find_by_name('PacBio library prep freezer')
     AssetGroup.create!(:name=>"PacBio group", :study=>Study.find_by_name('Test study')).assets << plate.wells
   end
@@ -73,9 +73,9 @@ Given /^I have a fast PacBio sequencing batch$/ do
   step(%Q{the sample tubes are part of the study})
   step(%Q{I have a PacBio submission})
   location = Location.find_by_name("PacBio sequencing freezer")
-  library_1 = PacBioLibraryTube.create!(:location => location, :barcode => "333", :aliquots => SampleTube.find_by_barcode(111).aliquots.map(&:clone))
+  library_1 = PacBioLibraryTube.create!(:location => location, :barcode => "333", :aliquots => SampleTube.find_by_barcode(111).aliquots.map(&:dup))
   library_1.pac_bio_library_tube_metadata.update_attributes!(:prep_kit_barcode => "999", :smrt_cells_available => 3)
-  library_2 = PacBioLibraryTube.create!(:location => location, :barcode => "444", :aliquots => SampleTube.find_by_barcode(222).aliquots.map(&:clone))
+  library_2 = PacBioLibraryTube.create!(:location => location, :barcode => "444", :aliquots => SampleTube.find_by_barcode(222).aliquots.map(&:dup))
   library_2.pac_bio_library_tube_metadata.update_attributes!(:prep_kit_barcode => "999", :smrt_cells_available => 1)
   PacBioSequencingRequest.first.update_attributes!(:asset => library_1)
   PacBioSequencingRequest.last.update_attributes!(:asset => library_2)

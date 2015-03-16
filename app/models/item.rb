@@ -25,13 +25,14 @@ class Item < ActiveRecord::Base
     { :conditions => [ 'name LIKE ? OR id=?', "%#{query}%", query ] }
   }
 
-  def before_validation_on_create
-    # TODO - Extract code to a shared library
+  before_validation :set_version, :on => :create
+
+  def set_version
     things_with_same_name = self.class.all(:conditions => {:name => self.name, :workflow_id => self.workflow_id})
     if things_with_same_name.empty?
       self.increment(:version)
     else
-      self.write_attribute :version, (things_with_same_name.size + 1)
+      self.version = things_with_same_name.size + 1
     end
   end
 end

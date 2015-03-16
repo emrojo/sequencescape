@@ -17,11 +17,12 @@ module Sanger
         end
 
         def should_have_instance_methods(*methods)
+          # TODO: Set this up
         end
 
         def should_have_successful_submission
           # FIXME: routing doesnt work property
-          #should_redirect_to("study workflow submission page"){ study_workflow_submission_url(@study, @workflow, @submission) }
+          #should redirect_to("study workflow submission page"){ study_workflow_submission_url(@study, @workflow, @submission) }
           should "have a successful submission" do
             assert_not_nil @controller.session.try(:[], :flash).try(:[], :notice).try(:grep, /Submission successfully created/)
             assert_equal @submission_count +1 , Submission.count
@@ -62,7 +63,7 @@ module Sanger
                     flunk "Testing for an unknown action: #{action}"
                   end
                 end
-                should_redirect_to("login page"){login_path}
+                should redirect_to("login page"){login_path}
               end
               # TODO - Include API passthrough checking
               # context "when requesting XML" do

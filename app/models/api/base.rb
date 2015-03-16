@@ -41,6 +41,7 @@ class Api::Base
 
       json_attributes = {}
       json_attributes["deleted_at"] = Time.now if object.destroyed?
+
       self.attribute_to_json_attribute_mappings.each do |attribute, json_attribute|
         json_attributes[ json_attribute ] = object.send(attribute)
       end
@@ -134,7 +135,7 @@ class Api::Base
 
   # TODO[xxx]: Need to warn about 'id' not being 'internal_id'
   def self.map_attribute_to_json_attribute(attribute, json_attribute = attribute)
-    self.attribute_to_json_attribute_mappings[ attribute.to_sym ] = json_attribute.to_s
+    self.attribute_to_json_attribute_mappings = self.attribute_to_json_attribute_mappings.merge(attribute.to_sym => json_attribute.to_s)
   end
 
   # Contains a list of resources that are related and should be exposed as URLs
@@ -173,7 +174,8 @@ class Api::Base
       define_method(:lookup_by) { options[:lookup_by] }
       define_method(:association) { association }
     end
-    self.associations[ association.to_sym ] = association_helper
+    self.associations = Hash.new if self.associations.empty?
+    self.associations[association.to_sym] = association_helper
   end
 
   def self.with_nested_has_many_association(association, options = {}, &block)
@@ -182,6 +184,7 @@ class Api::Base
     association_helper.singleton_class.class_eval do
       define_method(:association) { association }
     end
+    self.nested_has_many_associations = Hash.new if self.nested_has_many_associations.empty?
     self.nested_has_many_associations[ association.to_sym ] = association_helper
   end
 
@@ -198,7 +201,6 @@ class Api::Base
 
   # Contains the mapping from the ActiveRecord attribute to the key in the JSON hash when listing objects
   class_attribute :attribute_to_json_attribute_mappings_for_list
-  attribute_to_json_attribute_mappings_for_list =  {}
 
   self.attribute_to_json_attribute_mappings_for_list = {
     :id   => 'id',
@@ -213,6 +215,7 @@ class Api::Base
   self.extra_json_attribute_handlers =  []
 
   def self.extra_json_attributes(&block)
+    self.extra_json_attribute_handlers = Array.new if self.extra_json_attribute_handlers.empty?
     self.extra_json_attribute_handlers.push(block)
   end
 

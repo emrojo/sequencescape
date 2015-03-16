@@ -153,23 +153,15 @@ class Request < ActiveRecord::Base
   end
 
 
- scope :between, lambda { |source,target| { :conditions => { :asset_id => source.id, :target_asset_id => target.id } } }
- scope :into_by_id, lambda { |target_ids| { :conditions => { :target_asset_id => target_ids } } }
+ scope :between, lambda { |source,target| where(:asset_id => source.id, :target_asset_id => target.id) }
+ scope :into_by_id, lambda { |target_ids| where(:target_asset_id => target_ids ) }
 
-  # TODO: Really need to be consistent in who our named scopes behave
  scope :request_type, lambda { |request_type|
-    id =
-      case
-      when request_type.nil? then nil   # TODO: Are the pipelines with nil request_type_id really nil?
-      when request_type.is_a?(Fixnum), request_type.is_a?(String) then request_type
-      when request_type.is_a?(Array) then request_type
-      else request_type.id
-      end
-    {:conditions => { :request_type_id => id} }
+    where(:request_type_id => request_type)
   }
 
-  scope :where_is_a?,     lambda { |clazz| { :conditions => [ 'sti_type IN (?)',     [ clazz, *clazz.descendants ].map(&:name) ] } }
-  scope :where_is_not_a?, lambda { |clazz| { :conditions => [ 'sti_type NOT IN (?)', [ clazz, *clazz.descendants ].map(&:name) ] } }
+  scope :where_is_a?,     lambda { |clazz| where([ 'sti_type IN (?)',     [ clazz, *clazz.descendants ].map(&:name) ]) }
+  scope :where_is_not_a?, lambda { |clazz| where([ 'sti_type NOT IN (?)', [ clazz, *clazz.descendants ].map(&:name) ]) }
   scope :where_has_a_submission, where('submission_id IS NOT NULL')
 
  scope :full_inbox, where(:state => ["pending","hold"])
@@ -180,36 +172,33 @@ class Request < ActiveRecord::Base
 
   #Asset are Locatable (or at least some of them)
   belongs_to :location_association, :primary_key => :locatable_id, :foreign_key => :asset_id
- scope :located, lambda {|location_id| { :joins => :location_association, :conditions =>  ['location_associations.location_id = ?', location_id ], :readonly => false } }
+  scope :located, lambda {|location_id| joins(:location_association).where(['location_associations.location_id = ?', location_id ]).readonly(false) }
 
   #Use container location
- scope :holder_located, lambda { |location_id|
-    {
-      :joins => ["INNER JOIN container_associations hl ON hl.content_id = asset_id", "INNER JOIN location_associations ON location_associations.locatable_id = hl.container_id"],
-      :conditions => ['location_associations.location_id = ?', location_id ],
-      :readonly => false
-    }
+  scope :holder_located, lambda { |location_id|
+    joins(["INNER JOIN container_associations hl ON hl.content_id = asset_id", "INNER JOIN location_associations ON location_associations.locatable_id = hl.container_id"]).
+    where(['location_associations.location_id = ?', location_id ]).
+    readonly(false)
   }
- scope :holder_not_control, lambda {
-    {
-      :joins => ["INNER JOIN container_associations hncca ON hncca.content_id = asset_id", "INNER JOIN assets AS hncc ON hncc.id = hncca.container_id"],
-      :conditions => ['hncc.sti_type != ?', 'ControlPlate' ],
-      :readonly => false
-    }
+
+  scope :holder_not_control, lambda {
+    joins(["INNER JOIN container_associations hncca ON hncca.content_id = asset_id", "INNER JOIN assets AS hncc ON hncc.id = hncca.container_id"]).
+    conditions(['hncc.sti_type != ?', 'ControlPlate' ]).
+    readonly(false)
   }
- scope :without_asset, where('asset_id is null')
- scope :without_target, where('target_asset_id is null')
- scope :ordered, order("id ASC")
- scope :full_inbox, where(:state => ["pending","hold"])
- scope :hold, where(:state => "hold")
+  scope :without_asset, where('asset_id is null')
+  scope :without_target, where('target_asset_id is null')
+  scope :ordered, order("id ASC")
+  scope :full_inbox, where(:state => ["pending","hold"])
+  scope :hold, where(:state => "hold")
 
   scope :loaded_for_inbox_display, includes([{:submission => {:orders =>:study}, :asset => [:scanned_into_lab_event,:studies]}])
   scope :ordered_for_ungrouped_inbox, order('id DESC')
   scope :ordered_for_submission_grouped_inbox, order('submission_id DESC, id ASC')
 
- scope :group_conditions, lambda { |conditions, variables| {
-    :conditions => [ conditions.join(' OR '), *variables ]
-  } }
+  scope :group_conditions, lambda { |conditions, variables|
+    where([ conditions.join(' OR '), *variables ])
+  }
   def self.group_requests(finder_method, options = {})
     target = options[:by_target] ? 'target_asset_id' : 'asset_id'
 
@@ -221,34 +210,15 @@ class Request < ActiveRecord::Base
     ))
   end
 
- scope :for_submission_id, lambda { |id| { :conditions => { :submission_id => id } } }
- scope :for_asset_id, lambda { |id| { :conditions => { :asset_id => id } } }
- scope :for_study_ids, lambda { |ids|
-    {
-      :joins =>  'INNER JOIN aliquots AS al ON requests.asset_id = al.receptacle_id',
-      :group => "requests.id",
-      :conditions =>['al.study_id IN (?)',ids]
-    }
-  } do
-    #fix a bug in rail, the group clause if removed
-    #therefor we need to the DISTINCT parameter
-    def count
-      super('requests.id',:distinct =>true)
-    end
-  end
- scope :for_study_id, lambda { |id|
-    {
-      :joins =>  'INNER JOIN aliquots AS al ON requests.asset_id = al.receptacle_id',
-      :group => "requests.id",
-      :conditions =>['al.study_id = ?',id]
-    }
-  } do
-    #fix a bug in rail, the group clause if removed
-    #therefor we need to the DISTINCT parameter
-    def count
-      super('requests.id',:distinct =>true)
-    end
-  end
+  scope :for_submission_id, lambda { |id| { :conditions => { :submission_id => id } } }
+  scope :for_asset_id, lambda { |id| { :conditions => { :asset_id => id } } }
+  scope :for_study_ids, lambda { |ids|
+       select('DISTINCT requests.*').
+       joins('INNER JOIN aliquots AS al ON requests.asset_id = al.receptacle_id').
+       where(['al.study_id IN (?)',ids])
+   }
+
+  scope :for_study_id, lambda { |id| for_study_ids(id) }
 
   def self.for_study(study)
     Request.for_study_id(study.id)
@@ -269,11 +239,15 @@ class Request < ActiveRecord::Base
  scope :for_request_types, lambda { |types| { :joins => :request_type, :conditions => { :request_types => { :key => types } } } }
 
  scope :for_search_query, lambda { |query,with_includes|
-    { :conditions => [ 'id=?', query ] }
+    where([ 'id=?', query ])
   }
 
-  scope :find_all_target_asset, lambda { |target_asset_id| { :conditions => [ 'target_asset_id = ?', "#{target_asset_id}" ] } }
-  scope :for_studies, lambda { |*studies| { :conditions => { :initial_study_id => studies.map(&:id) } } }
+  scope :find_all_target_asset, lambda { |target_asset_id|
+    where(['target_asset_id = ?', "#{target_asset_id}" ])
+  }
+  scope :for_studies, lambda { |*studies|
+    where(:initial_study_id => studies.map(&:id))
+  }
 
   scope :with_assets_for_starting_requests, includes([:request_metadata,{:asset=>:aliquots,:target_asset=>:aliquots}])
   scope :not_failed, where(['state != ?', 'failed'])

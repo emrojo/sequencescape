@@ -26,7 +26,7 @@ class WorkflowsControllerTest < ActionController::TestCase
         get :index
       end
 
-      should_respond_with :success
+      should respond_with :success
     end
 
     context "#new" do
@@ -158,7 +158,7 @@ class WorkflowsControllerTest < ActionController::TestCase
         get :duplicate, :id => @workflow.id.to_s
       end
 
-      should_respond_with :redirect
+      should respond_with :redirect
     end
 
     context "#reorder_tasks" do
@@ -167,7 +167,7 @@ class WorkflowsControllerTest < ActionController::TestCase
         get :reorder_tasks, :id => @workflow.id.to_s
       end
 
-      should_respond_with :success
+      should respond_with :success
     end
 
     context "#sort" do
@@ -177,7 +177,7 @@ class WorkflowsControllerTest < ActionController::TestCase
         get :sort, :workflow_id => @workflow.id.to_s
       end
 
-      should_respond_with :success
+      should respond_with :success
     end
   end
 end

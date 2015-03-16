@@ -247,7 +247,7 @@ context "A request with no billing events " do
 
     @request.asset.aliquots.each do |aliquot|
       aliquot.project = Factory(:project)
-      aliquot.save(false)
+      aliquot.save(:validate => false)
     end
     @request.asset.aliquots(true)
 
@@ -288,7 +288,7 @@ context "A request with no billing events " do
   context "without an initial project" do
     setup do
       @request.initial_project = nil
-      @request.save(false)
+      @request.save(:validate => false)
 
       @reference = BillingEvent.build_reference(@request)
     end

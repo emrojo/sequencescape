@@ -36,5 +36,5 @@ end
 
 Given /^the aliquots in the library tube called "([^\"]+)" have been modified$/ do |name|
   tube = LibraryTube.find_by_name(name) or raise "Can't find library tube named #{name.inspect}"
-  tube.aliquots.each { |a| a.updated_at = Time.now ; a.save(false) }
+  tube.aliquots.each { |a| a.updated_at = Time.now ; a.save(:validate => false) }
 end

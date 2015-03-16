@@ -4,10 +4,9 @@
 require "test_helper"
 require 'users_controller'
 
-class PlateOwnerTest < ActionController::TestCase
+class OwnerTest < ActionController::TestCase
   context "Plates" do
     setup do
-
       @barcode_printer = mock("printer abc")
       @barcode_printer.stubs(:id).returns(1)
       @barcode_printer.stubs(:name).returns("abc")

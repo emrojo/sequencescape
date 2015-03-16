@@ -40,7 +40,7 @@ class Admin::ProjectsControllerTest < ActionController::TestCase
           assert_equal [], @emails
         end
 
-        should_redirect_to("admin projects") { "/admin/projects/#{@project.id}" }
+        should redirect_to("admin projects") { "/admin/projects/#{@project.id}" }
       end
 
 
@@ -49,8 +49,8 @@ class Admin::ProjectsControllerTest < ActionController::TestCase
           get :managed_update, :id => @project.id, :project => { :approved => true, :name => @project.name }
         end
 
-        should_redirect_to("admin project") { "/admin/projects/#{@project.id}" }
-        should_set_the_flash_to "Your project has been updated"
+        should redirect_to("admin project") { "/admin/projects/#{@project.id}" }
+        should set_the_flash.to("Your project has been updated")
 
         should_change("Event.count", :by => 1) { Event.count }
 

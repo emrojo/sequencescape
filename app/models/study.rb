@@ -73,6 +73,7 @@ class Study < ActiveRecord::Base
   def requests(reload=nil)
     Request.for_study(self)
   end
+
   has_many :asset_groups
   has_many :study_reports
 
@@ -620,8 +621,8 @@ class Study < ActiveRecord::Base
       nil
     when object.respond_to?(:study_id)
       self.id == object.study_id
-    when object.respond_to?(:study_ids)
-      object.study_ids.include?(self.id)
+    when object.respond_to?(:studies)
+      object.studies.include?(self)
     else
       nil
     end

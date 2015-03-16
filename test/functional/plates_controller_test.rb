@@ -43,8 +43,8 @@ class PlatesControllerTest < ActionController::TestCase
         setup do
           get :new
         end
-        should_respond_with :success
-        should_not_set_the_flash
+        should respond_with :success
+        should_not set_the_flash
       end
 
       context "#create" do
@@ -55,8 +55,8 @@ class PlatesControllerTest < ActionController::TestCase
           end
 
           should_change("Plate.count", :by => 1) { Plate.count }
-          should_respond_with :redirect
-          should_set_the_flash_to /Created/
+          should respond_with :redirect
+          should set_the_flash.to( /Created/)
         end
 
 
@@ -71,8 +71,8 @@ class PlatesControllerTest < ActionController::TestCase
               assert Plate.find(@parent_plate.id).children.first.is_a?(Plate)
               assert_equal PicoAssayPlatePurpose.find_by_name("Pico Assay A"), Plate.find(@parent_plate.id).children.first.plate_purpose
             end
-            should_respond_with :redirect
-            should_set_the_flash_to /Created/
+            should respond_with :redirect
+            should set_the_flash.to( /Created/)
           end
 
           context "with 3 source plates" do
@@ -89,8 +89,8 @@ class PlatesControllerTest < ActionController::TestCase
                 assert_equal PicoAssayPlatePurpose.find_by_name("Pico Assay A"), Plate.find(plate.id).children.first.plate_purpose
               end
             end
-            should_respond_with :redirect
-            should_set_the_flash_to /Created/
+            should respond_with :redirect
+            should set_the_flash.to( /Created/)
           end
         end
 

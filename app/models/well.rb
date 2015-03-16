@@ -56,26 +56,22 @@ class Well < Aliquot::Receptacle
   after_create { |w| w.create_well_attribute unless w.well_attribute.present? }
 
   scope :pooled_as_target_by, lambda { |type|
-    {
-      :joins      => 'LEFT JOIN requests patb ON assets.id=patb.target_asset_id',
-      :conditions => [ '(patb.sti_type IS NULL OR patb.sti_type IN (?))', [ type, *type.descendants ].map(&:name) ],
-      :select     => 'assets.*, patb.submission_id AS pool_id'
-    }
+    joins('LEFT JOIN requests patb ON assets.id=patb.target_asset_id').
+    where([ '(patb.sti_type IS NULL OR patb.sti_type IN (?))', [ type, *type.descendants ].map(&:name) ]).
+    select('DISTINCT assets.*, patb.submission_id AS pool_id')
   }
   scope :pooled_as_source_by, lambda { |type|
-    {
-      :joins      => 'LEFT JOIN requests pasb ON assets.id=pasb.asset_id',
-      :conditions => [ '(pasb.sti_type IS NULL OR pasb.sti_type IN (?))', [ type, *type.descendants ].map(&:name) ],
-      :select     => 'assets.*, pasb.submission_id AS pool_id'
-    }
+    joins('LEFT JOIN requests pasb ON assets.id=pasb.asset_id').
+    where([ '(pasb.sti_type IS NULL OR pasb.sti_type IN (?))', [ type, *type.descendants ].map(&:name) ]).
+    select('DISTINCT assets.*, pasb.submission_id AS pool_id')
   }
-  scope :in_column_major_order, joins(:map, :order => 'column_order ASC')
-  scope :in_row_major_order, joins(:map, :order => 'row_order ASC')
-  scope :in_inverse_column_major_order, joins(:map, :order => 'column_order DESC')
-  scope :in_inverse_row_major_order, joins(:map, :order => 'row_order DESC')
+  scope :in_column_major_order, joins(:map).order('column_order ASC')
+  scope :in_row_major_order, joins(:map).order('row_order ASC')
+  scope :in_inverse_column_major_order, joins(:map).order('column_order DESC')
+  scope :in_inverse_row_major_order, joins(:map).order('row_order DESC')
 
-  scope :in_plate_column, lambda {|col,size| {:joins => :map, :conditions => {:maps => {:description => Map::Coordinate.descriptions_for_column(col,size), :asset_size => size }}}}
-  scope :in_plate_row,    lambda {|row,size| {:joins => :map, :conditions => {:maps => {:description => Map::Coordinate.descriptions_for_row(row,size), :asset_size =>size }}}}
+  scope :in_plate_column, lambda {|col,size|  joins(:map).where(:maps => {:description => Map::Coordinate.descriptions_for_column(col,size), :asset_size => size }) }
+  scope :in_plate_row,    lambda {|row,size|  joins(:map).where(:maps => {:description => Map::Coordinate.descriptions_for_row(row,size), :asset_size =>size }) }
 
   scope :with_blank_samples,
     joins([
@@ -194,7 +190,7 @@ class Well < Aliquot::Receptacle
   end
 
   def create_child_sample_tube
-    Tube::Purpose.standard_sample_tube.create!(:map => self.map, :aliquots => aliquots.map(&:clone)).tap do |sample_tube|
+    Tube::Purpose.standard_sample_tube.create!(:map => self.map, :aliquots => aliquots.map(&:dup)).tap do |sample_tube|
       AssetLink.connect(self, sample_tube)
     end
   end
