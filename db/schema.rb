@@ -1,6 +1,6 @@
-# This file is auto-generated from the current state of the database. Instead
-# of editing this file, please use the migrations feature of Active Record to
-# incrementally modify your database, and then regenerate this schema definition.
+# This file is auto-generated from the current state of the database. Instead of editing this file, 
+# please use the migrations feature of Active Record to incrementally modify your database, and
+# then regenerate this schema definition.
 #
 # Note that this schema.rb definition is the authoritative source for your
 # database schema. If you need to create the application database on another
@@ -450,6 +450,13 @@ ActiveRecord::Schema.define(:version => 20150312223051) do
   add_index "events", ["eventful_type"], :name => "index_events_on_eventful_type"
   add_index "events", ["family"], :name => "index_events_on_family"
 
+  create_table "extended_validators", :force => true do |t|
+    t.string   "behaviour",  :null => false
+    t.text     "options"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "external_properties", :force => true do |t|
     t.integer  "propertied_id"
     t.string   "propertied_type", :limit => 50
@@ -812,6 +819,7 @@ ActiveRecord::Schema.define(:version => 20150312223051) do
     t.integer  "size",                                          :default => 96
     t.integer  "asset_shape_id",                                :default => 1,               :null => false
     t.string   "barcode_for_tecan",                             :default => "ean13_barcode", :null => false
+    t.integer  "source_purpose_id"
   end
 
   add_index "plate_purposes", ["qc_display"], :name => "index_plate_purposes_on_qc_display"
@@ -828,6 +836,11 @@ ActiveRecord::Schema.define(:version => 20150312223051) do
   end
 
   add_index "plate_volumes", ["uploaded_file_name"], :name => "index_plate_volumes_on_uploaded_file_name"
+
+  create_table "pooling_methods", :force => true do |t|
+    t.string "pooling_behaviour", :limit => 50, :null => false
+    t.text   "pooling_options"
+  end
 
   create_table "pre_capture_pool_pooled_requests", :force => true do |t|
     t.integer "pre_capture_pool_id", :null => false
@@ -1045,7 +1058,18 @@ ActiveRecord::Schema.define(:version => 20150312223051) do
     t.boolean  "deprecated",                        :default => false, :null => false
     t.boolean  "no_target_asset",                   :default => false, :null => false
     t.integer  "target_purpose_id"
+    t.integer  "pooling_method_id"
   end
+
+  create_table "request_types_extended_validators", :force => true do |t|
+    t.integer  "request_type_id",       :null => false
+    t.integer  "extended_validator_id", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "request_types_extended_validators", ["extended_validator_id"], :name => "fk_request_types_extended_validators_to_extended_validators"
+  add_index "request_types_extended_validators", ["request_type_id"], :name => "fk_request_types_extended_validators_to_request_types"
 
   create_table "requests", :force => true do |t|
     t.integer  "initial_study_id"
@@ -1574,7 +1598,7 @@ ActiveRecord::Schema.define(:version => 20150312223051) do
     t.integer  "source_id"
     t.integer  "destination_id"
     t.string   "destination_type"
-    t.string   "transfers",        :limit => 1024
+    t.text     "transfers"
     t.integer  "bulk_transfer_id"
   end
 
@@ -1638,6 +1662,7 @@ ActiveRecord::Schema.define(:version => 20150312223051) do
     t.string   "gender"
     t.float    "measured_volume"
     t.float    "initial_volume"
+    t.float    "molarity"
   end
 
   add_index "well_attributes", ["well_id"], :name => "index_well_attributes_on_well_id"

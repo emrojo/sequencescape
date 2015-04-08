@@ -22,6 +22,6 @@ begin
   copy_image 'tooltip_arrow.gif'
   copy_image 'tooltip_image.gif'
   copy_javascript 'tooltip.js'
-rescue Exception => e
+rescue StandardError => e
   puts "There are problems copying widgets assets to you app: #{e.message}"
 end

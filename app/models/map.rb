@@ -86,6 +86,10 @@ class Map < ActiveRecord::Base
       alternate_position(well_position, plate_size, :length, :width)
     end
 
+    def self.location_from_index(index, size)
+      horizontal_plate_position_to_description(index-1,size)
+    end
+
   class << self
     # Given the well position described in terms of a direction (vertical or horizontal) this function
     # will map it to the alternate positional representation, i.e. a vertical position will be mapped
@@ -113,6 +117,11 @@ class Map < ActiveRecord::Base
     def self.location_from_row_and_column(row, column, width, size)
       digit_count = Math.log10(size+1).ceil
       "S%0#{digit_count}d" % [(row)*width + column]
+    end
+
+    def self.location_from_index(index, size)
+      digit_count = Math.log10(size+1).ceil
+      "S%0#{digit_count}d" % [index+1]
     end
 
   end
@@ -158,6 +167,26 @@ class Map < ActiveRecord::Base
 
   def vertical_plate_position
     self.column_order + 1
+  end
+
+  def height
+    asset_shape.plate_height(asset_size)
+  end
+
+  def width
+    asset_shape.plate_width(asset_size)
+  end
+
+  ##
+  # Column of particular map location. Zero indexed integer
+  def column
+    self.row_order%width
+  end
+
+  ##
+  # Row of particular map location. Zero indexed integer
+  def row
+    self.column_order%height
   end
 
   def horizontal_plate_position

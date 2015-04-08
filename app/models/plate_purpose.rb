@@ -45,7 +45,7 @@ class PlatePurpose < Purpose
   belongs_to :asset_shape, :class_name => 'AssetShape'
 
   def source_plate(plate)
-    plate.stock_plate
+    source_purpose_id.present? ? plate.ancestor_of_purpose(source_purpose_id) : plate.stock_plate
   end
 
   def cherrypick_strategy
@@ -178,7 +178,9 @@ class PlatePurpose < Purpose
 
     attributes[:size]     ||= size
     attributes[:location] ||= default_location
-    plates.create_with_barcode!(attributes, &block).tap do |plate|
+    attributes[:purpose] = self
+
+    target_plate_type.constantize.create_with_barcode!(attributes, &block).tap do |plate|
       plate.wells.construct! unless do_not_create_wells
     end
   end
@@ -198,4 +200,7 @@ class PlatePurpose < Purpose
   def source_wells_for(stock_wells)
     stock_wells
   end
+
+  def supports_multiple_submissions?; false; end
+
 end
