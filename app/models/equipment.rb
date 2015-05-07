@@ -24,8 +24,6 @@ class Equipment < ActiveRecord::Base
   def printables
     [PrintBarcode::Label.new({
       :number => barcode_number,
-      :study => name,
-      :suffix => suffix,
       :prefix => prefix,
       :type => "custom-labels",
       :label_description =>  name })]
