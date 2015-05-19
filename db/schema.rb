@@ -1,4 +1,4 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
+# This file is auto-generated from the current state of the database. Instead of editing this file,
 # please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150312223051) do
+ActiveRecord::Schema.define(:version => 20150414151730) do
 
   create_table "aliquots", :force => true do |t|
     t.integer  "receptacle_id",    :null => false
@@ -429,6 +429,13 @@ ActiveRecord::Schema.define(:version => 20150312223051) do
 
   add_index "documents_shadow", ["documentable_id", "documentable_type"], :name => "index_documents_on_documentable_id_and_documentable_type"
 
+  create_table "equipment", :force => true do |t|
+    t.string "name"
+    t.string "equipment_type"
+    t.string "prefix",         :limit => 2,  :null => false
+    t.string "ean13_barcode",  :limit => 13
+  end
+
   create_table "events", :force => true do |t|
     t.integer  "eventful_id"
     t.string   "eventful_type",  :limit => 50
@@ -643,6 +650,16 @@ ActiveRecord::Schema.define(:version => 20150312223051) do
   add_index "maps", ["description", "asset_size"], :name => "index_maps_on_description_and_asset_size"
   add_index "maps", ["description"], :name => "index_maps_on_description"
 
+  create_table "messenger_creators", :force => true do |t|
+    t.string   "template",   :null => false
+    t.string   "root",       :null => false
+    t.integer  "purpose_id", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "messenger_creators", ["purpose_id"], :name => "fk_messenger_creators_to_plate_purposes"
+
   create_table "messengers", :force => true do |t|
     t.integer  "target_id"
     t.string   "target_type"
@@ -820,6 +837,7 @@ ActiveRecord::Schema.define(:version => 20150312223051) do
     t.integer  "asset_shape_id",                                :default => 1,               :null => false
     t.string   "barcode_for_tecan",                             :default => "ean13_barcode", :null => false
     t.integer  "source_purpose_id"
+    t.integer  "lifespan"
   end
 
   add_index "plate_purposes", ["qc_display"], :name => "index_plate_purposes_on_qc_display"

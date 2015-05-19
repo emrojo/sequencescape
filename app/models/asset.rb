@@ -39,7 +39,7 @@ class Asset < ActiveRecord::Base
   has_many :asset_audits
 
   # TODO: Remove 'requests' and 'source_request' as they are abiguous
-  has_many :requests, :inverse_of => :asset
+  has_many :requests
   has_one  :source_request,     :class_name => "Request", :foreign_key => :target_asset_id, :include => :request_metadata
   has_many :requests_as_source, :class_name => 'Request', :foreign_key => :asset_id,        :include => :request_metadata
   has_many :requests_as_target, :class_name => 'Request', :foreign_key => :target_asset_id, :include => :request_metadata
@@ -57,11 +57,6 @@ class Asset < ActiveRecord::Base
     nil
   end
 
-  # Holder
-  # Replaced by container
-  #belongs_to :holder, :polymorphic => true
-  # Replaced by contents
-  #has_many :holded_assets, :as => :holder, :class_name => "Asset"
   belongs_to :map
   belongs_to :barcode_prefix
   scope :sorted , order("map_id ASC")
@@ -71,6 +66,7 @@ class Asset < ActiveRecord::Base
 
  scope :of_type, lambda { |*args| { :conditions => { :sti_type => args.map { |t| [t, *t.descendants] }.flatten.map(&:name) } } }
 
+  named_scope :recent_first, :order => 'id DESC'
   def studies
     []
   end

@@ -163,6 +163,8 @@ class Batch < ActiveRecord::Base
     end
   end
 
+  alias_method :ordered_requests, :requests
+
   def shift_item_positions(position, number)
     return unless number
     BatchRequest.transaction do
@@ -212,9 +214,9 @@ class Batch < ActiveRecord::Base
     holder_ids = Request.get_target_holder_asset_id_map(request_ids).values
     Plate.find(holder_ids, :group => :barcode)
   end
-
-  # Returns the plate_purpose of the first output plate associated with the batch,
-  # this is currently assumed to the same for all output plates.
+  
+  ## WARNING! This method is used in the sanger barcode gem. Do not remove it without
+  ## refactoring the sanger barcode gem.
   def output_plate_purpose
     output_plates[0].plate_purpose unless output_plates[0].nil?
   end
@@ -222,17 +224,6 @@ class Batch < ActiveRecord::Base
   def output_plate_role
     requests.first.try(:role)
   end
-
-  # Set the plate_purpose of all output plates associated with this batch
-  def set_output_plate_purpose(plate_purpose)
-    raise "This batch has no output plates to assign a purpose to!" if output_plates.blank?
-    output_plates.each { |plate|
-      plate.plate_purpose = plate_purpose
-      plate.save!
-    }
-    true
-  end
-
 
   def output_plate_in_batch?(barcode)
     return false if barcode.nil?
@@ -291,10 +282,6 @@ class Batch < ActiveRecord::Base
 
   def multiplexed_items_with_unique_library_ids
     requests.map { |r| r.target_asset.children }.flatten.uniq
-  end
-
-  def ordered_requests(options=nil)
-    batch_requests.ordered.all(options).map(&:request).compact
   end
 
   def assets

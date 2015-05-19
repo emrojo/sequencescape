@@ -40,7 +40,15 @@ class Request < ActiveRecord::Base
     request_type.request_type_validators.find_by_request_option!(request_option.to_s)
   end
 
- scope :for_pooling_of, lambda { |plate|
+ 	scope :for_pipeline, lambda { |pipeline|
+    {
+      :joins => [ 'LEFT JOIN pipelines_request_types prt ON prt.request_type_id=requests.request_type_id' ],
+      :conditions => [ 'prt.pipeline_id=?', pipeline.id],
+      :readonly => false
+    }
+  }
+
+	scope :for_pooling_of, lambda { |plate|
     joins =
       if plate.stock_plate?
         [ 'INNER JOIN assets AS pw ON requests.asset_id=pw.id' ]
@@ -111,6 +119,8 @@ class Request < ActiveRecord::Base
 
   scope :with_request_type_id, lambda { |id| { :conditions => { :request_type_id => id } } }
 
+  named_scope :for_pacbio_sample_sheet, :include => [{:target_asset=>:map},:request_metadata]
+
   # project is read only so we can set it everywhere
   # but it will be only used in specific and controlled place
   belongs_to :initial_project, :class_name => "Project"
@@ -171,6 +181,8 @@ class Request < ActiveRecord::Base
   scope :join_asset,  joins(:asset)
   scope :with_asset_location, includes(:asset => :map)
 
+  named_scope :siblings_of, lambda {|request| { :conditions => ['asset_id = ? AND NOT id = ?', request.asset_id, request.id ] } }
+
   #Asset are Locatable (or at least some of them)
   belongs_to :location_association, :primary_key => :locatable_id, :foreign_key => :asset_id
   scope :located, lambda {|location_id| joins(:location_association).where(['location_associations.location_id = ?', location_id ]).readonly(false) }
@@ -194,6 +206,7 @@ class Request < ActiveRecord::Base
   scope :hold, where(:state => "hold")
 
   scope :loaded_for_inbox_display, includes([{:submission => {:orders =>:study}, :asset => [:scanned_into_lab_event,:studies]}])
+  scope :loaded_for_grouped_inbox_display, includes([ {:submission => :orders}, :asset , :target_asset, :request_type ])
   scope :ordered_for_ungrouped_inbox, order('id DESC')
   scope :ordered_for_submission_grouped_inbox, order('submission_id DESC, id ASC')
 
@@ -358,8 +371,8 @@ class Request < ActiveRecord::Base
     self.asset.requests.select { |previous_failed_request| (previous_failed_request.failed? or previous_failed_request.blocked?)}
   end
 
-  def add_comment(comment, current_user)
-    self.comments.create({:description => comment, :user_id => current_user.id})
+  def add_comment(comment, user)
+    self.comments.create({:description => comment, :user => user})
   end
 
   def self.number_expected_for_submission_id_and_request_type_id(submission_id, request_type_id)

@@ -33,6 +33,8 @@ Sequencescape::Application.configure do
   config.action_mailer.delivery_method = :test
   config.reload_plugins = true
 
+  config.time_zone = 'London'
+
 
   config.active_record.observers = [ :batch_cache_sweeper, :request_observer ]
 end

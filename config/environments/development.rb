@@ -29,6 +29,10 @@ Sequencescape::Application.configure do
   # Plus, rails 4 impliments it far more sensibly on the controller.
   config.active_record.whitelist_attributes = false
 
+  config.time_zone = 'London'
+
+  config.active_record.observers = [ :request_observer ]
+
   config.log_level = :debug
 
   config.active_record.observers = [ :request_observer ]

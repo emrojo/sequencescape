@@ -905,69 +905,6 @@ class BatchTest < ActiveSupport::TestCase
       end
     end
 
-    context "#output_plate_purpose" do
-      setup do
-        @batch = @pipeline.batches.create!
-      end
-
-      context "where no output plates are set," do
-        setup do
-          @batch.stubs(:output_plates).returns([nil])
-        end
-
-        should "return nil" do
-          assert_nil @batch.output_plate_purpose
-        end
-      end
-
-
-      context "where at least 1 output plate is set," do
-        setup do
-          @plate = mock("Plate")
-          @plate_purpose = 'A_PLATE_PURPOSE'
-          @plate.stubs(:plate_purpose).returns(@plate_purpose)
-          @batch.stubs(:output_plates).returns([@plate])
-        end
-
-        should "return the plate_purpose of the first output plate associated with @batch, currently assumed to the same for all output plates." do
-          assert_equal @plate_purpose, @batch.output_plate_purpose
-        end
-      end
-    end
-
-    context "#set_output_plate_purpose" do
-      setup do
-        @batch = @pipeline.batches.create!
-        @plate_purpose = 'A_PLATE_PURPOSE_INSTANCE'
-        @output_plate = mock("Plate")
-      end
-
-      context "with a set of output plates," do
-        setup do
-          @output_plate.expects(:plate_purpose=).with(@plate_purpose)
-          @output_plate.expects(:save!)
-          @batch.stubs(:output_plates).returns([@output_plate])
-          @return_value = @batch.set_output_plate_purpose(@plate_purpose)
-        end
-
-        should "set the plate_purpose of associated output plates to @plate_purpose and return true" do
-          assert_equal true, @return_value
-        end
-      end
-
-      context "when no output plates are defined," do
-        setup do
-          @output_plate.expects(:plate_purpose=).never
-          @batch.expects(:output_plates).returns([])
-        end
-
-        should "should do no assignments but raise a RuntimeError" do
-          assert_raise(RuntimeError) {
-            @batch.set_output_plate_purpose(@plate_purpose)
-          }
-        end
-      end
-    end
   end
 
   context "completing a batch" do

@@ -127,6 +127,14 @@ class Task < ActiveRecord::Base
   def partial
   end
 
+  def included_for_do_task
+    [:requests, :pipeline, :lab_events]
+  end
+
+  def included_for_render_task
+    [:requests, :pipeline, :lab_events]
+  end
+
 
   def render_task(controller, params)
     controller.render_task(self, params)
