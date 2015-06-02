@@ -31,8 +31,8 @@ gem 'sanger_barcode', '~>0.1.1',
 gem "acts-as-dag", '~>3.0.0'
 
 # Better table alterations
-gem "alter_table",
-  :github => "sanger/alter_table"
+# gem "alter_table",
+#   :github => "sanger/alter_table"
 
 # For background processing
 # Locked for ruby version

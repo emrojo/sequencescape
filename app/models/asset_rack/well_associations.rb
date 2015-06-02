@@ -51,14 +51,14 @@ module AssetRack::WellAssociations
   module AssetRackAssociation
     def self.included(base)
       base.class_eval do
-        named_scope :for_asset_rack, lambda{ |rack| {:select=>'assets.*',:joins=>:container_association,:conditions=>{:container_associations=>{:container_id=>rack.strip_tubes }} }}
+        scope :for_asset_rack, lambda{ |rack| {:select=>'assets.*',:joins=>:container_association,:conditions=>{:container_associations=>{:container_id=>rack.strip_tubes }} }}
 
         ##
         # Quite specialised scope. Takes array of:
         # [strip_id,strip_colum,row_offset]
         # Strip column is used to provide a quick conversion back to the standard map description
         # This is a performance optimization
-        named_scope :for_strip_tubes_row, lambda{|strips_wells|
+        scope :for_strip_tubes_row, lambda{|strips_wells|
 
           query = 'false'
           conds = [query]

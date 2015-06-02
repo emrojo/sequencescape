@@ -730,3 +730,4 @@ Factory.define(:messenger_creator) do |reporter|
   reporter.template 'FluidigmPlateIO'
   reporter.purpose {|purpose| purpose.association(:plate_purpose)}
 end
+

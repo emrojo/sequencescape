@@ -40,7 +40,7 @@ class ExtendedValidator < ActiveRecord::Base
   validates_presence_of :behaviour
   serialize :options
 
-  named_scope :for_submission, lambda {|submission|
+  scope :for_submission, lambda {|submission|
     {
       :joins => 'INNER JOIN request_types_extended_validators ON request_types_extended_validators.extended_validator_id = extended_validators.id',
       :conditions => {:request_types_extended_validators => { :request_type_id => submission.request_types }}

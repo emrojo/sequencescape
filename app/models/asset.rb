@@ -66,7 +66,7 @@ class Asset < ActiveRecord::Base
 
  scope :of_type, lambda { |*args| { :conditions => { :sti_type => args.map { |t| [t, *t.descendants] }.flatten.map(&:name) } } }
 
-  named_scope :recent_first, :order => 'id DESC'
+  scope :recent_first, order('id DESC')
   def studies
     []
   end

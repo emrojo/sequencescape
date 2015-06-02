@@ -7,7 +7,7 @@ class Comment < ActiveRecord::Base
   has_many :comments, :as => :commentable
   belongs_to :user
 
-  named_scope :for_plate, lambda { |plate|
+  scope :for_plate, lambda { |plate|
 
     submissions = plate.all_submission_ids
 
@@ -25,6 +25,6 @@ class Comment < ActiveRecord::Base
 
   }
 
-  named_scope :include_uuid, {} # BLUFF!
+  scope :include_uuid, {} # BLUFF!
 
 end

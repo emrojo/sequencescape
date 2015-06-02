@@ -119,7 +119,7 @@ class Request < ActiveRecord::Base
 
   scope :with_request_type_id, lambda { |id| { :conditions => { :request_type_id => id } } }
 
-  named_scope :for_pacbio_sample_sheet, :include => [{:target_asset=>:map},:request_metadata]
+  scope :for_pacbio_sample_sheet, includes([{:target_asset=>:map},:request_metadata])
 
   # project is read only so we can set it everywhere
   # but it will be only used in specific and controlled place
@@ -181,7 +181,7 @@ class Request < ActiveRecord::Base
   scope :join_asset,  joins(:asset)
   scope :with_asset_location, includes(:asset => :map)
 
-  named_scope :siblings_of, lambda {|request| { :conditions => ['asset_id = ? AND NOT id = ?', request.asset_id, request.id ] } }
+  scope :siblings_of, lambda {|request| { :conditions => ['asset_id = ? AND NOT id = ?', request.asset_id, request.id ] } }
 
   #Asset are Locatable (or at least some of them)
   belongs_to :location_association, :primary_key => :locatable_id, :foreign_key => :asset_id

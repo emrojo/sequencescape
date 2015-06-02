@@ -18,7 +18,7 @@ class Batch < ActiveRecord::Base
   include ModelExtensions::Batch
   include StandardNamedScopes
 
-  validate_on_create :requests_have_same_read_length, :cluster_formation_requests_must_be_over_minimum, :all_requests_are_ready?
+  validate :requests_have_same_read_length, :cluster_formation_requests_must_be_over_minimum, :all_requests_are_ready?, :on => :create
 
   def all_requests_are_ready?
     # Checks that SequencingRequests have at least one LibraryCreationRequest in passed status before being processed (as refered by #75102998)
@@ -214,7 +214,7 @@ class Batch < ActiveRecord::Base
     holder_ids = Request.get_target_holder_asset_id_map(request_ids).values
     Plate.find(holder_ids, :group => :barcode)
   end
-  
+
   ## WARNING! This method is used in the sanger barcode gem. Do not remove it without
   ## refactoring the sanger barcode gem.
   def output_plate_purpose

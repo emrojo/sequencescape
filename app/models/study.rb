@@ -136,7 +136,7 @@ class Study < ActiveRecord::Base
   private :set_default_ethical_approval
 
  scope :for_search_query, lambda { |query,with_includes|
-    where([ 'name LIKE ? OR id=?', "%#{query}%", query ])
+    joins(:study_metadata).where([ 'name LIKE ? OR studies.id=? OR prelim_id=?', "%#{query}%", query, query ])
   }
 
  scope :with_no_ethical_approval, where( :ethically_approved => false )
@@ -201,6 +201,7 @@ class Study < ActiveRecord::Base
     association(:reference_genome, :name, :required => true)
     association(:faculty_sponsor, :name, :required => true)
 
+    attribute(:prelim_id, :with => /^[a-zA-Z]\d{4}$/, :required => false)
     attribute(:study_description, :required => true)
     attribute(:contaminated_human_dna, :required => true, :in => YES_OR_NO)
     attribute(:remove_x_and_autosomes, :required => true, :default => 'No', :in => YES_OR_NO)
