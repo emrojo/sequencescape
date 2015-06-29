@@ -30,7 +30,7 @@ class Plate::Creator < ActiveRecord::Base
       plate_purposes.include?(r.plate_purpose)
     end.map(&:parent_purpose).uniq.compact
 
-    parent_purposes.empty? || parent_purposes.all? {|p| p==source_plate.purpose}
+    parent_purposes.empty? || parent_purposes.any? {|p| p==source_plate.purpose}
   end
 
   # Executes the plate creation so that the appropriate child plates are built.
@@ -68,7 +68,7 @@ class Plate::Creator < ActiveRecord::Base
 
   def create_child_plates_from(plate, current_user)
     stock_well_picker = plate.plate_purpose.can_be_considered_a_stock_plate? ? lambda { |w| [w] } : lambda { |w| w.stock_wells }
-    plate_purposes.map do |target_plate_purpose|
+    plate_purposes.select{|p| p.parent_purpose==plate.purpose}.map do |target_plate_purpose|
       target_plate_purpose.target_plate_type.constantize.create_with_barcode!(plate.barcode) do |child_plate|
         child_plate.plate_purpose = target_plate_purpose
         child_plate.size          = plate.size

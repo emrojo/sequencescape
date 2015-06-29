@@ -83,10 +83,11 @@ Feature: Printing new plate barcodes
     And I should be on the new plate page
 
     Examples:
-      | plate_purpose         | parent_plate_purpose |
-      | Working dilution      | Stock Plate          |
-      | Pico dilution         | Working dilution     |
-      | Pico Assay Plates     | Pico dilution        |
+      | plate_purpose         | parent_plate_purpose            |
+      | Working dilution      | Stock Plate                     |
+      | Pico dilution         | Working dilution                |
+      | Pico dilution         | Cherrypicked Working Dilution   |
+      | Pico Assay Plates     | Pico dilution                   |
 
   @xml @qc_event
   Scenario: Create all QC plates for SLF
