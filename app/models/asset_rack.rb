@@ -99,7 +99,7 @@ class AssetRack < Asset
   class Purpose < ::Purpose
 
     has_many :asset_racks, :foreign_key => :plate_purpose_id, :inverse_of => :purpose
-    belongs_to :asset_shape, :class_name => 'Map::AssetShape'
+    belongs_to :asset_shape, :class_name => 'AssetShape'
 
     def source_plate_purpose
       ::Purpose.find_by_name!('Cherrypicked')
@@ -124,7 +124,7 @@ class AssetRack < Asset
     ##
     # We're fixed to a standard 96 well plate map for the moment.
     def well_maps
-      Map.where_plate_size(self.size*strip_size).where_plate_shape(Map::AssetShape.default)
+      Map.where_plate_size(self.size*strip_size).where_plate_shape(AssetShape.default)
     end
 
     def strip_size

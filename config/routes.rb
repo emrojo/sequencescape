@@ -14,14 +14,10 @@ Sequencescape::Application.routes.draw do
 
   resources :projects
 
-  #### NPG start ####
-  map.with_options(:path_prefix => '/npg_actions', :conditions => { :method => :post, :format => :xml }) do |npg|
-    npg.with_options(:controller => 'npg_actions/assets') do |assets|
-      assets.pass_qc_state 'assets/:id/pass_qc_state', :action => 'pass'
-      assets.fail_qc_state 'assets/:id/fail_qc_state', :action => 'fail'
-    end
-  end
-  #### NPG end ####
+
+  match 'assets/:id/pass_qc_state', :action => 'pass', :path_prefix => '/npg_actions', :conditions => { :method => :post, :format => :xml }, :controller => 'npg_actions/assets'
+  match 'assets/:id/fail_qc_state', :action => 'fail', :path_prefix => '/npg_actions', :conditions => { :method => :post, :format => :xml }, :controller => 'npg_actions/assets'
+
 
   match 'assets/:id/pass_qc_state' => 'npg_actions/assets#pass', :as => :pass_qc_state, :path_prefix => '/npg_actions', :via => 'post'
   match 'assets/:id/fail_qc_state' => 'npg_actions/assets#fail', :as => :fail_qc_state, :path_prefix => '/npg_actions', :via => 'post'

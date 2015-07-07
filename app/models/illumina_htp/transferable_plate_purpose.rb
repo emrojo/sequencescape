@@ -5,9 +5,9 @@ class IlluminaHtp::TransferablePlatePurpose < IlluminaHtp::FinalPlatePurpose
   include PlatePurpose::Library
   include PlatePurpose::RequestAttachment
 
-  write_inheritable_attribute :connect_on, 'qc_complete'
-  write_inheritable_attribute :connect_downstream, true
-  write_inheritable_attribute :connected_class, IlluminaHtp::Requests::SharedLibraryPrep
+  self.connect_on = 'qc_complete'
+  self.connect_downstream = true
+  self.connected_class = IlluminaHtp::Requests::SharedLibraryPrep
 
   def source_wells_for(wells)
     Well.in_column_major_order.stock_wells_for(wells)

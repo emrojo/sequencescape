@@ -11,8 +11,8 @@ class FlexibleSubmissionTest < ActiveSupport::TestCase
       @pooling      = Factory :pooling_method
     end
 
-    should_belong_to :study
-    should_belong_to :user
+    should belong_to :study
+    should belong_to :user
 
     context "build (Submission factory)" do
       setup do

@@ -6,7 +6,7 @@ class Submission::SubmissionCreator < Submission::PresenterSkeleton
   IncorrectParamsException = Class.new(SubmissionsCreaterError)
   InvalidInputException    = Class.new(SubmissionsCreaterError)
 
-  write_inheritable_attribute :attributes,  [
+  self.attributes = [
     :id,
     :template_id,
     :sample_names_text,
