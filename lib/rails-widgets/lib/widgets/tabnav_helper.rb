@@ -97,9 +97,10 @@ module Widgets
             # :success => success,
             :method => :get,
             :loading => loading_function + success,
-            :loaded => "$('#{@_tabnav.html[:id]}_content').setStyle({height: 'auto'});"
+            :loaded => "$('#{@_tabnav.html[:id]}_content').setStyle({height: 'auto'});",
+            :remote => true
           }
-          concat link_to_remote(tab.name, remote_opts.merge(tab.remote_link), tab_html)
+          concat link_to(tab.name, remote_opts.merge(tab.remote_link), tab_html)
         else
           raise "WHAT THE HELL?"
         end

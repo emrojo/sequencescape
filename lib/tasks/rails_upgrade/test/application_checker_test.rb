@@ -191,7 +191,7 @@ class ApplicationCheckerTest < ActiveSupport::TestCase
   end
 
   def test_check_old_ajax_helpers
-    make_file("app/views/sections", "section.js", "<%= link_to_remote 'section-', :update => 'sections', :url => {:action => :destroy, :controller => 'sections', :id => @section.id } %>")
+    make_file("app/views/sections", "section.js", "<%= link_to'section-', :remote => true , :update => 'sections', :url => {:action => :destroy, :controller => 'sections', :id => @section.id } %>")
     @checker.check_old_ajax_helpers
 
     assert @checker.alerts.has_key?("Deprecated AJAX helper calls")

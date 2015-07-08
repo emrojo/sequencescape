@@ -5,7 +5,7 @@
 <% add :menu, "<strong>Edit profile</strong>" => edit_profile_path(@user) -%>
 <% add :menu, "View Projects" => projects_profile_path(@user) -%>
 <% add :menu, "Qc Reports" => study_reports_profile_path(@user) -%>
-<% add :admin_option, "Administer users" => users_path -%>
+<% add :admin_option, "Administer users" => admin_users_path -%>
 
 <h1><% unless @user.name.empty? %><%= @user.name %><% end %> : <%=h @user.login %></h1>
 

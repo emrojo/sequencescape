@@ -12,8 +12,17 @@ Sequencescape::Application.routes.draw do
     end
   end
 
-  resources :projects
-
+  resources :projects do
+    resources :studies do
+      member do
+        get :related_studies
+        get :collaborators
+        get :follow
+        post :grant_role
+        post :remove_role
+      end
+    end
+  end
 
   match 'assets/:id/pass_qc_state', :action => 'pass', :path_prefix => '/npg_actions', :conditions => { :method => :post, :format => :xml }, :controller => 'npg_actions/assets'
   match 'assets/:id/fail_qc_state', :action => 'fail', :path_prefix => '/npg_actions', :conditions => { :method => :post, :format => :xml }, :controller => 'npg_actions/assets'
@@ -66,9 +75,34 @@ Sequencescape::Application.routes.draw do
   match '/taxon_lookup_by_id/:id' => 'samples#taxon_lookup'
 
   resources :studies do
+
     collection do
       get :study_list
     end
+
+    member do
+      get :study_reports
+      get :sample_manifests
+      get :suppliers
+      get :assembly
+      put :assembly
+      get :new_plate_submission
+      post :create_plate_submission
+      get :close
+      get :open
+      get :follow
+      get :projects
+      get :study_status
+      get :collaborators
+      get :properties
+      get :state
+      post :grant_role
+      post :remove_role
+      get :related_studies
+      post :relate_study
+      post :unrelate_study
+    end
+
     resources :sample_registration do
       collection do
         post :new
@@ -135,67 +169,70 @@ Sequencescape::Application.routes.draw do
 
   resources :searches
 
+  namespace :admin do
+    resources :custom_texts
+
+    resources :settings do
+      collection do
+        get :reset
+        get :apply
+      end
+    end
+
+    resources :studies do
+      collection do
+        get :index
+        post :filer
+      end
+      member do
+        put :managed_update
+      end
+    end
+
+    resources :projects do
+      collection do
+        get :index
+        post :filer
+      end
+      member do
+        put :managed_update
+      end
+    end
+
+    resources :plate_purposes
+    resources :delayed_jobs
+    resources :faculty_sponsors
+    resources :delayed_jobs
+
+    resources :users do
+      collection do
+        post :filter
+      end
+      member do
+        get :switch
+        post :grant_user_role
+        post :remove_user_role
+      end
+    end
+
+    resources :roles do
+      resources :users
+    end
+
+    resources :robots
+    resources :bait_libraries
+    resources :bait_library_types
+    resources :bait_library_suppliers
+  end
   match 'admin' => 'admin#index', :as => :admin
-  resources :custom_texts
 
-  resources :settings do
-    collection do
-      get :reset
-      get :apply
-    end
-  end
-
-  resources :studies do
-    collection do
-      get :index
-      post :filer
-    end
-    member do
-      put :managed_update
-    end
-  end
-
-  resources :projects do
-    collection do
-      get :index
-      post :filer
-    end
-    member do
-      put :managed_update
-    end
-  end
-
-  resources :plate_purposes
-  resources :delayed_jobs
-  resources :faculty_sponsors
-  resources :delayed_jobs
-
-  resources :users do
-    collection do
-      post :filter
-    end
-    member do
-      get :switch
-      post :grant_user_role
-      post :remove_user_role
-    end
-  end
-
-  resources :profile do
+  resources :profile, :controller => 'Users' do
     member do
       get :study_reports
       get :projects
     end
   end
 
-  resources :roles do
-    resources :users
-  end
-
-  resources :robots
-  resources :bait_libraries
-  resources :bait_library_types
-  resources :bait_library_suppliers
   resources :verifications do
     collection do
       get :input
@@ -332,29 +369,96 @@ Sequencescape::Application.routes.draw do
   end
 
   match '/' => 'studies#index'
-  match 'asset_audits' => 'api/asset_audits#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'asset_links' => 'api/asset_links#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'batch_requests' => 'api/batch_requests#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'batches' => 'api/batches#index', :as => :asset, :path_prefix => '/1', :read_only => 'true'
-  match 'billing_events' => 'api/billing_events#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'events' => 'api/events#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'lanes' => 'api/lanes#index', :as => :asset, :path_prefix => '/1', :read_only => 'true'
-  match 'library_tubes' => 'api/library_tubes#index', :as => :asset, :path_prefix => '/1', :read_only => 'true'
-  match 'multiplexed_library_tubes' => 'api/multiplexed_library_tubes#index', :as => :asset, :path_prefix => '/1', :read_only => 'true'
-  match 'pulldown_multiplexed_library_tubes' => 'api/pulldown_multiplexed_library_tubes#index', :as => :asset, :path_prefix => '/1', :read_only => 'true'
-  match 'plate_purposes' => 'api/plate_purposes#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'plates' => 'api/plates#index', :as => :asset, :path_prefix => '/1', :read_only => 'true'
-  match 'sample_tubes' => 'api/sample_tubes#index', :as => :asset, :path_prefix => '/1', :read_only => 'true'
-  match 'study_samples' => 'api/study_samples#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'submissions' => 'api/submissions#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'orders' => 'api/orders#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'tags' => 'api/tags#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'wells' => 'api/wells#index', :as => :asset, :path_prefix => '/1', :read_only => 'true'
-  match 'aliquots' => 'api/aliquots#index', :as => :model, :path_prefix => '/1', :read_only => 'true'
-  match 'projects' => 'api/projects#index', :as => :model, :path_prefix => '/1', :read_only => 'false'
-  match 'requests' => 'api/requests#index', :as => :model, :path_prefix => '/1', :read_only => 'false'
-  match 'samples' => 'api/samples#index', :as => :model, :path_prefix => '/1', :read_only => 'false'
-  match 'studies' => 'api/studies#index', :as => :model, :path_prefix => '/1', :read_only => 'false'
+
+  scope '0_5', :module => 'api' do
+
+    resources 'asset_audits', :only => [:index, :show]
+    resources 'asset_links', :only => [:index, :show]
+    resources 'batch_requests', :only => [:index, :show]
+    resources 'batches', :only => [:index, :show] do
+      member do
+        get :children
+        get :parents
+      end
+    end
+    resources 'billing_events', :only => [:index, :show]
+    resources 'events', :only => [:index, :show]
+    resources 'lanes', :only => [:index, :show] do
+      member do
+        get :children
+        get :parents
+      end
+    end
+    resources 'library_tubes', :only => [:index, :show] do
+      member do
+        get :children
+        get :parents
+      end
+
+      resources 'lanes', :only => [:index, :show]
+      resources 'requests', :only => [:index, :show]
+    end
+    resources 'multiplexed_library_tubes', :only => [:index, :show] do
+      member do
+        get :children
+        get :parents
+      end
+    end
+    resources 'pulldown_multiplexed_library_tubes', :only => [:index, :show]
+    resources 'plate_purposes', :only => [:index, :show]
+    resources 'plates', :only => [:index, :show] do
+      member do
+        get :children
+        get :parents
+      end
+    end
+    resources 'sample_tubes', :only => [:index, :show] do
+      resources 'library_tubes', :only => [:index, :show] do
+      member do
+        get :children
+        get :parents
+      end
+    end
+      resources 'requests', :only => [:index, :show]
+    end
+    resources 'study_samples', :only => [:index, :show]
+    resources 'submissions', :only => [:index, :show] do
+      resources 'orders', :only => [:index, :show]
+    end
+    resources 'orders', :only => [:index, :show]
+    resources 'tags', :only => [:index, :show]
+    resources 'wells', :only => [:index, :show] do
+      member do
+        get :children
+        get :parents
+      end
+    end
+    resources 'aliquots', :only => [:index, :show]
+
+
+    resources 'projects', :except => :destroy do
+      resources 'studies', :except => :destroy
+    end
+    resources 'requests', :except => :destroy
+    resources 'samples', :except => :destroy do
+      member do
+        get :children
+        get :parents
+      end
+      resources 'sample_tubes', :only => [:index, :show] do
+        member do
+          get :children
+          get :parents
+        end
+      end
+    end
+    resources 'studies', :except => :destroy do
+      resources 'samples', :except => :destroy
+      resources 'projects', :except => :destroy
+    end
+
+  end
+
 
   resources :sample_manifests do
     collection do

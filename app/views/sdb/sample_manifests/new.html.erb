@@ -28,7 +28,7 @@
   <% end %>
   <% form.buttons do %>
     <%= form.input :asset_type, :value => params[:type], :as => :hidden %>
-    <%= form.commit_button 'Create manifest and print labels' %>
+    <%= form.action(:submit) 'Create manifest and print labels' %>
   <% end %>
 
 

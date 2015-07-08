@@ -17,6 +17,12 @@ gem 'carrierwave'
 gem 'jruby-openssl', :platforms => :jruby
 gem 'rdoc'
 
+# Provides legacy form helpers
+gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+
+# Provides eg. error_messages_for previously in rails 2, now deprecated.
+gem 'dynamic_form'
+
 gem 'trinidad', :platforms => :jruby
 
 # This was once a plugin, now it's a gem:

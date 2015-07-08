@@ -1,6 +1,8 @@
 #This file is part of SEQUENCESCAPE is distributed under the terms of GNU General Public License version 1 or later;
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2007-2011 Genome Research Ltd.
+
+# TODO: Fix these
 module ApiRouting
   # Assets have a couple of extra actions that are always present: namely 'parents' and 'children'
   def asset(*entities, &block)
@@ -23,6 +25,6 @@ module ApiRouting
   end
 end
 
-# class ActionController::Routing::RouteSet::Mapper
-#   include ApiRouting
-# end
+class ActionDispatch::Routing::Mapper
+  include ApiRouting
+end

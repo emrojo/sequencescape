@@ -6,7 +6,7 @@
 <% semantic_form_for(:study_report, :url => study_reports_path ) do |form| %>
   <% form.inputs :name => "New report for" do %>
     <%= form.input :study, :as => :select, :collection => @studies %>
-    <%= form.commit_button %>
+    <%= form.action(:submit) %>
   <% end %>
 <% end %>
 

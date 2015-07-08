@@ -6,7 +6,7 @@
 
 <% if @studies %>
   <h1>Manage Studies</h1>
-  <%= form_remote_tag(:url => { :action => :filter }, :html => { :id => "filter_form"}, :id => "filter_form", :update => "studies", :loading => "show_update_loader();", :complete => "hide_update_loader();") %>
+  <%= form_tag(:url => { :action => :filter }, :remote => true, :html => { :id => "filter_form"}, :id => "filter_form", :update => "studies", :loading => "show_update_loader();", :complete => "hide_update_loader();") %>
 
     <div class='callout_filter'>
       <table width='100%'>

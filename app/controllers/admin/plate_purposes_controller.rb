@@ -66,7 +66,7 @@ class Admin::PlatePurposesController < ApplicationController
     @plate_purpose.destroy
 
     respond_to do |format|
-      format.html { redirect_to(plate_purposes_url) }
+      format.html { redirect_to(admin_plate_purposes_url) }
       format.xml  { head :ok }
     end
   end

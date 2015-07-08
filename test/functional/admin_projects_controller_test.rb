@@ -19,7 +19,7 @@ class Admin::ProjectsControllerTest < ActionController::TestCase
 
     context "management UI" do
       setup do
-        @user     = Factory :admin
+        @user     = Factory :admin, :email => "project.owner@example.com"
         @project  = Factory :project, :approved => false
         role = Factory :owner_role, :authorizable => @project
         role.users << @user
@@ -54,13 +54,12 @@ class Admin::ProjectsControllerTest < ActionController::TestCase
 
         should_change("Event.count", :by => 1) { Event.count }
 
-        should "send an email" do
-          assert_sent_email do |email|
-            email.subject   =~ /Project/ && email.subject =~ /[TEST]/ && email.bcc.include?(@project.owner.email)
-            email.bcc.size  == 2
-            email.body      =~ /Project approved by/
-          end
-        end
+        should have_sent_email.
+          with_subject(/[TEST].*Project/).
+          bcc("project.owner@example.com").
+          with_body(/Project approved by/)
+          # email.bcc.size  == 2
+
       end
     end
 

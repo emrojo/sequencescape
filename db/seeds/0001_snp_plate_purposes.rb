@@ -295,13 +295,13 @@ AssetShape.create!(
   :vertical_ratio   => 4,
   :description_strategy => 'Map::Sequential'
 )
-Map::AssetShape.create!(
+AssetShape.create!(
   :name => 'StripTubeColumn',
   :horizontal_ratio => 1,
   :vertical_ratio   => 8,
   :description_strategy => 'Map::Sequential'
 )
-Map::AssetShape.create!(
+AssetShape.create!(
   :name => 'StripTubeRack',
   :horizontal_ratio => 12,
   :vertical_ratio   => 1,

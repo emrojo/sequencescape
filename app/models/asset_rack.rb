@@ -23,16 +23,16 @@ class AssetRack < Asset
 
     def construct!(source=nil)
 
-      source ||= proxy_owner.source_plate||proxy_owner
+      source ||= proxy_association.owner.source_plate||proxy_association.owner
 
-      strips = proxy_owner.maps.map do |map|
+      strips = proxy_association.owner.maps.map do |map|
         {
           :name => "#{source.sanger_human_barcode}:#{map.description}",
           :map  => map
         }
       end
-      proxy_owner.strip_tubes.build(strips)
-      proxy_owner.save!
+      proxy_association.owner.strip_tubes.build(strips)
+      proxy_association.owner.save!
 
     end
 

@@ -63,7 +63,7 @@ class Admin::CustomTextsController < ApplicationController
     else
       flash[:notice] = "Failed to destroy custom text"
     end
-    redirect_to custom_texts_url
+    redirect_to admin_custom_texts_url
   end
 
 end

@@ -72,14 +72,14 @@ class StudiesControllerTest < ActionController::TestCase
             "name" => "hello",
             "reference_genome_id" => ReferenceGenome.find_by_name("").id,
             'study_metadata_attributes' => {
-              'faculty_sponsor' => FacultySponsor.create!(:name => 'Me'),
+              'faculty_sponsor_id' => FacultySponsor.create!(:name => 'Me'),
               'study_description' => 'some new study',
               'contains_human_dna' => 'No',
               'contaminated_human_dna' => 'No',
               'commercially_available' => 'No',
-              'data_release_study_type' => DataReleaseStudyType.find_by_name('genomic sequencing'),
+              'data_release_study_type_id' => DataReleaseStudyType.find_by_name('genomic sequencing'),
               'data_release_strategy' => 'open',
-              'study_type' => StudyType.find_by_name("Not specified")
+              'study_type_id' => StudyType.find_by_name("Not specified").id
             }
           }
         end
@@ -108,14 +108,14 @@ class StudiesControllerTest < ActionController::TestCase
             "name" => "hello 3",
             "reference_genome_id" => ReferenceGenome.find_by_name("").id,
             'study_metadata_attributes' => {
-              'faculty_sponsor' => FacultySponsor.create!(:name => 'Me'),
+              'faculty_sponsor_id' => FacultySponsor.create!(:name => 'Me').id,
               'study_description' => 'some new study',
               'contains_human_dna' => 'No',
               'contaminated_human_dna' => 'No',
               'commercially_available' => 'No',
-              'data_release_study_type' => DataReleaseStudyType.find_by_name('genomic sequencing'),
+              'data_release_study_type_id' => DataReleaseStudyType.find_by_name('genomic sequencing').id,
               'data_release_strategy' => 'open',
-              'study_type' => StudyType.find_by_name("Not specified")
+              'study_type_id' => StudyType.find_by_name("Not specified").id
             }
           }
         end

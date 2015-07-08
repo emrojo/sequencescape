@@ -293,9 +293,9 @@ module NavigationHelpers
       new_request_asset_path(:id => asset)
 
     when /the faculty sponsor homepage/
-      faculty_sponsors_path
+      admin_faculty_sponsors_path
     when /the bait library management/
-      bait_libraries_path
+      admin_bait_libraries_path
 
     # Add more page name => path mappings above here
     else

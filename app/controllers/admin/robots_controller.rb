@@ -65,7 +65,7 @@ class Admin::RobotsController < ApplicationController
     flash[:notice] = "Robot removed successfully"
 
     respond_to do |format|
-      format.html { redirect_to(robots_url) }
+      format.html { redirect_to(admin_robots_url) }
       format.xml  { head :ok }
     end
   end

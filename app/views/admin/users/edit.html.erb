@@ -2,11 +2,11 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2007-2011,2014 Genome Research Ltd.%>
 <%- add :title, "Update your user profile." %>
-<%- add :menu, "Back to all users" => users_path %>
+<%- add :menu, "Back to all users" => admin_users_path %>
 
 <h1>Edit profile: <% unless @user.name.empty? %><%=h @user.name %><% else %><%=h @user.login %><% end %></h1>
 
-<% form_for :user, :url => user_path(@user), :html => {:method => :put} do |f| %>
+<% form_for :user, :url => admin_user_path(@user), :html => {:method => :put} do |f| %>
   <h3>User Details</h3>
   <table width="100%" cellpadding="0" cellspacing="0">
     <tbody>
@@ -65,7 +65,7 @@
   </div>
 <% end %>
 <hr>
-<h3><% unless @user.name.empty? %><%=h @user.name %><% else %><%=h @user.login %><% end %>'s roles (<%= link_to "Add new role", edit_user_path(@user, :anchor => "add_new_role")-%>)</h3>
+<h3><% unless @user.name.empty? %><%=h @user.name %><% else %><%=h @user.login %><% end %>'s roles (<%= link_to "Add new role", edit_admin_user_path(@user, :anchor => "add_new_role")-%>)</h3>
 <div class="help">You edit these roles independently of any changes above.</div>
 <div id="role_list">
   <% if @users_roles.empty? %>
