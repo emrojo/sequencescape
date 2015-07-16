@@ -344,4 +344,22 @@ module ApplicationHelper
     admin_address = configatron.admin_email || "admin@test.com"
     link_to "#{admin_address}", "mailto:#{admin_address}"
   end
+
+  def remote_function(options)
+    # remote_function(:url => show_summary_study_workflow_path(@study, @workflow, { :summary => summary}.merge(@extra_params)),
+    #     :update => {:success => "everything"},
+    #     :method => :get,
+    #     :loading => "Element.show('loading')",
+    #     :complete => "try {
+    #         TableSorterFacade.extend_table('summary');
+    #         Element.highlight('summary');
+    #       } catch (e) {
+    #         (e.name == 'ElementDoesNotExistError') || console.warn(e);
+    #       } finally {
+    #         Element.hide('loading');
+    #       };",
+    #     :failure => "Element.show('remote_error')")
+    # });)
+    "Need to update application_helper.rb:348"
+  end
 end

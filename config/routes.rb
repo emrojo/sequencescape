@@ -2,8 +2,10 @@
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2007-2011,2011,2012,2013,2014 Genome Research Ltd.
 Sequencescape::Application.routes.draw do
+
   resources :reference_genomes
   resources :barcode_printers
+
   resources :robot_verifications do
     collection do
       post :submission
@@ -13,28 +15,38 @@ Sequencescape::Application.routes.draw do
   end
 
   resources :projects do
-    resources :studies do
-      member do
-        get :related_studies
-        get :collaborators
-        get :follow
-        post :grant_role
-        post :remove_role
-      end
+    resources :studies
+    member do
+      get :related_studies
+      get :collaborators
+      get :follow
+      post :grant_role
+      post :remove_role
     end
   end
 
+  #### NPG start ####
   match 'assets/:id/pass_qc_state', :action => 'pass', :path_prefix => '/npg_actions', :conditions => { :method => :post, :format => :xml }, :controller => 'npg_actions/assets'
   match 'assets/:id/fail_qc_state', :action => 'fail', :path_prefix => '/npg_actions', :conditions => { :method => :post, :format => :xml }, :controller => 'npg_actions/assets'
-
-
   match 'assets/:id/pass_qc_state' => 'npg_actions/assets#pass', :as => :pass_qc_state, :path_prefix => '/npg_actions', :via => 'post'
   match 'assets/:id/fail_qc_state' => 'npg_actions/assets#fail', :as => :fail_qc_state, :path_prefix => '/npg_actions', :via => 'post'
+  #### NPG end ####
 
   resources :items
+
   resources :batches do
     resources :requests
     resources :comments
+
+    member do
+      get :print_labels
+      get :print_stock_labels
+      get :print_plate_labels
+      get :filtered
+      post :swap
+      get :gwl_file
+    end
+
   end
 
   match 'pipelines/release/:id' => 'pipelines#release', :as => :release_batch
@@ -47,19 +59,26 @@ Sequencescape::Application.routes.draw do
 
   resources :events
   resources :sources
+
   resources :samples do
+
+    resources :assets
+    resources :comments
+    resources :studies
+
     member do
       get :history
     end
-  end
 
-  resources :samples do
-    resources :comments
-    resources :studies
+    collection do
+      get :upload
+      post :review
+    end
   end
 
   match '/taxon_lookup_by_term/:term' => 'samples#taxon_lookup'
   match '/taxon_lookup_by_id/:id' => 'samples#taxon_lookup'
+
   match '/studies/:study_id/workflows/:workflow_id/summary_detailed/:id' => 'studies/workflows#summary_detailed'
   match 'studies/accession/:id' => 'studies#accession'
   match 'studies/policy_accession/:id' => 'studies#policy_accession'
@@ -103,15 +122,19 @@ Sequencescape::Application.routes.draw do
       post :unrelate_study
     end
 
-    resources :sample_registration do
+    resources :assets
+
+    resources :sample_registration, :only => [:index,:new,:create] do
       collection do
         post :new
+        get :new
         get :upload
       end
     end
 
     resources :samples
     resources :events
+
     resources :requests do
       member do
         post :reset
@@ -120,6 +143,7 @@ Sequencescape::Application.routes.draw do
     end
 
     resources :comments
+
     resources :asset_groups do
       member do
         post :search
@@ -128,17 +152,39 @@ Sequencescape::Application.routes.draw do
         post :print_labels
         get :printing
       end
+    end
 
+    resources :plates, :excpet => :destroy do
+
+      collection do
+        post :view_wells
+        post :asset_group
+        get :show_asset_group
+      end
+
+      member do
+        post :remove_wells
+      end
+
+      resources :wells, :expect => [:destroy,:edit]
     end
 
     resources :workflows do
+
+      member do
+        get :summary
+        get :show_summary
+      end
+
       resources :assets do
         collection do
           post :print
         end
       end
     end
-    resources :documents
+
+    resources :documents, :only => [:show,:destroy]
+
   end
 
   match 'bulk_submissions' => 'bulk_submissions#new'
@@ -219,7 +265,9 @@ Sequencescape::Application.routes.draw do
       resources :users
     end
 
-    resources :robots
+    resources :robots do
+      resources :robot_properties
+    end
     resources :bait_libraries
     resources :bait_library_types
     resources :bait_library_suppliers

@@ -38,7 +38,7 @@ class Admin::RobotsController < ApplicationController
     respond_to do |format|
       if @robot.save
         flash[:notice] = 'Robot was successfully created.'
-        format.html { redirect_to(@robot) }
+        format.html { redirect_to admin_robot_path(@robot) }
         format.xml  { render :xml => @robot, :status => :created, :location => @robot }
       else
         format.html { render :action => "new" }
@@ -51,7 +51,7 @@ class Admin::RobotsController < ApplicationController
     respond_to do |format|
       if @robot.update_attributes(params[:robot])
         flash[:notice] = 'Robot was successfully updated.'
-        format.html { redirect_to(@robot) }
+        format.html { redirect_to admin_robot_path(@robot) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

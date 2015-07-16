@@ -3,6 +3,7 @@
 #Copyright (C) 2012,2013,2015 Genome Research Ltd.
 require "test_helper"
 require 'submissions_controller'
+require 'pry'
 
 class SubmissionsControllerTest < ActionController::TestCase
   context "Submissions controller" do
@@ -23,7 +24,7 @@ class SubmissionsControllerTest < ActionController::TestCase
         well = Factory :well_with_sample_and_without_plate, :map => Map.find_by_description(location)
         @plate.wells << well
       end
-      @plate.wells << Factory(:well, :map => Map.find_by_description('C5'))
+      Factory(:well, :map => Map.find_by_description('C5'), :plate=>@plate)
       @study = Factory :study, :name => 'A study'
       @project = Factory :project, :name => 'A project'
       @submission_template = SubmissionTemplate.find_by_name('Cherrypicking for pulldown')
@@ -74,7 +75,22 @@ class SubmissionsControllerTest < ActionController::TestCase
         end
         samples = @wd_plate.wells.with_aliquots.each.map {|w| w.aliquots.first.sample.name}
 
-        post(:create, :submission => {:is_a_sequencing_order=>"false", :comments=>"", :template_id=>@submission_template.id.to_s, :order_params=>{"read_length"=>"37", "fragment_size_required_to"=>"400", "bait_library_name"=>"Human all exon 50MB", "fragment_size_required_from"=>"100", "library_type"=>"Agilent Pulldown"}, :asset_group_id=>"", :study_id=>@study.id.to_s, :sample_names_text=>samples[1..4].join("\n"), :plate_purpose_id=>@wd_plate.plate_purpose.id.to_s, :project_name=>"A project"})
+        post(:create, :submission => {
+          :is_a_sequencing_order=>"false",
+          :comments=>"",
+          :template_id=>@submission_template.id.to_s,
+          :order_params=>{
+            "read_length"=>"37",
+            "fragment_size_required_to"=>"400",
+            "bait_library_name"=>"Human all exon 50MB",
+            "fragment_size_required_from"=>"100",
+            "library_type"=>"Agilent Pulldown"
+          },
+          :asset_group_id=>"",
+          :study_id=>@study.id.to_s,
+          :sample_names_text=>samples[1..4].join("\n"),
+          :plate_purpose_id=>@wd_plate.plate_purpose.id.to_s,
+          :project_name=>"A project"})
 
       end
 
@@ -91,6 +107,7 @@ class SubmissionsControllerTest < ActionController::TestCase
       end
 
       should "create the appropriate orders" do
+        assert Order.first.present?, "No order was created!"
         assert_equal 27, Order.first.assets.count
       end
 

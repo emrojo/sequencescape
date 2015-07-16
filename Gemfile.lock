@@ -100,6 +100,7 @@ GEM
     cgi_multipart_eof_fix (2.5.0)
     childprocess (0.5.6)
       ffi (~> 1.0, >= 1.0.11)
+    coderay (1.0.9)
     columnize (0.3.6)
     configatron (2.9.1)
       yamler (>= 0.1.0)
@@ -168,6 +169,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     metaclass (0.0.4)
+    method_source (0.8.2)
     mime-types (1.19)
     mini_portile (0.6.2)
     mocha (1.1.0)
@@ -196,6 +198,15 @@ GEM
       http_parser.rb (~> 0.5.3)
       multi_json (~> 1.0)
     polyglot (0.3.5)
+    pry (0.9.12)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    pry (0.9.12-java)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+      spoon (~> 0.0)
     rack (1.4.5)
     rack-acceptable (0.1.0)
       rack (>= 1.1.0)
@@ -258,7 +269,9 @@ GEM
     sinatra (1.1.4)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
-    spoon (0.0.1)
+    slop (3.6.0)
+    spoon (0.0.4)
+      ffi
     spreadsheet (0.6.5.4)
       ruby-ole (>= 1.0)
     sprockets (2.2.2)
@@ -334,6 +347,7 @@ DEPENDENCIES
   parallel_tests
   poltergeist (= 1.0.3)
   prototype_legacy_helper (= 0.0.0)!
+  pry (= 0.9.12)
   psd_logger!
   rack-acceptable
   rails (= 3.2.19)

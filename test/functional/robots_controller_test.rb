@@ -37,7 +37,7 @@ class RobotsControllerTest < ActionController::TestCase
       end
       should "increase number of robots" do
         assert_equal @count+1, Robot.count
-        assert_redirected_to robot_path(assigns(:robot))
+        assert_redirected_to admin_robot_path(assigns(:robot))
       end
       should set_the_flash.to( "Robot was successfully created.")
     end
@@ -65,7 +65,7 @@ class RobotsControllerTest < ActionController::TestCase
 
       should "update name" do
         assert_equal "tecan", Robot.find(@robot.id).name
-        assert_redirected_to robot_path(assigns(:robot))
+        assert_redirected_to admin_robot_path(assigns(:robot))
       end
       should set_the_flash.to( "Robot was successfully updated.")
     end
@@ -77,7 +77,7 @@ class RobotsControllerTest < ActionController::TestCase
       end
       should "delete robot" do
         assert_equal @count-1, Robot.count
-        assert_redirected_to robots_path
+        assert_redirected_to admin_robots_path
       end
       should set_the_flash.to("Robot removed successfully")
     end

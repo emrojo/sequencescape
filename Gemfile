@@ -86,6 +86,7 @@ group :development do
   gem "utility_belt"
 #  gem 'rack-perftools_profiler', '~> 0.1', :require => 'rack/perftools_profiler'
 #  gem 'rbtrace', :require => 'rbtrace'
+  gem 'pry', '0.9.12'
 end
 
 group :test do

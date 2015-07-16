@@ -31,7 +31,9 @@ class Aliquot < ActiveRecord::Base
 
     # Named scopes for the future
     scope :include_aliquots, includes( :aliquots => [ :sample, :tag, :bait_library ] )
-    scope :with_aliquots, joins(:aliquots)
+
+    # This is a lambda as otherwise the scope selects Aliquot::Receptacles
+    scope :with_aliquots, lambda { joins(:aliquots) }
 
     # Provide some named scopes that will fit with what we've used in the past
     scope :with_sample_id, lambda { |id|     { :conditions => { :aliquots => { :sample_id => Array(id)     } }, :joins => :aliquots } }
