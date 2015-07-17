@@ -11,6 +11,7 @@
 
 class ExtendedValidator < ActiveRecord::Base
 
+
   class RequestTypeExtendedValidator < ActiveRecord::Base
 
     set_table_name('request_types_extended_validators')
@@ -22,9 +23,7 @@ class ExtendedValidator < ActiveRecord::Base
 
   end
 
-  def after_initialize
-    import_behaviour
-  end
+  after_initialize :import_behaviour
 
   def import_behaviour
     return if behaviour.nil?

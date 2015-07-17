@@ -8,7 +8,7 @@ require 'samples_controller'
 class Admin::UsersController; def rescue_action(e) raise e end; end
 
 class Admin::UsersControllerTest < ActionController::TestCase
-  context "Studies controller" do
+  context "Admin Users controller" do
     setup do
       @controller = Admin::UsersController.new
       @request    = ActionController::TestRequest.new

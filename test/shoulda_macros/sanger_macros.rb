@@ -39,7 +39,7 @@ module Sanger
                   @controller.stubs(:current_user).returns(Factory(:user))
                   begin
                     get action
-                  rescue ActionController::UnknownAction
+                  rescue AbstractController::ActionNotFound
                      flunk "Testing for an unknown action: #{action}"
                   rescue ActiveRecord::RecordNotFound
                     assert true
@@ -59,7 +59,7 @@ module Sanger
                   @controller.stubs(:logged_in?).returns(false)
                   begin
                     get action
-                  rescue ActionController::UnknownAction
+                  rescue AbstractController::ActionNotFound
                     flunk "Testing for an unknown action: #{action}"
                   end
                 end

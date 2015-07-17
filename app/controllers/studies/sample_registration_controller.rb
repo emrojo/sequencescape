@@ -44,7 +44,7 @@ class Studies::SampleRegistrationController < ApplicationController
   rescue SampleRegistrar::SpreadsheetError => exception
     flash[:notice] = 'Your file has been processed'
     flash[:error] = exception.message
-    redirect_to upload_study_sample_registration_path
+    redirect_to upload_study_sample_registration_index_path
   end
 
   def upload

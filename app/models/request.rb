@@ -84,20 +84,21 @@ class Request < ActiveRecord::Base
           'INNER JOIN assets AS pw ON well_links.target_well_id=pw.id AND well_links.type="stock"',
         ]
       end
-    {
-      :select => 'min(uuids.external_id) AS group_id, GROUP_CONCAT(DISTINCT pw_location.description SEPARATOR ",") AS group_into, requests.*',
-      :joins => joins + [
+
+      select('min(uuids.external_id) AS group_id, GROUP_CONCAT(DISTINCT pw_location.description SEPARATOR ",") AS group_into, requests.*').
+      joins(joins + [
         'INNER JOIN maps AS pw_location ON pw.map_id=pw_location.id',
         'INNER JOIN container_associations ON container_associations.content_id=pw.id',
         'INNER JOIN pre_capture_pool_pooled_requests ON requests.id=pre_capture_pool_pooled_requests.request_id',
         'INNER JOIN uuids ON uuids.resource_id=pre_capture_pool_pooled_requests.pre_capture_pool_id AND uuids.resource_type="PreCapturePool"'
-      ],
-      :group => 'pre_capture_pool_pooled_requests.pre_capture_pool_id',
-      :conditions => [
-        'requests.sti_type NOT IN (?) AND container_associations.container_id=?',
+        ]
+      ).
+      group('pre_capture_pool_pooled_requests.pre_capture_pool_id').
+      where([
+        'requests.sti_type NOT IN (?) AND container_associations.container_id=? AND requests.state="pending"',
         [TransferRequest,*TransferRequest.descendants].map(&:name), plate.id
-      ]
-    }
+      ])
+
   }
 
   scope :for_order_including_submission_based_requests, lambda {|order|

@@ -47,7 +47,7 @@ class BatchesControllerTest < ActionController::TestCase
           batch.reload
           batch.start!(Factory(:user))
 
-          get :show, :id => batch.id, :format => "xml"
+          get :show, :id => batch.id, :format => :xml
         end
 
         should respond_with_content_type :xml
@@ -188,15 +188,6 @@ class BatchesControllerTest < ActionController::TestCase
             end
           end
 
-          context "multiplexed batches for library prep" do
-            should "have items created that share an internal tracking id"
-            should "send internal tracking id back to projects"
-          end
-
-          context "non-multiplexed batches" do
-            should "have items created that have different internal tracking ids"
-          end
-
           context "create and assign requests" do
             setup do
               @old_count = Batch.count
@@ -216,11 +207,6 @@ class BatchesControllerTest < ActionController::TestCase
         context "#released" do
           should "return all released batches if passed params" do
             get :released, :id => @pipeline.id
-            assert_response :success
-          end
-
-          should "return released batches without params passed" do
-            get :released
             assert_response :success
           end
         end
@@ -294,31 +280,25 @@ class BatchesControllerTest < ActionController::TestCase
         @e.add_descriptor Descriptor.new({:name => "Chip Barcode", :value => "Chip Barcode: 62c7gaaxx"})
         @e.batch_id = @batch.id
         @e.save
-        get :find_batch_by_barcode, :id => "62c7gaaxx", :format => "xml"
+        get :find_batch_by_barcode, :id => "62c7gaaxx", :format => :xml
       end
-      # should "lab event" do
-      #   assert_equal "Cluster generation", @e.description
-      #   assert_equal "Request", @e.eventful_type
-      #   assert_true @e.descriptors.to_yaml.include? "Chip Barcode: 62c7gaaxx"
-      # end
-      # should "get batch" do
-      #   assert_equal @batch.id, LabEvent.find_by_barcode("62c7gaaxx")
-      # end
       should "show batch" do
         assert_response :success
-        assert_template "batches/show.xml.builder"
+        assert_equal "application/xml", @response.content_type
+        assert_template "batches/show"
       end
     end
 
     context "Find by barcode (not found)" do
       setup do
         @controller.stubs(:current_user).returns(@admin)
-        get :find_batch_by_barcode, :id => "62c7axx", :format => "xml"
+        get :find_batch_by_barcode, :id => "62c7axx", :format => :xml
       end
       should "show error" do
         # this is the wrong response!
         assert_response :success
-        assert_template "batches/batch_error.xml.builder"
+        assert_equal "application/xml", @response.content_type
+        assert_template "batches/batch_error"
       end
     end
   end

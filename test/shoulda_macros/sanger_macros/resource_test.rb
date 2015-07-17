@@ -12,6 +12,7 @@ module Sanger
           restful_actions = ['index','new','create','show','update','destroy','edit']
           ignore_actions  = params[:ignore_actions] || []
           actions         = params[:actions] || (restful_actions - ignore_actions)
+          path_prefix     = params[:with_prefix]||""
           raise Exception.new, ":actions need to be an Array" unless actions.instance_of?(Array)
 
           other_actions   = params[:other_actions] || []
@@ -24,13 +25,13 @@ module Sanger
               @input_params = {}
             end
 
-            show_url              = "#{resource_name}_path(@#{resource_name})"
-            index_url             = "#{resource_name.to_s.pluralize}_path"
+            show_url              = "#{path_prefix}#{resource_name}_path(@object)"
+            index_url             = "#{path_prefix}#{resource_name.to_s.pluralize}_path"
             grand_parent_resource = params[:grand_parent]
             parent_resource       = params[:parent]
 
             if grand_parent_resource && parent_resource
-              show_url  = "#{grand_parent_resource}_#{parent_resource}_#{resource_name}_path(@#{grand_parent_resource}, @#{parent_resource}, @#{resource_name})"
+              show_url  = "#{grand_parent_resource}_#{parent_resource}_#{resource_name}_path(@#{grand_parent_resource}, @#{parent_resource}, @object)"
               index_url = "#{grand_parent_resource}_#{parent_resource}_#{resource_name.to_s.pluralize}_path(@#{grand_parent_resource}, @#{parent_resource})"
 
               setup do
@@ -48,7 +49,7 @@ module Sanger
                 )
               end
             elsif parent_resource
-              show_url  = "#{parent_resource}_#{resource_name}_path(@#{parent_resource}, @#{resource_name})"
+              show_url  = "#{parent_resource}_#{resource_name}_path(@#{parent_resource}, @object)"
               index_url = "#{parent_resource}_#{resource_name.to_s.pluralize}_path(@#{parent_resource})"
 
               setup do
@@ -109,7 +110,7 @@ module Sanger
                     local_params[resource_name] = @create_options
                     post :create, local_params
                   end
-                  #assert eval "@#{resource_name}".valid?
+                  #assert eval "@object".valid?
                   should redirect_to("show page"){ eval(show_url) }
                 end
               end
@@ -147,6 +148,7 @@ module Sanger
                     local_params[:id] = @object.id
                     put :update, local_params
                   end
+                  p show_url
                   should redirect_to("show page"){ eval(show_url) }
                 end
               end
@@ -177,7 +179,7 @@ module Sanger
               context "should not have untested action" do
                 untested_actions.each do |action|
                   should "#{action}" do
-                    assert_raise ActionController::UnknownAction do
+                    assert_raise AbstractController::ActionNotFound do
                       get action
                     end
                   end

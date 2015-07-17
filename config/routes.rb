@@ -124,7 +124,7 @@ Sequencescape::Application.routes.draw do
 
     resources :assets
 
-    resources :sample_registration, :only => [:index,:new,:create] do
+    resources :sample_registration, :only => [:index,:new,:create], :controller => "studies/sample_registration" do
       collection do
         post :new
         get :new
@@ -251,14 +251,17 @@ Sequencescape::Application.routes.draw do
     resources :delayed_jobs
 
     resources :users do
+
       collection do
         post :filter
       end
+
       member do
         get :switch
         post :grant_user_role
         post :remove_user_role
       end
+
     end
 
     resources :roles do

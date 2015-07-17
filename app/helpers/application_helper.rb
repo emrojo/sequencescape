@@ -362,4 +362,47 @@ module ApplicationHelper
     # });)
     "Need to update application_helper.rb:348"
   end
+
+  def sortable_element(*options)
+   # 'requests_list',
+   #  :tag => 'tr',
+   #  :url => { :action => "sort", :batch_id => @batch.id },
+   #  :complete => "reload_batch();"
+   "Need to update application_helper.rb:366"
+  end
 end
+
+ # File actionpack/lib/action_view/helpers/prototype_helper.rb, line 115
+ #      def remote_function(options)
+ #        javascript_options = options_for_ajax(options)
+
+ #        update = ''
+ #        if options[:update] && options[:update].is_a?(Hash)
+ #          update  = []
+ #          update << "success:'#{options[:update][:success]}'" if options[:update][:success]
+ #          update << "failure:'#{options[:update][:failure]}'" if options[:update][:failure]
+ #          update  = '{' + update.join(',') + '}'
+ #        elsif options[:update]
+ #          update << "'#{options[:update]}'"
+ #        end
+
+ #        function = update.empty? ?
+ #          "new Ajax.Request(" :
+ #          "new Ajax.Updater(#{update}, "
+
+ #        url_options = options[:url]
+ #        function << "'#{html_escape(escape_javascript(url_for(url_options)))}'"
+ #        function << ", #{javascript_options})"
+
+ #        function = "#{options[:before]}; #{function}" if options[:before]
+ #        function = "#{function}; #{options[:after]}"  if options[:after]
+ #        function = "if (#{options[:condition]}) { #{function}; }" if options[:condition]
+ #        function = "if (confirm('#{escape_javascript(options[:confirm])}')) { #{function}; }" if options[:confirm]
+
+ #        return function.html_safe
+ #      end
+
+ #  Scriptaculous
+      # def sortable_element(element_id, options = {})
+      #   javascript_tag(sortable_element_js(element_id, options).chop!)
+      # end

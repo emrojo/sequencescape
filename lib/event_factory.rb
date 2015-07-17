@@ -20,7 +20,15 @@ class EventFactory
     )
     event.save
 
-    EventfulMailer.confirm_event(User.all_administrators_emails.reject(&:blank?), event.eventful, event.message, event.content, "No Milestone").deliver
+    admin_emails = User.all_administrators_emails.reject(&:blank?)
+
+    EventfulMailer.confirm_event(
+      admin_emails,
+      event.eventful,
+      event.message,
+      event.content,
+      "No Milestone"
+    ).deliver unless admin_emails.empty?
   end
 
   # Creates an event and sends an email or emails when a project is approved

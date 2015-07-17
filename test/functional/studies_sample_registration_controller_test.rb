@@ -55,7 +55,7 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
         context "with attached file" do
           setup do
             @controller.stubs(:current_user).returns(@user)
-            post :new, :study_id => @study, :file => File.open(Rails.root + '/test/data/two_plate_sample_info_valid.xls')
+            post :new, :study_id => @study, :file => Rack::Test::UploadedFile.new(Rails.root.to_s + '/test/data/two_plate_sample_info_valid.xls','')
           end
 
           should "respond successfully and render the new template" do
@@ -66,11 +66,11 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
 
         context "with invalid file" do
           setup do
-            post :new, :study_id => @study, :file => File.open(Rails.root + '/config/environment.rb')
+            post :new, :study_id => @study, :file => Rack::Test::UploadedFile.new(Rails.root.to_s + '/config/environment.rb','text/csv')
           end
 
           should set_the_flash.to( "Problems processing your file. Only Excel spreadsheets accepted")
-          should redirect_to("upload study sample registration") { upload_study_sample_registration_path }
+          should redirect_to("upload study sample registration") { upload_study_sample_registration_index_path }
         end
       end
 
@@ -177,26 +177,31 @@ class Studies::SampleRegistrationControllerTest < ActionController::TestCase
           should_change('Asset.count', :by => 2) { Asset.count }
 
           context 'sample 1' do
-            subject { Sample.find_by_name("Sam1") }
+
+            setup do
+              @sample = Sample.find_by_name("Sam1")
+            end
 
             should 'have the 2D barcode on the asset' do
-              assert_equal "SI0000012345", subject.assets.first.two_dimensional_barcode
+              assert_equal "SI0000012345", @sample.assets.first.two_dimensional_barcode
             end
 
             should 'have the barcode on the asset' do
-              assert_equal "12345", subject.assets.first.barcode
+              assert_equal "12345", @sample.assets.first.barcode
             end
           end
 
           context 'sample 2' do
-            subject { Sample.find_by_name('Sam2') }
+            setup do
+              @sample = Sample.find_by_name('Sam2')
+            end
 
             should 'have the 2D barcode on the asset' do
-              assert_equal "SI0000098765", subject.assets.first.two_dimensional_barcode
+              assert_equal "SI0000098765", @sample.assets.first.two_dimensional_barcode
             end
 
             should 'have the barcode on the asset' do
-              assert_equal "98765", subject.assets.first.barcode
+              assert_equal "98765", @sample.assets.first.barcode
             end
           end
         end

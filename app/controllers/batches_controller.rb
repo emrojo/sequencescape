@@ -82,16 +82,13 @@ class BatchesController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-    Batch.benchmark "BENCH Batch:WorkflowController:create", Logger::INFO, false do
       @pipeline = Pipeline.find(params[:id])
 
       unless @pipeline.valid_number_of_checked_request_groups?(params)
         return pipeline_error_on_batch_creation("Too many request groups selected, maximum is #{@pipeline.max_number_of_groups}")
       end
 
-      requests = Batch.benchmark "BENCH Batch:WorkflowController:create - finding requests", Logger::INFO, false do
-        @pipeline.extract_requests_from_input_params(params)
-      end
+      requests = @pipeline.extract_requests_from_input_params(params)
 
       return pipeline_error_on_batch_creation("Maximum batch size is #{@pipeline.max_size}") if @pipeline.max_size && requests.size > @pipeline.max_size
       return pipeline_error_on_batch_creation("All plates in a submission must be selected") unless @pipeline.all_requests_from_submissions_selected?(requests)
@@ -99,9 +96,7 @@ class BatchesController < ApplicationController
       return hide_from_inbox(requests) if params[:action_on_requests] == "hide_from_inbox"
 
       @batch = @pipeline.batches.create!(:requests => requests, :user => current_user)
-      # we exclude the rendering bit from the usefull code
-      # the global time is anyway already in the Rails log
-      end # of benchmak
+
     end # of transaction
 
     respond_to do |format|
@@ -222,20 +217,12 @@ class BatchesController < ApplicationController
   end
 
   def released
-    if params[:id]
-      @pipeline = Pipeline.find(params[:id])
+    @pipeline = Pipeline.find(params[:id])
 
-      @batches = @pipeline.batches.released.all(:order => "id DESC", :include => [:user ])
-      respond_to do |format|
-        format.html
-        format.xml { render :layout => false }
-      end
-    else
-      @all_batches = Batch.all
-      @batches = @all_batches.select { |batch| batch.externally_released? }
-      respond_to do |format|
-        format.xml { render :layout => false }
-      end
+    @batches = @pipeline.batches.released.all(:order => "id DESC", :include => [:user ])
+    respond_to do |format|
+      format.html
+      format.xml { render :layout => false }
     end
   end
 
@@ -746,11 +733,11 @@ class BatchesController < ApplicationController
     batch_id = LabEvent.find_by_barcode(params[:id])
     if batch_id == 0
       @batch_error = "Batch id not found."
-      render :action => "batch_error"
+      render :action => "batch_error", :format => :xml
       return
     else
       @batch = Batch.find(batch_id)
-      render :action => "show"
+      render :action => "show", :format => :xml
     end
   end
 

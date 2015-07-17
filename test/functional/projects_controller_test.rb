@@ -24,6 +24,7 @@ class ProjectsControllerTest < ActionController::TestCase
       @request    = ActionController::TestRequest.new
       @response   = ActionController::TestResponse.new
       @user = Factory :user
+
       @user.has_role('owner')
       @controller.stubs(:logged_in?).returns(@user)
       @controller.stubs(:current_user).returns(@user)

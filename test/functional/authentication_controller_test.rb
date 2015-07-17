@@ -5,12 +5,15 @@ require "test_helper"
 
 # Re-raise errors caught by the controller.
 class AuthenticationController < ApplicationController
+
   before_filter :login_required, :except => :open
+
   def rescue_action(e) raise e end
 
   def restricted
     data = {:parent => {:child => "open"}}
     respond_to do |format|
+      format.html { render :text => "<html></html>" }
       format.xml  { render :text => data.to_xml }
       format.json { render :text => data.to_json }
     end
@@ -19,6 +22,7 @@ class AuthenticationController < ApplicationController
   def open
     data = {:parent => {:child => "restricted"}}
     respond_to do |format|
+      format.html { render :text => "<html></html>" }
       format.xml  { render :text => data.to_xml }
       format.json { render :text => data.to_json }
     end

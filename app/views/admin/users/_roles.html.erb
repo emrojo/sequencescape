@@ -14,7 +14,7 @@
   <tbody>
   <% @users_roles.each do |role| -%>
     <tr class="<%= cycle('rowodd', 'roweven') -%>">
-      <td><%= link_to role.name.humanize, role_path(role) %></td>
+      <td><%= link_to role.name.humanize, admin_role_path(role) %></td>
       <% unless role.authorizable.nil? || role.authorizable.name == "Study" -%>
         <td><%= link_to "#{role.authorizable_id}", study_path(role.authorizable_id) -%></td>
         <td><%= link_to "#{role.authorizable_type}", study_path(role.authorizable_id) -%></td>
