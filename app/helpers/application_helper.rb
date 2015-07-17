@@ -370,6 +370,10 @@ module ApplicationHelper
    #  :complete => "reload_batch();"
    "Need to update application_helper.rb:366"
   end
+
+  def visual_effect(*args)
+    "Another Deprecated Helper"
+  end
 end
 
  # File actionpack/lib/action_view/helpers/prototype_helper.rb, line 115

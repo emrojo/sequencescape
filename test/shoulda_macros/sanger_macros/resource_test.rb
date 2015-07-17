@@ -148,7 +148,6 @@ module Sanger
                     local_params[:id] = @object.id
                     put :update, local_params
                   end
-                  p show_url
                   should redirect_to("show page"){ eval(show_url) }
                 end
               end
