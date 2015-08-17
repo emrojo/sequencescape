@@ -57,7 +57,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           post :download,   :user_id  => @user.id,
                             :batch_id => @batch.id,
                             :robot_id => @robot.id,
-                            :source_plate_types => "ABgene_0765",
+                            :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                             :barcodes => { :destination_plate_barcode => "1220142334774"},
                             :bed_barcodes => {"1" => "580000001806", "2" => "580000002810", "3" => "580000003824", "4" => "580000004838"},
                             :plate_barcodes => {"1220127162859" => "1220127162859", "1220127167670" => "1220127167670", "1220127168684" => "1220127168684", "1220134443842" => "1220134443842"},
@@ -77,7 +77,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
             post :download,   :user_id  => @user.id,
                               :batch_id => @batch.id,
                               :robot_id => @robot.id,
-                              :source_plate_types => "ABgene_0765",
+                              :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                               :barcodes => { :destination_plate_barcode => "1220142334774"},
                               :bed_barcodes => {"1" => "", "2" => "", "3" => "", "4" => ""},
                               :plate_barcodes => {"1220127162859" => "", "1220127167670" => "", "1220127168684" => "", "1220134443842" => ""},
@@ -87,7 +87,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
 
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -97,7 +97,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
             post :download,   :user_id  => @user.id,
                               :batch_id => @batch.id,
                               :robot_id => @robot.id,
-                              :source_plate_types => "ABgene_0765",
+                              :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                               :barcodes => { :destination_plate_barcode => "1220142334774"},
                               :bed_barcodes => {"1" => "580000001806", "2" => "580000002810", "3" => "580000003824", "4" => "580000004838"},
                               :plate_barcodes => {"1220127162859" => "", "1220127167670" => "", "1220127168684" => "", "1220134443842" => ""},
@@ -106,7 +106,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           end
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -116,7 +116,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
             post :download,   :user_id  => @user.id,
                               :batch_id => @batch.id,
                               :robot_id => @robot.id,
-                              :source_plate_types => "ABgene_0765",
+                              :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                               :barcodes => { :destination_plate_barcode => "1220142334774"},
                               :bed_barcodes => {"1" => "", "2" => "", "3" => "", "4" => ""},
                               :plate_barcodes => {"1220127162859" => "1220127162859", "1220127167670" => "1220127167670", "1220127168684" => "1220127168684", "1220134443842" => "1220134443842"},
@@ -125,7 +125,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           end
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -134,7 +134,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
             post :download,   :user_id  => @user.id,
                               :batch_id => @batch.id,
                               :robot_id => @robot.id,
-                              :source_plate_types => "ABgene_0765",
+                              :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                               :barcodes => { :destination_plate_barcode => "1220142334774"},
                               :bed_barcodes => {"1" => "580000001806", "2" => "580000002810", "3" => "580000003824", "4" => "580000004838"},
                               :plate_barcodes => {"1220127167670" => "1220127162859", "1220127162859" => "1220127167670", "1220134443842" => "1220127168684", "1220127168684" => "1220134443842"},
@@ -143,7 +143,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           end
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -152,7 +152,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
             post :download,   :user_id  => @user.id,
                               :batch_id => @batch.id,
                               :robot_id => @robot.id,
-                              :source_plate_types => "ABgene_0765",
+                              :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                               :barcodes => { :destination_plate_barcode => "1220142334774"},
                               :bed_barcodes => {"4" => "580000001806", "3" => "580000002810", "1" => "580000003824", "2" => "580000004838"},
                               :plate_barcodes => {"1220127162859" => "1220127162859", "1220127167670" => "1220127167670", "1220127168684" => "1220127168684", "1220134443842" => "1220134443842"},
@@ -161,7 +161,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           end
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -170,7 +170,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
             post :download,   :user_id  => @user.id,
                               :batch_id => @batch.id,
                               :robot_id => @robot.id,
-                              :source_plate_types => "ABgene_0765",
+                              :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                               :barcodes => { :destination_plate_barcode => "1220142334774"},
                               :bed_barcodes => {"1" => "1220127162859", "2" => "580000002810", "3" => "580000003824", "4" => "580000004838"},
                               :plate_barcodes => {"1220127162859" => "580000001806", "1220127167670" => "1220127167670", "1220127168684" => "1220127168684", "1220134443842" => "1220134443842"},
@@ -179,7 +179,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           end
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -188,7 +188,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
             post :download,   :user_id  => @user.id,
                               :batch_id => @batch.id,
                               :robot_id => @robot.id,
-                              :source_plate_types => "ABgene_0765",
+                              :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                               :barcodes => { :destination_plate_barcode => "1220142334774"},
                               :bed_barcodes => {"1" => "580000001806", "2" => "580000002810", "3" => "580000003824", "4" => "580000004838"},
                               :plate_barcodes => {"1220127162859" => "1220127162859", "1220127167670" => "1220127167670", "1220127168684" => "1220127168684", "1220134443842" => "1220134443842"},
@@ -197,7 +197,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           end
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -206,7 +206,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
             post :download,   :user_id  => @user.id,
                               :batch_id => @batch.id,
                               :robot_id => @robot.id,
-                              :source_plate_types => "ABgene_0765",
+                              :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                               :barcodes => { :destination_plate_barcode => "1220142334774"},
                               :bed_barcodes => {"1" => "580000001806", "2" => "580000002810", "3" => "580000003824", "4" => "580000004838"},
                               :plate_barcodes => {"1220127162859" => "1220127162859", "1220127167670" => "1220127167670", "1220127168684" => "1220127168684", "1220134443842" => "1220134443842"},
@@ -215,7 +215,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           end
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -233,7 +233,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           end
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -242,7 +242,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
             post :download,   :user_id  => @user.id,
                               :batch_id => @batch.id,
                               :robot_id => @robot.id,
-                              :source_plate_types => "ABgene_0765",
+                              :source_plate_types => {"1220127162859" => "ABgene_0765", "1220127167670" => "ABgene_0765", "1220127168684" => "ABgene_0765", "1220134443842" => "ABgene_0765"},
                               :barcodes => { :destination_plate_barcode => "1220142334774"},
                               :bed_barcodes => {"1" => " 580000001806", "2" => "580000002810    ", "3" => "  580000003824", "4" => "580000004838"},
                               :plate_barcodes => {"1220127162859" => "1220127162859     ", "1220127167670" => "1220127167670 ", "1220127168684" => "1220127168684", "1220134443842" => "1220134443842"},
@@ -251,7 +251,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
           end
           should "redirect and set the flash to error" do
             assert_response :redirect
-            assert_not_nil @controller.session[:flash][:error].grep /Error/
+            assert_not_nil @controller.session[:flash][:error].include?("Error")
             assert_equal @before_event_count+ 1, Event.count
           end
         end
@@ -294,7 +294,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
         end
         should "redirect and set the flash to error" do
           assert_response :redirect
-          assert_not_nil @controller.session[:flash][:error].grep /Invalid/
+          assert_not_nil @controller.session[:flash][:error].include?("Invalid")
         end
 
       end
@@ -307,7 +307,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
         end
         should "redirect and set the flash to error" do
           assert_response :redirect
-          assert_not_nil @controller.session[:flash][:error].grep /Invalid/
+          assert_not_nil @controller.session[:flash][:error].include?("Invalid")
         end
 
       end
@@ -320,7 +320,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
         end
         should "redirect and set the flash to error" do
           assert_response :redirect
-          assert_not_nil @controller.session[:flash][:error].grep /Invalid/
+          assert_not_nil @controller.session[:flash][:error].include?("Invalid")
         end
 
       end
@@ -333,7 +333,7 @@ class RobotVerificationsControllerTest < ActionController::TestCase
         end
         should "redirect and set the flash to error" do
           assert_response :redirect
-          assert_not_nil @controller.session[:flash][:error].grep /Invalid/
+          assert_not_nil @controller.session[:flash][:error].include?("Invalid")
         end
 
       end

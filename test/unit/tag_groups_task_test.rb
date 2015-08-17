@@ -20,7 +20,7 @@ class TagGroupsTaskTest < TaskTestBase
     end
 
     should "not have at least one entry in tag_groups" do
-      assert 'tag_groups empty', !@object.tag_groups.empty?
+      assert @object.tag_groups.present?
     end
 
     should "assign tag_groups" do

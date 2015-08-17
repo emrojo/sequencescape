@@ -130,8 +130,6 @@ class SubmissionTemplate < ActiveRecord::Base
   def self.unserialize(object)
     if object.respond_to? :map
       return object.map { |o| unserialize(o) }
-    elsif object.is_a?(YAML::Object)
-      return object.class.constantize.new(object.ivars)
     else
       return object
     end

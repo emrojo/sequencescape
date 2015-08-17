@@ -24,7 +24,7 @@ module Sanger
           # FIXME: routing doesnt work property
           #should redirect_to("study workflow submission page"){ study_workflow_submission_url(@study, @workflow, @submission) }
           should "have a successful submission" do
-            assert_not_nil @controller.session.try(:[], :flash).try(:[], :notice).try(:grep, /Submission successfully created/)
+            assert_not_nil @controller.session.try(:[], :flash).try(:[], :notice).try(:include?, "Submission successfully created")
             assert_equal @submission_count +1 , Submission.count
           end
         end

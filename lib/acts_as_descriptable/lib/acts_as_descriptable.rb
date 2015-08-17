@@ -1,3 +1,4 @@
+require 'pry'
 module ActiveRecord # :nodoc:
   module Acts #:nodoc:
     module Descriptable

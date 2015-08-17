@@ -30,7 +30,7 @@ class StudyReport < ActiveRecord::Base
       csv_options =  {:row_sep => "\r\n", :force_quotes => true }
       Tempfile.open("#{self.study.dehumanise_abbreviated_name}_progress_report.csv") do |tempfile|
         Study.find(self.study_id).progress_report_on_all_assets do |fields|
-          tempfile.puts(FasterCSV.generate_line(fields, csv_options))
+          tempfile.puts(CSV.generate_line(fields, csv_options))
         end
         tempfile.open  # Reopen the temporary file
         self.update_attributes!(:report => tempfile)

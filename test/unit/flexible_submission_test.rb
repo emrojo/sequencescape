@@ -153,7 +153,7 @@ class FlexibleSubmissionTest < ActiveSupport::TestCase
             should_change("Request.count", :by => (16+8)) { Request.count }
 
             should "set target assets according to the request_type.pool_by" do
-              rows = (0...8).map
+              rows = (0...8).to_a
               used_assets = []
 
               @assets.group_by {|well| well.map.row }.each do |row,wells|

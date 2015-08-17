@@ -85,7 +85,7 @@ class SampleManifestTemplate < ActiveRecord::Base
   private :set_value
 
   def generate(manifest)
-    spreadsheet = Spreadsheet.open(Rails.root.to_str + (self.path || '/data/base_manifest.xls'))
+    spreadsheet = Spreadsheet.open(Rails.root.to_s + (self.path || '/data/base_manifest.xls'))
     worksheet   = spreadsheet.worksheets.first
 
     @column_position_map = read_column_position(manifest, worksheet)

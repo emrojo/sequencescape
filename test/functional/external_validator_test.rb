@@ -9,7 +9,7 @@ class ExternalValidatorTest < ActiveSupport::TestCase
 
     setup do
       @validated_request_type = Factory :validated_request_type
-      @assets = [Factory :sample_tube]
+      @assets = [Factory(:sample_tube)]
       # We don't want to trigger validation just yet!
       @order = Factory.build(:order, :request_types => [@validated_request_type.id], :assets => @assets)
       @sample = @assets.first.aliquots.first.sample

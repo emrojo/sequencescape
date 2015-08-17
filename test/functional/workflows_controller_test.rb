@@ -137,10 +137,8 @@ class WorkflowsControllerTest < ActionController::TestCase
 
       context "should set descriptors on batch" do
         setup do
-
-          # Check the requests
           request_data = @batch.requests(true).map { |r| r.id }.inject({}) { |result, element| result[element.to_s] = "1" ; result }
-          post  "stage"  , {:controller=>"workflows", :id => 0, :action => "stage","next_stage"=>"true", "fields"=>{"1"=>"Passed?", "2"=>"Operator", "3"=>"Chip Barcode", "4"=>"Comment"}, "descriptors"=>{"Comment"=>"Some Comment", "Chip Barcode"=>"3290000006714", "Operator"=>"2470000002799", "Passed?"=>"Yes"}, :batch_id => @batch.id,  :workflow_id => @ws1.id, :request => request_data}
+          post :stage, {:controller=>"workflows", :id => 0, :action => "stage","next_stage"=>"true", "fields"=>{"1"=>"Passed?", "2"=>"Operator", "3"=>"Chip Barcode", "4"=>"Comment"}, "descriptors"=>{"Comment"=>"Some Comment", "Chip Barcode"=>"3290000006714", "Operator"=>"2470000002799", "Passed?"=>"Yes"}, :batch_id => @batch.id,  :workflow_id => @ws1.id, :request => request_data}
         end
 
         should_change('batch.lab_events', :by => 1) { Batch.find(@batch.id).lab_events.size }

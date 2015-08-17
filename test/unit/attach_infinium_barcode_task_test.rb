@@ -3,10 +3,6 @@
 #Copyright (C) 2007-2011,2012 Genome Research Ltd.
 require "test_helper"
 
-class WorkflowsController
-  attr_writer :batch
-end
-
 class AttachInfiniumBarcodeTest < TaskTestBase
   context "Attach Infinium Barcode task" do
     setup do

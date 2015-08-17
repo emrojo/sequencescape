@@ -62,7 +62,7 @@ Factory.define :control_plate do |a|
   a.name                "Control Plate name"
   a.value               ""
   a.descriptors         []
-  a.descriptor_fields   ""
+  a.descriptor_fields   []
   a.qc_state            ""
   a.resource            nil
   a.sti_type            "ControlPlate"
@@ -132,7 +132,7 @@ end
 Factory.define :pipeline_event do |e|
   e.description           ""
   e.descriptors           ""
-  e.descriptor_fields     ""
+  e.descriptor_fields     []
   e.eventful_id           nil
   e.eventful_type         ""
   e.filename              ""
@@ -366,7 +366,7 @@ Factory.define :empty_sample_tube, :class => SampleTube do |sample_tube|
   sample_tube.name                {|a| Factory.next :asset_name }
   sample_tube.value               ""
   sample_tube.descriptors         []
-  sample_tube.descriptor_fields   ""
+  sample_tube.descriptor_fields   []
   sample_tube.qc_state            ""
   sample_tube.resource            nil
   sample_tube.barcode             {|a| Factory.next :barcode_number }

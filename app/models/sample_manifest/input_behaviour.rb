@@ -4,7 +4,7 @@
 module SampleManifest::InputBehaviour
   module ClassMethods
     def find_sample_manifest_from_uploaded_spreadsheet(spreadsheet_file)
-      csv        = FasterCSV.parse(spreadsheet_file.read)
+      csv        = CSV.parse(spreadsheet_file.read)
       column_map = compute_column_map(csv[spreadsheet_header_row])
 
       spreadsheet_offset.upto(csv.size-1) do |n|
@@ -166,7 +166,7 @@ module SampleManifest::InputBehaviour
   InvalidManifest = Class.new(StandardError)
 
   def each_csv_row(&block)
-    csv = FasterCSV.parse(uploaded.current_data)
+    csv = CSV.parse(uploaded.current_data)
     clean_up_sheet(csv)
 
     headers = csv[spreadsheet_header_row].map { |header| h = header.gsub(/\s+/, ' '); SampleManifest::Headers.renamed(h) }
@@ -180,7 +180,7 @@ module SampleManifest::InputBehaviour
     spreadsheet_offset.upto(csv.size-1) do |row|
       yield(Hash[headers.each_with_index.map { |header, column| [ header, csv[row][column] ] }])
     end
-  rescue FasterCSV::MalformedCSVError => exception
+  rescue CSV::MalformedCSVError => exception
     raise InvalidManifest, "Invalid CSV file, did you upload an Excel file by accident? - #{exception.message}"
   end
   private :each_csv_row

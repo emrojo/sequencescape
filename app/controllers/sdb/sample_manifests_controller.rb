@@ -20,7 +20,7 @@ class Sdb::SampleManifestsController < Sdb::BaseController
     @sample_manifest.update_attributes(params[:sample_manifest])
     @sample_manifest.process(current_user, params[:sample_manifest][:override] == "1")
     flash[:notice] = "Manifest being processed"
-  rescue FasterCSV::MalformedCSVError
+  rescue CSV::MalformedCSVError
     flash[:error] = "Invalid CSV file"
   ensure
     redirect_to sample_manifests_path

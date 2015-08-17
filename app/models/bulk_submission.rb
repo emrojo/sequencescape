@@ -60,7 +60,7 @@ class BulkSubmission < ActiveRecord::Base
         end
       end
     end
-  rescue FasterCSV::MalformedCSVError
+  rescue CSV::MalformedCSVError
     errors.add(:spreadsheet, "The supplied file was not a valid CSV file (try opening it with MS Excel)")
   end
 
@@ -121,7 +121,7 @@ class BulkSubmission < ActiveRecord::Base
     # Store the details of the successful submissions so the user can be presented with a summary
     @submission_ids = []
     @completed_submissions = {}
-    @csv_rows = FasterCSV.parse(spreadsheet.read)
+    @csv_rows = CSV.parse(spreadsheet.read)
 
     if spreadsheet_valid?
       submission_details = submission_structure

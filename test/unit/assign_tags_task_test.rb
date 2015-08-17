@@ -3,7 +3,7 @@
 #Copyright (C) 2007-2011,2011,2012 Genome Research Ltd.
 require "test_helper"
 
-class WorkflowsController
+class TestWorkflowsController < WorkflowsController
   attr_accessor :batch, :tags, :workflow, :stage
 end
 
@@ -14,7 +14,7 @@ class AssignTagsTaskTest < TaskTestBase
       # Basically 'flash' is pulled from 'session[:flash]' which is not configured properly on @workflow
       # @workflow needs 'workflow' and 'stage' set
       # @workflow does not like redirect_to (think this might be shoulda)
-      @controller  = WorkflowsController.new
+      @controller  = TestWorkflowsController.new
       @workflow = Factory :lab_workflow_for_pipeline
       @user = Factory :user
       @controller.stubs(:current_user).returns(@user)

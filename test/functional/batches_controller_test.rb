@@ -239,7 +239,7 @@ class BatchesControllerTest < ActionController::TestCase
               post :fail_items, :id => @batch_one.id, :failure => { :reason => "", :comment => "" }
             end
             should "not allow failing a batch/items without specifying a reason and set the flash" do
-              @controller.session[:flash][:error].grep /Please specify a failure reason for this batch/
+              assert /Please specify a failure reason for this batch/ === @controller.session[:flash][:error]
               assert_redirected_to :action => :fail, :id => @batch_one.id
             end
           end

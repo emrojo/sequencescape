@@ -17,7 +17,7 @@ class Map < ActiveRecord::Base
     )
 
     def self.location_from_row_and_column(row, column,_=nil,__=nil)
-      "#{(?A+row).chr}#{column}"
+      "#{(?A.getbyte(0)+row).chr}#{column}"
     end
 
     def self.description_to_horizontal_plate_position(well_description,plate_size)
@@ -199,7 +199,7 @@ class Map < ActiveRecord::Base
   end
 
   def self.location_from_row_and_column(row, column)
-    "#{(?A+row).chr}#{column}"
+    "#{('A'.getbyte(0)+row).chr}#{column}"
   end
 
   def self.next_map_position(current_map_id)
@@ -257,7 +257,7 @@ class Map < ActiveRecord::Base
   end
 
   def self.split_well_description(well_description)
-    { :row=> well_description[0] - 65, :col=> well_description[1,well_description.size].to_i}
+    { :row=> well_description.getbyte(0) - 65, :col=> well_description[1,well_description.size].to_i}
   end
 
   def self.find_for_cell_location(cell_location, asset_size)

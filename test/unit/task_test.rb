@@ -123,7 +123,7 @@ class TaskTest < ActiveSupport::TestCase
         should "have this value in the database" do
           a = SubclassAttribute.find_by_value!(@initial_value)
           assert a
-          assert @task.id, a.attributable_id # sti doesn't work with class defined on the flight, so a.attributable doesn't work
+          assert_equal @task.id, a.attributable_id # sti doesn't work with class defined on the flight, so a.attributable doesn't work
         end
 
         should "update value in the database" do

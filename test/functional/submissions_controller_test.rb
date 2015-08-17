@@ -33,12 +33,13 @@ class SubmissionsControllerTest < ActionController::TestCase
     context "when a submission exists" do
 
       setup do
+        @user.is_lab_manager
         @submission = Submission.create!(:priority=>1, :user=>@user)
         post :change_priority, {:id=> @submission.id, :submission=>{:priority=>3}}
       end
 
       should 'allow update of priorities' do
-        assert 3, @submission.reload.priority
+        assert_equal 3, @submission.reload.priority
       end
     end
 

@@ -33,7 +33,7 @@ end
 Then /^the manifest for study "([^"]*)" with plate "([^"]*)" should be:$/ do |study_name, plate_barcode, expected_results_table|
   study = Study.find_by_name(study_name)
   plate = Plate.find_by_barcode(plate_barcode)
-  manifest = FasterCSV.parse(ManifestGenerator.generate_manifest_for_plate_ids([plate.id],study))
+  manifest = CSV.parse(ManifestGenerator.generate_manifest_for_plate_ids([plate.id],study))
   manifest.shift(3)
   expected_results_table.diff!(manifest)
 end

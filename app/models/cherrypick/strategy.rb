@@ -152,10 +152,6 @@ class Cherrypick::Strategy
         nil
       end
 
-      def representation
-        [0, 'Empty', '']
-      end
-
       # This well really isn't present!
       def present?
         false

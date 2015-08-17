@@ -494,7 +494,7 @@ class Batch < ActiveRecord::Base
   end
 
   def pulldown_batch_report
-    report_data = FasterCSV.generate( :row_sep => "\r\n") do |csv|
+    report_data = CSV.generate( :row_sep => "\r\n") do |csv|
       csv << pulldown_report_headers
 
       self.requests.each do |request|

@@ -4,10 +4,6 @@
 require "test_helper"
 require 'submissions_controller'
 
-class WorkflowsController
-  attr_accessor :batch, :tags, :workflow, :stage
-end
-
 class SplitSubmissionBatchesTest < ActionController::TestCase
 
   context "when I have a submission" do
@@ -119,59 +115,6 @@ class SplitSubmissionBatchesTest < ActionController::TestCase
            assert_equal 5, MultiplexedLibraryCreationRequest.first.next_requests(@library_pipeline) {|r| true}.size
            assert_equal MultiplexedLibraryCreationRequest.first.id+8, MultiplexedLibraryCreationRequest.first.next_requests(@library_pipeline) {|r| true}.last.id
          end
-
-         # context "and I batch the requests" do
-         #
-         #            setup do
-         #              @batch_a = Batch.create!(:requests=>MultiplexedLibraryCreationRequest.all, :pipeline=>@library_pipeline)
-         #              @batch_a.start!(:user=>@user)
-         #
-         #              @task      = Factory :assign_tags_task
-         #              @tag_group = Factory :tag_group
-         #              @workflow = Factory :lab_workflow_for_pipeline
-         #
-         #              @tag_hash = {}
-         #
-         #              @wf_controller  = WorkflowsController.new
-         #              $stop = true
-         #              @wf_controller.batch = @batch_a
-         #
-         #              MultiplexedLibraryCreationRequest.all.each do |r|
-         #               tag = Factory :tag, :tag_group => @tag_group
-         #               @tag_hash[r.id.to_s] = tag.id.to_s
-         #              end
-         #
-         #              params = { :workflow_id => @workflow, :batch_id => @batch_a.id,
-         #                         :tag_group => @tag_group.id.to_s,
-         #                         :mx_library_name => "MX library",
-         #                         :tag => @tag_hash,
-         #                          }
-         #              @task.do_task(@wf_controller, params)
-         #
-         #              @batch_a.complete!(@user)
-         #              @batch_a.release!(@user)
-         #            end
-         #
-         #            should "before failing any sequencing requests" do
-         #              assert_equal MultiplexedLibraryCreationRequest.first.id+4, MultiplexedLibraryCreationRequest.first.next_requests(@library_pipeline) {|r| true}.first.id
-         #            end
-         #
-         #            context "afer failing sequencing requests" do
-         #              setup do
-         #                @sequencing_group = SequencingRequest.all
-         #                @seq_batch = Batch.create!(:requests=>@sequencing_group, :pipeline=>@sequencing_pipeline)
-         #                @seq_batch.requests.map(&:start!)
-         #                @seq_batch.fail('just','because')
-         #                @seq_batch.requests.each {|r| @seq_batch.detach_request(r)}
-         #              end
-         #
-         #              should "correctly identify the next requests" do
-         #                assert_equal MultiplexedLibraryCreationRequest.first.id+4, MultiplexedLibraryCreationRequest.first.next_requests(@library_pipeline) {|r| true}.first.id
-         #              end
-         #
-         #            end
-         #
-         #          end
 
     end
   end

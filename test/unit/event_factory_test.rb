@@ -42,7 +42,7 @@ class EventFactoryTest < ActiveSupport::TestCase
         admin = Factory :role, :name => "administrator"
         user1 = Factory :user, :login => "abc123"
         user1.roles << admin
-        @sample = Factory :sample, :name => "NewSample"
+        @sample = Factory(:sample, :name => "NewSample")
       end
 
       context "project is blank" do
@@ -210,7 +210,7 @@ class EventFactoryTest < ActiveSupport::TestCase
         @user2 = Factory :user, :login => "west"
         @user2.roles << follower
         @study = Factory :study, :user => @user2
-        @submission = Factory::submission :project => @project, :study => @study, :assets => [Factory :sample_tube]
+        @submission = Factory::submission(:project => @project, :study => @study, :assets => [Factory(:sample_tube)])
         @request = Factory :request, :study => @study, :project => @project,  :submission => @submission
         @user3 = Factory :user, :login => "east"
         message = "An error has occurred"
@@ -241,7 +241,7 @@ class EventFactoryTest < ActiveSupport::TestCase
 # e.g. use as: 'should "list" do  assert_did_not_send_mail; end'
       msg = "Sent #{::ActionMailer::Base.deliveries.size} emails.\n"
       ::ActionMailer::Base.deliveries.each do |email|
-        msg << "  ‘#{email.subject}’ sent to #{email.bcc}:\n#{email.body}\n\n"
+        msg << "  '#{email.subject}' sent to #{email.bcc}:\n#{email.body}\n\n"
       end
       assert ::ActionMailer::Base.deliveries.empty?, msg
     end

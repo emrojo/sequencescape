@@ -265,7 +265,7 @@ class BatchTest < ActiveSupport::TestCase
         ]
       end
       should "return 1 plate id where they are in given study" do
-        assert 2, @batch.plate_ids_in_study(@study1).size
+        assert_equal 2, @batch.plate_ids_in_study(@study1).size
         assert @batch.plate_ids_in_study(@study1).include?(@plate1.id)
         assert @batch.plate_ids_in_study(@study1).include?(@plate2.id)
       end
@@ -640,7 +640,7 @@ class BatchTest < ActiveSupport::TestCase
           end
 
           should "return no errors if successful" do
-            assert true, Batch.qc_evaluations_update(@info)
+            assert Batch.qc_evaluations_update(@info)
           end
 
           should "create an event using passed params" do

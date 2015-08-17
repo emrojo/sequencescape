@@ -92,7 +92,11 @@ class AuthenticationControllerTest < ActionController::TestCase
 
     context "with configatron disable_api_authentication set to false" do
       setup do
-        configatron.stubs(:disable_api_authentication).returns(false)
+        @memo = configatron.disable_api_authentication
+        configatron.disable_api_authentication = false
+      end
+      teardown do
+        configatron.disable_api_authentication = @memo
       end
       context "and HTML request" do
         context "will allow access to open content" do

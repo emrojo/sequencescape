@@ -34,7 +34,10 @@ module ViewsSchema
       SELECT TABLE_NAME AS name
       FROM INFORMATION_SCHEMA.VIEWS
       WHERE TABLE_SCHEMA = '#{ActiveRecord::Base.connection.current_database}';}
-    ).map {|v| v['name'] }
+    ).map do |v|
+      # Behaviour depends on ruby version, so we need to work out what we have
+      v.is_a?(Hash) ? v['name'] : v.first
+    end.flatten
   end
 
   def self.create_view(name,definition)

@@ -196,7 +196,7 @@ end
 
 # TODO: It's 'UUID' not xxxing 'uuid'.
 Given /^I have an (event|external release event) with uuid "([^"]*)"$/ do |model,uuid_value|
-  set_uuid_for(model.gsub(/\s+/, '_').methodize.camelize.constantize.create!(:message => model), uuid_value)
+  set_uuid_for(model.gsub(/\s+/, '_').downcase.gsub(/[^\w]+/,'_').camelize.constantize.create!(:message => model), uuid_value)
 end
 
 Given /^a (plate|well) with uuid "([^"]*)" exists$/ do |model,uuid_value|

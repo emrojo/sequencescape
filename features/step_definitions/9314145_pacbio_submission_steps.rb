@@ -146,7 +146,7 @@ Then /^the PacBio manifest for the last batch should look like:$/ do |expected_r
   csv_rows = pac_bio_run_file.split(/\r\n/)
   csv_rows.shift(8)
   expected_results_table.column_names.each {|c| expected_results_table.map_column!(c) {|d| d.blank? ? nil : d }}
-  actual_table = FasterCSV.parse( csv_rows.map{|c| "#{c}\r\n"}.join(''))
+  actual_table = CSV.parse( csv_rows.map{|c| "#{c}\r\n"}.join(''))
   expected_results_table.diff!(actual_table)
 end
 
@@ -172,7 +172,7 @@ Then /^the PacBio sample prep worksheet should look like:$/ do |expected_results
   worksheet = page.source
   csv_rows = worksheet.split(/\r\n/)
   csv_rows.shift(2)
-  actual_table = FasterCSV.parse( csv_rows.map{|c| "#{c}\r\n"}.join(''))
+  actual_table = CSV.parse( csv_rows.map{|c| "#{c}\r\n"}.join(''))
   expected_results_table.diff!(actual_table)
 end
 
@@ -219,7 +219,7 @@ Then /^the PacBio manifest should be:$/ do |expected_results_table|
   pac_bio_run_file = page.source
   csv_rows = pac_bio_run_file.split(/\r\n/)
   csv_rows.shift(8)
-  actual_table = FasterCSV.parse( csv_rows.map{|c| "#{c}\r\n"}.join(''))
+  actual_table = CSV.parse( csv_rows.map{|c| "#{c}\r\n"}.join(''))
   expected_results_table.column_names.each {|c| expected_results_table.map_column!(c) {|d| d.blank? ? nil : d }}
   expected_results_table.diff!(actual_table)
 end

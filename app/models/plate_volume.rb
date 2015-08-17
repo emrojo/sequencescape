@@ -31,7 +31,7 @@ class PlateVolume < ActiveRecord::Base
 
   def extract_well_volumes
     return if self.uploaded.nil?
-    head, *tail = FasterCSV.parse(self.uploaded.file.read)
+    head, *tail = CSV.parse(self.uploaded.file.read)
     tail.each { |(barcode, location, volume)| yield(location, volume) }
   end
   private :extract_well_volumes

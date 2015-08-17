@@ -54,14 +54,14 @@ class ReceptionsControllerTest < ActionController::TestCase
     context "#confirm reception" do
       context "where asset exists" do
         setup do
-          post :confirm_reception, :asset_id => @plate.id, :asset => { :location_id => @location.id }
+          post :confirm_reception, :asset_id => { "0" => @plate.id }, :asset => { :location_id => @location.id }
         end
         should_change("Asset.count", :by => 0) { Asset.count }
         should respond_with :success
       end
       context "where asset doesnt exist" do
         setup do
-          post :confirm_reception, :asset_id => 999999, :asset => { :location_id => @location.id }
+          post :confirm_reception, :asset_id => { "0" => 999999 }, :asset => { :location_id => @location.id }
         end
         should_change("Asset.count", :by => 0) { Asset.count }
         should set_the_flash.to( /not found/)
@@ -69,7 +69,7 @@ class ReceptionsControllerTest < ActionController::TestCase
 
       context "create an event" do
         setup do
-          post :confirm_reception, :asset_id => @sample_tube.id, :asset => { :location_id => @location.id }
+          post :confirm_reception, :asset_id => { "0" => @sample_tube.id }, :asset => { :location_id => @location.id }
         end
         should_change("Event.count", :by => 0) { Event.count }
         should respond_with :success

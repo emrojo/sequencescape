@@ -195,6 +195,9 @@ Sequencescape::Application.routes.draw do
       get :order_fields
       get :project_details
     end
+    member do
+      post :change_priority
+    end
   end
 
   resources :orders
@@ -352,6 +355,7 @@ Sequencescape::Application.routes.draw do
   match 'workflows/refresh_sample_list' => 'workflows#refresh_sample_list'
 
   resources :workflows
+
   resources :tasks
   resources :asset_audits
 

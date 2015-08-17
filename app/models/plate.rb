@@ -417,7 +417,7 @@ WHERE c.container_id=?
   def self.create_from_rack_csv(file_location, plate_barcode)
     plate = self.create(:name => "Plate #{plate_barcode}", :barcode => plate_barcode, :size => 96)
 
-    FasterCSV.foreach(file_location) do |row|
+    CSV.foreach(file_location) do |row|
       map = Map.find_for_cell_location(row.first, plate.size)
       unless row.last.strip.blank?
         asset = Asset.find_by_two_dimensional_barcode(row.last.strip)

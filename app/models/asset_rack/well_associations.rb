@@ -39,9 +39,9 @@ module AssetRack::WellAssociations
     # Refactor if things change in future
     def column_wells_for(locations)
       Hash.new {|hash,column| hash[column] = Array.new }. tap do |column_wells|
-        locations.each do |location|
+        Array.wrap(locations).each do |location|
           row, column = /^([A-Z])([0-9]+)$/.match(location).captures
-          column_wells[column.to_i-1] << row[0]-65
+          column_wells[column.to_i-1] << row.getbyte(0)-65
         end
       end
     end
