@@ -55,12 +55,15 @@ class BatchTest < ActiveSupport::TestCase
 
   context "Batch#add_control" do
     setup do
+      @batchrequest_count =  BatchRequest.count
       @control = Factory :control
       @batch = @pipeline.batches.create!
       @batch.add_control(@control.name, 2)
     end
 
-    should_change("BatchRequest.count", :by => 2) { BatchRequest.count }
+    should "change BatchRequest.count by 2" do
+   assert_equal 2,  BatchRequest.count  - @batchrequest_count, "Expected BatchRequest.count to change by 2"
+end
   end
 
   context 'modifying request positions within a batch' do
@@ -142,12 +145,15 @@ class BatchTest < ActiveSupport::TestCase
 
     context "create requests" do
       setup do
+        @asset_count =  Asset.count
         @requests    = (1..4).map { |_| Factory(:request, :request_type => @pipeline.request_types.last) }
         @request_ids = @requests.map { |r| Request.new_proxy(r.id) }
         @batch       = @pipeline.batches.create!(:requests => @requests)
       end
 
-      should_change("Asset.count", :by => 8) { Asset.count }
+      should "change Asset.count by 8" do
+        assert_equal 8,  Asset.count  - @asset_count, "Expected Asset.count to change by 8"
+      end
 
       should "not have same asset name" do
         assert_not_equal Asset.first.name, Asset.last.name
@@ -295,12 +301,16 @@ class BatchTest < ActiveSupport::TestCase
 
     context "create requests" do
       setup do
+        @asset_count =  Asset.count
         @requests = (1..4).map { |_| Factory(:request, :request_type => @pipeline.request_types.last) }
         @request_ids = @requests.map { |r| Request.new_proxy(r.id) }
         @batch = @pipeline.batches.create!(:requests => @requests)
       end
 
-      should_change("Asset.count", :by => 12) { Asset.count }
+
+      should "change Asset.count by 12" do
+        assert_equal 12,  Asset.count  - @asset_count, "Expected Asset.count to change by 12"
+      end
 
       should "not have same asset name" do
         assert_not_equal Asset.first.name, Asset.last.name
@@ -349,6 +359,8 @@ class BatchTest < ActiveSupport::TestCase
 
       context "create failures" do
         setup do
+          @bfpc_initial = @batch.failures.count
+          @bps_initial = @batch.production_state
           @batch.fail(@reason, @comment)
         end
 
@@ -357,8 +369,16 @@ class BatchTest < ActiveSupport::TestCase
           assert_equal @request2.id, @batch.requests.last.id
         end
 
-        should_change("@batch.failures.count", :from => 0, :to => 1) { @batch.failures.count }
-        should_change("@batch.production_state", :from => nil, :to => "fail") { @batch.production_state }
+        should "change @batch.failures.count from 0 to 1" do
+          assert_equal 0, @bfpc_initial
+          assert_equal 1, @batch.failures.count
+        end
+
+        should "change @batch.production_state from 0 to 1" do
+          assert_equal nil, @bps_initial
+          assert_equal 'fail', @batch.production_state
+        end
+
       end
     end
 
@@ -602,10 +622,13 @@ class BatchTest < ActiveSupport::TestCase
 
           context 'checking stuff' do
             setup do
+              @labevent_count =  LabEvent.count
               @rc = Batch.qc_evaluations_update({ 'evaluation' => @evaluation })
             end
 
-            should_change('LabEvent.count', :by => 2) { LabEvent.count }
+            should "change LabEvent.count by 2" do
+              assert_equal 2,  LabEvent.count  - @labevent_count, "Expected LabEvent.count to change by 2"
+            end
 
             should 'return no errors' do
               assert_equal({ 'evaluation' => @evaluation }, @rc)
@@ -680,13 +703,28 @@ class BatchTest < ActiveSupport::TestCase
       # Separate context because we need to setup the DB first and we cannot check the changes made.
       context 'checking DB changes' do
         setup do
+          @asset_count =  Asset.count
+          @batchrequest_count =  BatchRequest.count
           @batch.reset!(@user)
+          @request_count =  Request.count
+          @batch_count =  Batch.count
         end
 
-        should_change('BatchRequest.count', :by => -2) { BatchRequest.count }
-        should_change('Asset.count', :by => -2) { Asset.count }
-        should_change('Request.count', :by => 0) { Request.count }
-        should_change('Batch.count', :by =>0) { Batch.count }
+         should "change BatchRequest.count by -2" do
+           assert_equal -2,  BatchRequest.count  - @batchrequest_count, "Expected BatchRequest.count to change by -2"
+         end
+
+         should "change Asset.count by -2" do
+           assert_equal -2,  Asset.count  - @asset_count, "Expected Asset.count to change by -2"
+         end
+
+        should "change Request.count by 0" do
+          assert_equal 0,  Request.count  - @request_count, "Expected Request.count to change by 0"
+        end
+
+        should "change Batch.count by 0" do
+          assert_equal 0,  Batch.count  - @batch_count, "Expected Batch.count to change by 0"
+        end
 
         should 'transition to discarded' do
           assert_equal('discarded',@batch.state)
@@ -721,14 +759,31 @@ class BatchTest < ActiveSupport::TestCase
       # Separate context because we need to setup the DB first and we cannot check the changes made.
       context 'checking DB changes' do
         setup do
+          @batchrequest_count =  BatchRequest.count
+          @asset_count =  Asset.count
+          @request_count =  Request.count
+          @batch_count =  Batch.count
           @batch.reset!(@user)
         end
 
-        should_change('BatchRequest.count', :by => -2) { BatchRequest.count }
-        should_change('Asset.count', :by => -2) { Asset.count }
-        should_change('Request.count', :by => 0) { Request.count }
 
-        should_change('Batch.count', :by =>0) { Batch.count }
+ should "change BatchRequest.count by -2" do
+ assert_equal -2,  BatchRequest.count  - @batchrequest_count, "Expected BatchRequest.count to change by -2"
+ end
+
+
+ should "change Asset.count by -2" do
+ assert_equal -2,  Asset.count  - @asset_count, "Expected Asset.count to change by -2"
+ end
+
+        should "change Request.count by 0" do
+          assert_equal 0,  Request.count  - @request_count, "Expected Request.count to change by 0"
+        end
+
+
+        should "change Batch.count by 0" do
+          assert_equal 0,  Batch.count  - @batch_count, "Expected Batch.count to change by 0"
+        end
 
         should 'transition to discarded' do
           assert_equal('discarded',@batch.state)

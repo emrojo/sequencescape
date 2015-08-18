@@ -11,6 +11,8 @@ class SampleRegistrarTest < ActiveSupport::TestCase
 
     context 'registering a sample alone' do
       setup do
+        @sample_count =  Sample.count
+        @sampletube_count =  SampleTube.count
         SampleRegistrar.create!(
           :asset_group_helper => SampleRegistrar::AssetGroupHelper.new,
           :study => @study,
@@ -20,8 +22,14 @@ class SampleRegistrarTest < ActiveSupport::TestCase
         )
       end
 
-      should_change('Sample.count', :by => 1)     { Sample.count          }
-      should_change('SampleTube.count', :by => 1) { SampleTube.count      }
+
+      should "change Sample.count by 1" do
+        assert_equal 1,  Sample.count           - @sample_count, "Expected Sample.count to change by 1"
+      end
+
+      should "change SampleTube.count by 1" do
+        assert_equal 1,  SampleTube.count       - @sampletube_count, "Expected SampleTube.count to change by 1"
+      end
       should_not_change('AssetGroup.count')       { AssetGroup.count      }
       should_not_change('SampleRegistrar.count')  { SampleRegistrar.count }
 
@@ -55,6 +63,7 @@ class SampleRegistrarTest < ActiveSupport::TestCase
     context 'registering a sample within an asset group' do
       context 'when the asset group does not exist' do
         setup do
+          @assetgroup_count =  AssetGroup.count
           SampleRegistrar.create!(
             :asset_group_helper => SampleRegistrar::AssetGroupHelper.new,
             :study => @study,
@@ -64,7 +73,9 @@ class SampleRegistrarTest < ActiveSupport::TestCase
           )
         end
 
-        should_change('AssetGroup.count', :by => 1) { AssetGroup.count }
+        should "change AssetGroup.count by 1" do
+          assert_equal 1,  AssetGroup.count  - @assetgroup_count, "Expected AssetGroup.count to change by 1"
+        end
 
         should 'put the sample tube into the asset groups' do
           assert_contains(AssetGroup.last.assets, SampleTube.last)
@@ -142,6 +153,8 @@ class SampleRegistrarTest < ActiveSupport::TestCase
 
       context 'ignores any samples to be registered' do
         setup do
+          @sample_count =  Sample.count
+          @sampletube_count =  SampleTube.count
           SampleRegistrar.register!([
             {
               :ignore => '1',
@@ -159,8 +172,14 @@ class SampleRegistrarTest < ActiveSupport::TestCase
         end
 
         should_not_change('SampleRegistrar.count')  { SampleRegistrar.count }
-        should_change('Sample.count', :by => 1)     { Sample.count          }
-        should_change('SampleTube.count', :by => 1) { SampleTube.count      }
+
+        should "change Sample.count by 1" do
+          assert_equal 1,  Sample.count           - @sample_count, "Expected Sample.count to change by 1"
+        end
+
+        should "change SampleTube.count by 1" do
+          assert_equal 1,  SampleTube.count       - @sampletube_count, "Expected SampleTube.count to change by 1"
+        end
         should_not_change('AssetGroup.count')       { AssetGroup.count      }
 
         should 'not registered the ignored sample' do
@@ -170,6 +189,9 @@ class SampleRegistrarTest < ActiveSupport::TestCase
 
       context 'registers multiple samples correctly' do
         setup do
+          @sample_count =  Sample.count
+          @sampletube_count =  SampleTube.count
+          @assetgroup_count =  AssetGroup.count
           SampleRegistrar.register!([
             {
               :study => @study,
@@ -205,9 +227,18 @@ class SampleRegistrarTest < ActiveSupport::TestCase
         end
 
         should_not_change('SampleRegistrar.count')  { SampleRegistrar.count }
-        should_change('Sample.count', :by => 4)     { Sample.count          }
-        should_change('SampleTube.count', :by => 4) { SampleTube.count      }
-        should_change('AssetGroup.count', :by => 2) { AssetGroup.count      }
+
+        should "change Sample.count by 4" do
+          assert_equal 4,  Sample.count           - @sample_count, "Expected Sample.count to change by 4"
+        end
+
+        should "change SampleTube.count by 4" do
+          assert_equal 4,  SampleTube.count       - @sampletube_count, "Expected SampleTube.count to change by 4"
+        end
+
+        should "change AssetGroup.count by 2" do
+          assert_equal 2,  AssetGroup.count       - @assetgroup_count, "Expected AssetGroup.count to change by 2"
+        end
 
         should 'put samples 1 and 3 into asset group 1' do
           group = AssetGroup.find_by_name('asset_group_1')

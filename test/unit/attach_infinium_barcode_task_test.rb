@@ -15,7 +15,7 @@ class AttachInfiniumBarcodeTest < TaskTestBase
 
     context "#render_task" do
       setup do
-        @workflow.batch = @br.batch
+
         params = {}
         @task.render_task(@workflow, params)
       end
@@ -27,7 +27,6 @@ class AttachInfiniumBarcodeTest < TaskTestBase
         @batch          = Factory :batch, :pipeline => @pipeline
         @plate1 = Factory :plate
         @plate2 = Factory :plate
-        @workflow.batch = @batch
       end
       context "with valid parameters" do
         setup do

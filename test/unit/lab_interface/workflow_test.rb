@@ -22,16 +22,28 @@ class LabInterface::WorkflowTest < ActiveSupport::TestCase
 
     context "#deep_copy" do
       setup do
+        @labinterface_workflow_count =  LabInterface::Workflow.count
+        @task_count =  Task.count
+        @pipeline_count =  Pipeline.count
+        @descriptor_count =  Descriptor.count
         @workflow.deep_copy
       end
 
-      should_change("LabInterface::Workflow.count", :by => 1) { LabInterface::Workflow.count }
+       should "change LabInterface::Workflow.count by 1" do
+         assert_equal 1,  LabInterface::Workflow.count  - @labinterface_workflow_count, "Expected LabInterface::Workflow.count to change by 1"
+      end
 
-      should_change("Task.count", :by => 1) { Task.count }
+       should "change Task.count by 1" do
+         assert_equal 1,  Task.count  - @task_count, "Expected Task.count to change by 1"
+      end
 
-      should_change("Pipeline.count", :by => 1) { Pipeline.count }
+       should "change Pipeline.count by 1" do
+         assert_equal 1,  Pipeline.count  - @pipeline_count, "Expected Pipeline.count to change by 1"
+      end
 
-      should_change("Descriptor.count", :by => 2) { Descriptor.count }
+       should "change Descriptor.count by 2" do
+         assert_equal 2,  Descriptor.count  - @descriptor_count, "Expected Descriptor.count to change by 2"
+      end
 
       should "duplicate workflow" do
         assert_equal "Workflow for LabInterface::WorkflowTest_dup", LabInterface::Workflow.last.name

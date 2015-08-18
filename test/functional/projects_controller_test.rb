@@ -60,7 +60,9 @@ class ProjectsControllerTest < ActionController::TestCase
 
         should set_the_flash.to( "Your project has been created")
         should redirect_to("last project page") { project_path(Project.last) }
-        should_change('Project.count', 1) { Project.count }
+        should "change Project.count by 1" do
+         assert_equal 1, Project.count - @project_counter
+        end
       end
 
       context "with invalid data" do
@@ -84,6 +86,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
       context "create a new project using permission allowed (not required)" do
         setup do
+          @project_counter  = Project.count
           post :create, "project" => {
             "name" => "hello 3",
             :project_metadata_attributes => {
@@ -95,7 +98,9 @@ class ProjectsControllerTest < ActionController::TestCase
 
         should redirect_to("last project added page") { project_path(Project.last) }
         should set_the_flash.to( "Your project has been created")
-        should_change('Project.count', 1) { Project.count }
+        should "change Project.count by 1" do
+         assert_equal 1, Project.count - @project_counter
+        end
       end
 
     end

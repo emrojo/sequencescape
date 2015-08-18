@@ -14,6 +14,7 @@ class AssetsControllerTest < ActionController::TestCase
 
   context "#create a new asset with JSON input" do
     setup do
+      @asset_count =  Asset.count
       @user = Factory :user
       @user.is_administrator
       @controller.stubs(:current_user).returns(@user)
@@ -26,11 +27,15 @@ class AssetsControllerTest < ActionController::TestCase
     end
 
     should set_the_flash.to(  /Asset was successfully created/)
-    should_change("Asset.count", :by => 1) { Asset.count }
+
+     should "change Asset.count by 1" do
+       assert_equal 1,  Asset.count  - @asset_count, "Expected Asset.count to change by 1"
+    end
   end
 
   context "create request with JSON input" do
     setup do
+      @submission_count =  Submission.count
       @asset = Factory(:sample_tube)
       @sample = @asset.primary_aliquot.sample
 
@@ -48,7 +53,9 @@ class AssetsControllerTest < ActionController::TestCase
       post :create_request, ActiveSupport::JSON.decode(@json_data)
     end
 
-    should_change("Submission.count", :by => 1) { Submission.count }
+    should "change Submission.count by 1" do
+      assert_equal 1,  Submission.count  - @submission_count, "Expected Submission.count to change by 1"
+    end
     should "set a priority" do
       assert_equal(3,Submission.last.priority)
     end

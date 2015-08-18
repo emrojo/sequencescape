@@ -17,6 +17,7 @@ class Api::SubmissionsControllerTest < ActionController::TestCase
 
     context "#create" do
       setup do
+        @submission_count =  Submission.count
         template    = Factory :submission_template
         study       = Factory :study
         project     = Factory :project
@@ -27,7 +28,10 @@ class Api::SubmissionsControllerTest < ActionController::TestCase
 
         post :create, :order => { :project_id => project.id, :study_id => study.id, :sample_tubes => [sample_tube.id.to_s], :number_of_lanes => "2", :type => template.key }
       end
-      should_change("Submission.count", :by => 1) { Submission.count }
+
+      should "change Submission.count by 1" do
+        assert_equal 1,  Submission.count  - @submission_count, "Expected Submission.count to change by 1"
+      end
 
       should "output a correct error message" do
         assert_equal "\"Submission created\"", @response.body

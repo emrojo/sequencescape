@@ -114,10 +114,14 @@ class SampleManifestTest < ActiveSupport::TestCase
 
     context 'delayed jobs' do
       setup do
+        @well_count =  Sample.count
         Delayed::Job.first.invoke_job
       end
 
-      should_change('Well.count',   :by => 96) { Sample.count }
+
+      should "change Well.count by 96" do
+        assert_equal 96,  Sample.count  - @well_count, "Expected Well.count to change by 96"
+      end
     end
   end
 end

@@ -40,11 +40,15 @@ class SamplesControllerTest < ActionController::TestCase
 
       context "#add_to_study" do
         setup do
+          @initial_study_sample_count = StudySample.count
           @sample = Factory :sample
           @study = Factory :study
           put :add_to_study, :id => @sample.id, :study => { :id => @study.id }
         end
-        should_change("StudySample.count", :from => 0, :to => 1) { StudySample.count }
+        should "change StudySample.count from  0 to 1" do
+          assert_equal 0, @initial_study_sample_count
+          assert_equal 1, StudySample.count
+        end
         should redirect_to("sample path") { sample_path(@sample) }
       end
 

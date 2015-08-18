@@ -62,16 +62,26 @@ class LinearSubmissionTest < ActiveSupport::TestCase
         context "#process!" do
           context 'single request' do
             setup do
+              @request_count =  Request.count
+              @item_count =  Item.count
               @mpx_submission.process!
             end
 
             should_not_change("Comment.count") { Comment.count }
-            should_change("Request.count", :by => 11) { Request.count }
-            should_change("Item.count", :by => 10) { Item.count }
+
+ should "change Request.count by 11" do
+   assert_equal 11,  Request.count  - @request_count, "Expected Request.count to change by 11"
+end
+
+ should "change Item.count by 10" do
+   assert_equal 10,  Item.count  - @item_count, "Expected Item.count to change by 10"
+end
           end
 
           context 'multiple requests' do
             setup do
+              @request_count =  Request.count
+              @item_count =  Item.count
               @sequencing_request_type_2 = Factory :sequencing_request_type
               @mpx_request_type_ids = [@mpx_request_type.id, @sequencing_request_type_2.id, @sequencing_request_type.id]
 
@@ -89,8 +99,14 @@ class LinearSubmissionTest < ActiveSupport::TestCase
             end
 
             should_not_change("Comment.count") { Comment.count }
-            should_change("Request.count", :by => 12) { Request.count }
-            should_change("Item.count", :by => 10) { Item.count }
+
+ should "change Request.count by 12" do
+   assert_equal 12,  Request.count  - @request_count, "Expected Request.count to change by 12"
+end
+
+ should "change Item.count by 10" do
+   assert_equal 10,  Item.count  - @item_count, "Expected Item.count to change by 10"
+end
           end
         end
       end
@@ -125,18 +141,28 @@ class LinearSubmissionTest < ActiveSupport::TestCase
 
         context '#process!' do
           setup do
+            @request_count =  Request.count
             @submission.process!
           end
 
-          should_change("Request.count", :by => 12) { Request.count }
+         should "change Request.count by 12" do
+           assert_equal 12,  Request.count  - @request_count, "Expected Request.count to change by 12"
+        end
 
           context "#create_requests_for_items" do
             setup do
+              @request_count =  Request.count
+              @comment_count =  Comment.count
               @submission.create_requests
             end
 
-            should_change("Request.count", :by => 12) { Request.count }
-            should_change("Comment.count", :by => 12) { Comment.count }
+           should "change Request.count by 12" do
+             assert_equal 12,  Request.count  - @request_count, "Expected Request.count to change by 12"
+          end
+
+           should "change Comment.count by 12" do
+             assert_equal 12,  Comment.count  - @comment_count, "Expected Comment.count to change by 12"
+          end
 
             should "assign submission ids to the requests" do
               assert_equal @submission, @submission.items.first.requests.first.submission
@@ -297,9 +323,13 @@ class LinearSubmissionTest < ActiveSupport::TestCase
 
         context "for non multiplexed libraries and sequencing" do
           setup do
+            @request_count =  Request.count
             @submission_with_multiplication_factor.process!
           end
-          should_change("Request.count", :by => 12) { Request.count }
+
+           should "change Request.count by 12" do
+             assert_equal 12,  Request.count  - @request_count, "Expected Request.count to change by 12"
+          end
 
           should "create 2 library requests" do
             lib_requests = Request.find_all_by_submission_id_and_request_type_id(@submission_with_multiplication_factor, @lib_request_type.id)

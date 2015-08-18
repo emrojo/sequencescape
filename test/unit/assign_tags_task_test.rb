@@ -51,6 +51,7 @@ class AssignTagsTaskTest < TaskTestBase
 
     context "#do_task" do
       setup do
+        @multiplexedlibrarytube_count =  MultiplexedLibraryTube.count
         @pipeline       = Factory :pipeline
         @batch          = Factory :batch, :pipeline => @pipeline
         # TODO: Move this into factory. Create library and sample_tube factory
@@ -77,7 +78,10 @@ class AssignTagsTaskTest < TaskTestBase
         assert_equal 2, @controller.batch.request_count
       end
 
-      should_change("MultiplexedLibraryTube.count", :by => 1) { MultiplexedLibraryTube.count }
+
+      should "change MultiplexedLibraryTube.count by 1" do
+        assert_equal 1,  MultiplexedLibraryTube.count  - @multiplexedlibrarytube_count, "Expected MultiplexedLibraryTube.count to change by 1"
+      end
 
       should "should update library" do
         assert_equal 1, @sample_tube.children.size

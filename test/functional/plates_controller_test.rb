@@ -58,10 +58,13 @@ class PlatesControllerTest < ActionController::TestCase
 
        context "with no source plates" do
           setup do
+            @plate_count =  Plate.count
             post :create, :plates => {:creator_id => @gel_dilution_plates_creator.id, :barcode_printer => @barcode_printer.id, :user_barcode => '2470000100730'}
           end
 
-          should_change("Plate.count", :by => 1) { Plate.count }
+           should "change Plate.count by 1" do
+             assert_equal 1,  Plate.count  - @plate_count, "Expected Plate.count to change by 1"
+          end
           should respond_with :redirect
           should set_the_flash.to( /Created/)
         end
@@ -70,10 +73,14 @@ class PlatesControllerTest < ActionController::TestCase
         context "Create Pico Assay Plates" do
           context "with one source plate" do
             setup do
+              @picoassayplate_count =  PicoAssayPlate.count
               @parent_raw_barcode = Barcode.calculate_barcode(Plate.prefix, @parent_plate.barcode.to_i)
               post :create, :plates => {:creator_id => @pico_assay_plate_creator.id, :barcode_printer => @barcode_printer.id, :source_plates =>"#{@parent_raw_barcode}", :user_barcode => '2470000100730' }
             end
-            should_change("PicoAssayPlate.count", :by => 2) { PicoAssayPlate.count }
+
+            should "change PicoAssayPlate.count by 2" do
+              assert_equal 2,  PicoAssayPlate.count  - @picoassayplate_count, "Expected PicoAssayPlate.count to change by 2"
+            end
             should "add a child to the parent plate" do
               assert Plate.find(@parent_plate.id).children.first.is_a?(Plate)
               assert_equal PicoAssayPlatePurpose.find_by_name("Pico Assay A"), Plate.find(@parent_plate.id).children.first.plate_purpose
@@ -84,12 +91,17 @@ class PlatesControllerTest < ActionController::TestCase
 
           context "with 3 source plates" do
             setup do
+              @picoassayplate_count =  PicoAssayPlate.count
               @parent_raw_barcode  = Barcode.calculate_barcode(Plate.prefix, @parent_plate.barcode.to_i)
               @parent_raw_barcode2 = Barcode.calculate_barcode(Plate.prefix, @parent_plate2.barcode.to_i)
               @parent_raw_barcode3 = Barcode.calculate_barcode(Plate.prefix, @parent_plate3.barcode.to_i)
               post :create, :plates => {:creator_id => @pico_assay_plate_creator.id, :barcode_printer => @barcode_printer.id, :source_plates =>"#{@parent_raw_barcode}\n#{@parent_raw_barcode2}\t#{@parent_raw_barcode3}", :user_barcode => '2470000100730'}
             end
-            should_change("PicoAssayPlate.count", :by => 6) { PicoAssayPlate.count }
+
+            should "change PicoAssayPlate.count by 6" do
+              assert_equal 6,  PicoAssayPlate.count  - @picoassayplate_count, "Expected PicoAssayPlate.count to change by 6"
+            end
+
             should "have child plates" do
               [@parent_plate, @parent_plate2, @parent_plate3].each do  |plate|
                 assert Plate.find(plate.id).children.first.is_a?(Plate)

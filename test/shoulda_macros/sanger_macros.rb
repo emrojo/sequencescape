@@ -8,9 +8,6 @@ module Sanger
     module Controller
       module Macros
 
-        def should_change(*params,&block)
-           # TODO: Set this up
-        end
 
         def should_not_change(*params,&block)
            # TODO: Set this up

@@ -50,10 +50,13 @@ class FlexibleSubmissionTest < ActiveSupport::TestCase
 
           context 'multiple requests' do
             setup do
-               @mpx_submission.process!
+              @request_count = Request.count
+              @mpx_submission.process!
             end
 
-            should_change("Request.count", :by => (16+8)) { Request.count }
+            should "change Request.count by #{16+8}" do
+              assert_equal (16+8), Request.count - @request_count
+            end
           end
 
         end
@@ -94,10 +97,13 @@ class FlexibleSubmissionTest < ActiveSupport::TestCase
 
           context 'multiple requests' do
             setup do
-               @xs_mpx_submission.process!
+              @request_count = Request.count
+              @xs_mpx_submission.process!
             end
 
-            should_change("Request.count", :by => (16+8)) { Request.count }
+            should "change Request.count by #{16+8}" do
+              assert_equal (16+8), Request.count - @request_count
+            end
 
             should 'not set study or project post multiplexing' do
               assert_equal nil, @sequencing_request_type.requests.last.initial_study_id
@@ -147,10 +153,13 @@ class FlexibleSubmissionTest < ActiveSupport::TestCase
 
           context 'multiple requests' do
             setup do
-               @mpx_submission.process!
+              @request_count = Request.count
+              @mpx_submission.process!
             end
 
-            should_change("Request.count", :by => (16+8)) { Request.count }
+            should "change Request.count by #{16+8}" do
+              assert_equal (16+8), Request.count - @request_count
+            end
 
             should "set target assets according to the request_type.pool_by" do
               rows = (0...8).to_a

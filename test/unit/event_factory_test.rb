@@ -19,13 +19,16 @@ class EventFactoryTest < ActiveSupport::TestCase
 
     context "#new_project" do
       setup do
+        @event_count =  Event.count
         admin = Factory :role, :name => "administrator"
         user1 = Factory :user, :login => "abc123"
         user1.roles << admin
         EventFactory.new_project(@project, @user)
       end
 
-      should_change("Event.count", :by => 1) { Event.count }
+     should "change Event.count by 1" do
+       assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
+     end
 
       context "send 1 email to 1 recipient" do
         should have_sent_email.
@@ -39,6 +42,7 @@ class EventFactoryTest < ActiveSupport::TestCase
 
     context "#new_sample" do
       setup do
+        @event_count =  Event.count
         admin = Factory :role, :name => "administrator"
         user1 = Factory :user, :login => "abc123"
         user1.roles << admin
@@ -50,7 +54,9 @@ class EventFactoryTest < ActiveSupport::TestCase
           EventFactory.new_sample(@sample, [], @user)
         end
 
-        should_change("Event.count", :by => 1) { Event.count }
+       should "change Event.count by 1" do
+         assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
+      end
 
         context "send an email to one recipient" do
           should have_sent_email.
@@ -62,10 +68,14 @@ class EventFactoryTest < ActiveSupport::TestCase
 
       context "project is not blank" do
         setup do
+          @event_count =  Event.count
           EventFactory.new_sample(@sample, @project, @user)
         end
 
-        should_change("Event.count", :by => 2) { Event.count }
+
+         should "change Event.count by 2" do
+           assert_equal 2,  Event.count  - @event_count, "Expected Event.count to change by 2"
+        end
 
         context "send 2 emails each to one recipient" do
           should have_sent_email.
@@ -88,6 +98,7 @@ class EventFactoryTest < ActiveSupport::TestCase
 
     context "#project_approved" do
       setup do
+        @event_count =  Event.count
         ::ActionMailer::Base.deliveries = [] # reset the queue
         role = Factory :manager_role, :authorizable => @project
         role.users << @user
@@ -97,7 +108,9 @@ class EventFactoryTest < ActiveSupport::TestCase
         EventFactory.project_approved(@project, @user)
       end
 
-      should_change("Event.count", :by => 1) { Event.count }
+      should "change Event.count by 1" do
+        assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
+      end
 
       context "send email to project manager" do
         should have_sent_email.
@@ -111,6 +124,7 @@ class EventFactoryTest < ActiveSupport::TestCase
 
     context "#project_approved by administrator" do
       setup do
+        @event_count =  Event.count
         ::ActionMailer::Base.deliveries = [] # reset the queue
         admin = Factory :role, :name => "administrator"
         @user1 = Factory :user, :login => "west"
@@ -122,7 +136,9 @@ class EventFactoryTest < ActiveSupport::TestCase
         EventFactory.project_approved(@project, @user2)
       end
 
-      should_change("Event.count", :by => 1) { Event.count }
+      should "change Event.count by 1" do
+        assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
+      end
 
       context ": send emails to everyone administrators" do
         should have_sent_email.
@@ -139,6 +155,7 @@ class EventFactoryTest < ActiveSupport::TestCase
 
     context "#project_approved but not by administrator" do
       setup do
+        @event_count =  Event.count
         ::ActionMailer::Base.deliveries = []
         admin = Factory :role, :name => "administrator"
         @user1 = Factory :user, :login => "west"
@@ -151,7 +168,10 @@ class EventFactoryTest < ActiveSupport::TestCase
         EventFactory.project_approved(@project, @user2)
       end
 
-      should_change("Event.count", :by => 1) { Event.count }
+
+       should "change Event.count by 1" do
+         assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
+      end
 
       context ": send email to project manager" do
         should have_sent_email.
@@ -172,6 +192,7 @@ class EventFactoryTest < ActiveSupport::TestCase
 
     context "#study has samples added" do
       setup do
+        @event_count =  Event.count
         ::ActionMailer::Base.deliveries = []
         role = Factory :manager_role, :authorizable => @project
         role.users << @user
@@ -188,7 +209,9 @@ class EventFactoryTest < ActiveSupport::TestCase
         EventFactory.study_has_samples_registered(@study, @samples, @user1)
       end
 
-      should_change("Event.count", :by => 1) { Event.count }
+       should "change Event.count by 1" do
+         assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
+      end
 
       context "send email to project manager" do
         should have_sent_email.
@@ -201,6 +224,7 @@ class EventFactoryTest < ActiveSupport::TestCase
 
     context "#request update failed" do
       setup do
+        @event_count =  Event.count
         ::ActionMailer::Base.deliveries = []
         role = Factory :manager_role, :authorizable => @project
         role.users << @user
@@ -217,7 +241,10 @@ class EventFactoryTest < ActiveSupport::TestCase
         EventFactory.request_update_note_to_manager(@request, @user3, message)
       end
 
-      should_change("Event.count", :by => 1) { Event.count }
+
+       should "change Event.count by 1" do
+         assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
+      end
 
       context "send email to project manager" do
         should have_sent_email.

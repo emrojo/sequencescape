@@ -190,11 +190,23 @@ class PlateTest < ActiveSupport::TestCase
     context "#generate_plate_submission(project, study, user, current_time)" do
       context "with valid inputs" do
         setup do
+          @event_count =  Event.count
+          @submission_count =  Submission.count
+          @request_count =  Request.count
           @plate1.generate_plate_submission(@project, @study, @user, @current_time)
         end
-        should_change("Event.count", :by => 1) { Event.count }
-        should_change("Submission.count", :by => 1) { Submission.count }
-        should_change("Request.count", :by => 0) { Request.count }
+
+ should "change Event.count by 1" do
+   assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
+end
+
+ should "change Submission.count by 1" do
+   assert_equal 1,  Submission.count  - @submission_count, "Expected Submission.count to change by 1"
+end
+
+ should "change Request.count by 0" do
+   assert_equal 0,  Request.count  - @request_count, "Expected Request.count to change by 0"
+end
         should "not set study.errors" do
           assert_equal 0, @study.errors.count
         end
@@ -205,32 +217,64 @@ class PlateTest < ActiveSupport::TestCase
       context "with valid inputs" do
         context "and 1 plate" do
           setup do
+            @event_count =  Event.count
+          @submission_count =  Submission.count
+          @request_count =  Request.count
             Plate.create_plates_submission(@project, @study, [@plate1], @user)
           end
-          should_change("Event.count", :by => 1) { Event.count }
-          should_change("Submission.count", :by => 1) { Submission.count }
-          should_change("Request.count", :by => 0) { Request.count }
+
+ should "change Event.count by 1" do
+   assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
+end
+
+ should "change Submission.count by 1" do
+   assert_equal 1,  Submission.count  - @submission_count, "Expected Submission.count to change by 1"
+end
+
+ should "change Request.count by 0" do
+   assert_equal 0,  Request.count  - @request_count, "Expected Request.count to change by 0"
+end
           should "not set study.errors" do
             assert_equal 0, @study.errors.count
           end
         end
         context "and 3 plates" do
           setup do
+            @event_count =  Event.count
+          @submission_count =  Submission.count
+          @request_count =  Request.count
             Plate.create_plates_submission(@project, @study, [@plate1,@plate3,@plate2], @user)
           end
-          should_change("Event.count", :by => 3) { Event.count }
-          should_change("Submission.count", :by => 3) { Submission.count }
-          should_change("Request.count", :by => 0) { Request.count }
+
+ should "change Event.count by 3" do
+   assert_equal 3,  Event.count  - @event_count, "Expected Event.count to change by 3"
+end
+
+ should "change Submission.count by 3" do
+   assert_equal 3,  Submission.count  - @submission_count, "Expected Submission.count to change by 3"
+end
+
+ should "change Request.count by 0" do
+   assert_equal 0,  Request.count  - @request_count, "Expected Request.count to change by 0"
+end
           should "not set study.errors" do
             assert_equal 0, @study.errors.count
           end
         end
         context "and no plates" do
           setup do
+            @event_count =  Event.count
+          @submission_count =  Submission.count
             Plate.create_plates_submission(@project, @study, [], @user)
           end
-          should_change("Event.count", :by => 0) { Event.count }
-          should_change("Submission.count", :by => 0) { Submission.count }
+
+ should "change Event.count by 0" do
+   assert_equal 0,  Event.count  - @event_count, "Expected Event.count to change by 0"
+end
+
+ should "change Submission.count by 0" do
+   assert_equal 0,  Submission.count  - @submission_count, "Expected Submission.count to change by 0"
+end
           should "not set study.errors" do
             assert_equal 0, @study.errors.count
           end
@@ -240,24 +284,50 @@ class PlateTest < ActiveSupport::TestCase
       context "with invalid inputs" do
         context "where user is nil" do
           setup do
+            @event_count =  Event.count
+          @submission_count =  Submission.count
             Plate.create_plates_submission(@project, @study, [@plate1], nil)
           end
-          should_change("Event.count", :by => 0) { Event.count }
-          should_change("Submission.count", :by => 0) { Submission.count }
+
+ should "change Event.count by 0" do
+   assert_equal 0,  Event.count  - @event_count, "Expected Event.count to change by 0"
+end
+
+ should "change Submission.count by 0" do
+   assert_equal 0,  Submission.count  - @submission_count, "Expected Submission.count to change by 0"
+end
         end
         context "where project is nil" do
           setup do
+            @event_count =  Event.count
+          @submission_count =  Submission.count
+          @request_count =  Request.count
             Plate.create_plates_submission(nil, @study, [@plate1], @user)
           end
-          should_change("Event.count", :by => 0) { Event.count }
-          should_change("Submission.count", :by => 0) { Submission.count }
+
+ should "change Event.count by 0" do
+   assert_equal 0,  Event.count  - @event_count, "Expected Event.count to change by 0"
+end
+
+ should "change Submission.count by 0" do
+   assert_equal 0,  Submission.count  - @submission_count, "Expected Submission.count to change by 0"
+end
         end
         context "where study is nil" do
           setup do
+            @event_count =  Event.count
+          @submission_count =  Submission.count
+          @request_count =  Request.count
             Plate.create_plates_submission(@project, nil, [@plate1], @user)
           end
-          should_change("Event.count", :by => 0) { Event.count }
-          should_change("Submission.count", :by => 0) { Submission.count }
+
+ should "change Event.count by 0" do
+   assert_equal 0,  Event.count  - @event_count, "Expected Event.count to change by 0"
+end
+
+ should "change Submission.count by 0" do
+   assert_equal 0,  Submission.count  - @submission_count, "Expected Submission.count to change by 0"
+end
         end
       end
 

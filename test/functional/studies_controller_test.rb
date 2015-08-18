@@ -68,6 +68,7 @@ class StudiesControllerTest < ActionController::TestCase
 
       context "successfully create a new study" do
         setup do
+          @study_count = Study.count
           post :create, "study" => {
             "name" => "hello",
             "reference_genome_id" => ReferenceGenome.find_by_name("").id,
@@ -86,7 +87,9 @@ class StudiesControllerTest < ActionController::TestCase
 
         should set_the_flash.to( "Your study has been created")
         should redirect_to("study path") { study_path(Study.last) }
-        should_change('Study.count', 1) { Study.count }
+        should "change Study.count by 1" do
+          assert_equal 1, Study.count - @study_count
+        end
       end
 
       context "fail to create a new study" do
@@ -104,6 +107,7 @@ class StudiesControllerTest < ActionController::TestCase
 
       context "create a new study using permission allowed (not required)" do
         setup do
+          @study_count = Study.count
           post :create, "study" => {
             "name" => "hello 3",
             "reference_genome_id" => ReferenceGenome.find_by_name("").id,
@@ -120,7 +124,9 @@ class StudiesControllerTest < ActionController::TestCase
           }
         end
 
-        should_change('Study.count', 1) { Study.count }
+        should "change Study.count by 1" do
+          assert_equal 1, Study.count - @study_count
+        end
         should redirect_to("study path") { study_path(Study.last) }
         should set_the_flash.to( "Your study has been created")
       end
