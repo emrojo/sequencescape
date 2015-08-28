@@ -67,6 +67,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
       context "with invalid data" do
         setup do
+          @initial_project_count = Project.count
           post :create, "project" => {
             "name" => "hello 2",
             :project_metadata_attributes => {
@@ -77,7 +78,9 @@ class ProjectsControllerTest < ActionController::TestCase
         end
 
         should render_template :new
-        should_not_change('Project.count') { Project.count }
+        should "not change Project.count" do
+          assert_equal @initial_project_count, Project.count
+        end
 
         should 'set a message for the error' do
           assert_contains(@controller.action_flash.values, 'Problems creating your new project')

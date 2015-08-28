@@ -94,11 +94,15 @@ class StudiesControllerTest < ActionController::TestCase
 
       context "fail to create a new study" do
         setup do
+          @initial_study_count = Study.count
           post :create, "study" => { "name" => "hello 2" }
         end
 
         should render_template :new
-        should_not_change('Study.count') { Study.count }
+
+        should "not change Study.count" do
+          assert_equal @initial_study_count, Study.count
+        end
 
         should 'set a message for the error' do
           assert_contains(@controller.action_flash.values, 'Problems creating your new study')

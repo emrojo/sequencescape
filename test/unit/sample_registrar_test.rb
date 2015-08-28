@@ -11,6 +11,8 @@ class SampleRegistrarTest < ActiveSupport::TestCase
 
     context 'registering a sample alone' do
       setup do
+        @initial_agc =  AssetGroup.count
+        @initial_src =  SampleRegistrar.count
         @sample_count =  Sample.count
         @sampletube_count =  SampleTube.count
         SampleRegistrar.create!(
@@ -30,8 +32,13 @@ class SampleRegistrarTest < ActiveSupport::TestCase
       should "change SampleTube.count by 1" do
         assert_equal 1,  SampleTube.count       - @sampletube_count, "Expected SampleTube.count to change by 1"
       end
-      should_not_change('AssetGroup.count')       { AssetGroup.count      }
-      should_not_change('SampleRegistrar.count')  { SampleRegistrar.count }
+      should "not change AssetGroup.count" do
+        assert_equal @initial_agc,  AssetGroup.count
+       end
+
+      should "not change SampleRegistrar.count" do
+        assert_equal @initial_src,  SampleRegistrar.count
+       end
 
       should 'put the sample in the sample tube' do
         assert_equal(Sample.last, SampleTube.last.primary_aliquot.sample)
@@ -92,6 +99,7 @@ class SampleRegistrarTest < ActiveSupport::TestCase
         # construction!
         context 'the actual test should give you an error. No Samples inserted.' do
           setup do
+            @initial_sc =  Sample.count
             assert_raise(ActiveRecord::RecordInvalid) do
               SampleRegistrar.create!(
                 :asset_group_helper => SampleRegistrar::AssetGroupHelper.new,
@@ -103,7 +111,9 @@ class SampleRegistrarTest < ActiveSupport::TestCase
             end
           end
 
-          should_not_change('Sample.count')     { Sample.count }
+          should "not change Sample.count" do
+            assert_equal @initial_sc,  Sample.count
+           end
         end
       end
     end
@@ -154,6 +164,8 @@ class SampleRegistrarTest < ActiveSupport::TestCase
       context 'ignores any samples to be registered' do
         setup do
           @sample_count =  Sample.count
+          @initial_src =  SampleRegistrar.count
+          @initial_agc =  AssetGroup.count
           @sampletube_count =  SampleTube.count
           SampleRegistrar.register!([
             {
@@ -171,7 +183,9 @@ class SampleRegistrarTest < ActiveSupport::TestCase
           ])
         end
 
-        should_not_change('SampleRegistrar.count')  { SampleRegistrar.count }
+        should "not change SampleRegistrar.count" do
+          assert_equal @initial_src,  SampleRegistrar.count
+         end
 
         should "change Sample.count by 1" do
           assert_equal 1,  Sample.count           - @sample_count, "Expected Sample.count to change by 1"
@@ -180,7 +194,9 @@ class SampleRegistrarTest < ActiveSupport::TestCase
         should "change SampleTube.count by 1" do
           assert_equal 1,  SampleTube.count       - @sampletube_count, "Expected SampleTube.count to change by 1"
         end
-        should_not_change('AssetGroup.count')       { AssetGroup.count      }
+        should "not change AssetGroup.count" do
+          assert_equal @initial_agc,  AssetGroup.count
+         end
 
         should 'not registered the ignored sample' do
           assert_nil(Sample.find_by_name('ignored_sample'))
@@ -189,6 +205,7 @@ class SampleRegistrarTest < ActiveSupport::TestCase
 
       context 'registers multiple samples correctly' do
         setup do
+          @initial_sample_registrar =  SampleRegistrar.count
           @sample_count =  Sample.count
           @sampletube_count =  SampleTube.count
           @assetgroup_count =  AssetGroup.count
@@ -226,7 +243,9 @@ class SampleRegistrarTest < ActiveSupport::TestCase
           ])
         end
 
-        should_not_change('SampleRegistrar.count')  { SampleRegistrar.count }
+        should "not change SampleRegistrar.count" do
+          assert_equal @initial_sample_registrar,  SampleRegistrar.count
+        end
 
         should "change Sample.count by 4" do
           assert_equal 4,  Sample.count           - @sample_count, "Expected Sample.count to change by 4"

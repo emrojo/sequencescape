@@ -289,6 +289,7 @@ end
     should have_many :failures
     should have_many :lab_events
     should have_many :requests
+
     should_have_instance_methods :shift_item_positions, :assigned_user, :start, :fail, :workflow, :started?, :released?, :externally_released?, :internally_released?, :qc_state
     should_have_instance_methods :submit_to_qc_queue
 

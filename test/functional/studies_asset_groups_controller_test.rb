@@ -13,8 +13,8 @@ class Studies::AssetGroupsControllerTest < ActionController::TestCase
 
   context "Studies AssetGroups" do
     setup do
-      @assetgroup_count =  AssetGroup.count
-      @study_count =  Study.count
+      @assetgroup_count_a =  AssetGroup.count
+      @study_count_a =  Study.count
       @controller = Studies::AssetGroupsController.new
       @request    = ActionController::TestRequest.new
       @response   = ActionController::TestResponse.new
@@ -25,30 +25,38 @@ class Studies::AssetGroupsControllerTest < ActionController::TestCase
       @asset_group = Factory :asset_group
     end
 
-    should respond_with :success
-
-    should "change AssetGroup.count by 0" do
-      assert_equal 0,  AssetGroup.count  - @assetgroup_count, "Expected AssetGroup.count to change by 0"
-    end
-    should "change Study.count by 0" do
-      assert_equal 0,  Study.count  - @study_count, "Expected Study.count to change by 0"
-    end
 
     ["index","new"].each do |controller_method|
       context "##{controller_method}" do
         setup do
+          @assetgroup_count =  AssetGroup.count
+          @study_count =  Study.count
           get controller_method, :study_id => @study.id
         end
-        view_page_with_no_updates
+        should respond_with :success
+
+        should "change AssetGroup.count by 0" do
+          assert_equal 0,  AssetGroup.count  - @assetgroup_count, "Expected AssetGroup.count to change by 0"
+        end
+        should "change Study.count by 0" do
+          assert_equal 0,  Study.count  - @study_count, "Expected Study.count to change by 0"
+        end
       end
     end
 
     ["show", "edit", "print", "printing"].each do |controller_method|
       context "##{controller_method}" do
         setup do
+          @assetgroup_count =  AssetGroup.count
+          @study_count =  Study.count
           get controller_method, :study_id => @study.id, :id => @asset_group.id
         end
-        view_page_with_no_updates
+        should "change AssetGroup.count by 0" do
+          assert_equal 0,  AssetGroup.count  - @assetgroup_count, "Expected AssetGroup.count to change by 0"
+        end
+        should "change Study.count by 0" do
+          assert_equal 0,  Study.count  - @study_count, "Expected Study.count to change by 0"
+        end
       end
     end
 
@@ -94,8 +102,8 @@ class Studies::AssetGroupsControllerTest < ActionController::TestCase
       end
 
       should "change AssetGroup.count by -1" do
-       assert -1,  AssetGroup.count - @assetgroup_count, "Expected AssetGroup.count to change by -1"
-
+       assert_equal -1,  AssetGroup.count - @assetgroup_count, "Expected AssetGroup.count to change by -1"
+     end
 
       should "change Study.count by 0" do
         assert_equal 0,  Study.count  - @study_count, "Expected Study.count to change by 0"
@@ -105,21 +113,25 @@ class Studies::AssetGroupsControllerTest < ActionController::TestCase
     end
 
     context "#update" do
+
       setup do
         @assetgroup_count =  AssetGroup.count
         @study_count =  Study.count
         put :update, :study_id => @study.id, :id => @asset_group.id, :name=>"update name"
       end
+
       should set_the_flash.to( /updated/)
 
-       should "change AssetGroup.count by 0" do
+      should "change AssetGroup.count by 0" do
          assert_equal 0,  AssetGroup.count  - @assetgroup_count, "Expected AssetGroup.count to change by 0"
       end
 
-       should "change Study.count by 0" do
+      should "change Study.count by 0" do
          assert_equal 0,  Study.count  - @study_count, "Expected Study.count to change by 0"
       end
+
       should respond_with :redirect
+
       should "set name" do
         assert "update name", AssetGroup.find(@asset_group.id).name
       end

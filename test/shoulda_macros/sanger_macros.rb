@@ -9,12 +9,14 @@ module Sanger
       module Macros
 
 
-        def should_not_change(*params,&block)
-           # TODO: Set this up
-        end
 
         def should_have_instance_methods(*methods)
-          # TODO: Set this up
+          dt = described_type
+          should "have instance methods #{methods.join(',')}" do
+            methods.each do |method|
+              assert dt.instance_methods.include?(method), "Missing instance methods #{method}"
+            end
+          end
         end
 
         def should_have_successful_submission

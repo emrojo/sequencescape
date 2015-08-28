@@ -89,8 +89,8 @@ class ReceptionsControllerTest < ActionController::TestCase
           post :confirm_reception, :asset_id => { "0" => @sample_tube.id }, :asset => { :location_id => @location.id }
         end
 
-        should "change Event.count by 0" do
-          assert_equal 0,  Event.count  - @event_count, "Expected Event.count to change by 0"
+        should "change Event.count by 1" do
+          assert_equal 1,  Event.count  - @event_count, "Expected Event.count to change by 1"
         end
         should respond_with :success
       end

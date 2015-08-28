@@ -62,12 +62,15 @@ class LinearSubmissionTest < ActiveSupport::TestCase
         context "#process!" do
           context 'single request' do
             setup do
+              @initial_comment_count = Comment.count
               @request_count =  Request.count
               @item_count =  Item.count
               @mpx_submission.process!
             end
 
-            should_not_change("Comment.count") { Comment.count }
+            should "not change Comment.count" do
+              assert_equal @initial_comment_count, Comment.count
+            end
 
  should "change Request.count by 11" do
    assert_equal 11,  Request.count  - @request_count, "Expected Request.count to change by 11"
@@ -80,6 +83,7 @@ end
 
           context 'multiple requests' do
             setup do
+              @initial_comment_count = Comment.count
               @request_count =  Request.count
               @item_count =  Item.count
               @sequencing_request_type_2 = Factory :sequencing_request_type
@@ -98,7 +102,9 @@ end
               @multiple_mpx_submission.process!
             end
 
-            should_not_change("Comment.count") { Comment.count }
+            should "not change Comment.count" do
+              assert_equal @initial_comment_count, Comment.count
+            end
 
  should "change Request.count by 12" do
    assert_equal 12,  Request.count  - @request_count, "Expected Request.count to change by 12"
