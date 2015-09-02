@@ -15,12 +15,12 @@ module Pipeline::Grouper
   def all(selected_groups)
     conditions, variables = [], []
     selected_groups.each { |group, _| call(conditions, variables, group) }
-    requests.inputs(true).group_where(conditions, variables).group_requests(:all)
+    requests.inputs(true).group_conditions(conditions, variables).group_requests(:all)
   end
 
   def count(selected_groups)
     conditions, variables = [], []
     selected_groups.each { |group, _| call(conditions, variables, group) }
-    requests.inputs(true).group_where(conditions, variables).group_requests(:count, :group => grouping)
+    requests.inputs(true).group_conditions(conditions, variables).group_requests(:count, :group => grouping)
   end
 end

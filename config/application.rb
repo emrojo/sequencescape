@@ -63,47 +63,51 @@ module Sequencescape
       # Settings in config/environments/* take precedence over those specified here.
 
 
-  # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{Rails.root}/extras )
-  config.autoload_paths += %W{ #{Rails.root}/app/observers }
-  config.autoload_paths += %W{ #{Rails.root}/app/api }
-  config.autoload_paths += %W{ #{Rails.root}/lib }
+    # Add additional load paths for your own custom dirs
+    # config.load_paths += %W( #{Rails.root}/extras )
+    config.autoload_paths += %W{ #{Rails.root}/app/observers }
+    config.autoload_paths += %W{ #{Rails.root}/app/metal }
+    config.autoload_paths += %W{ #{Rails.root}/app }
+    config.autoload_paths += %W{ #{Rails.root}/lib }
 
-  # UPDATE ? - Is this old rails code or custom code?
-  # if %w(development test sandbox production cucumber).include? Rails.env
-  #   config.load_paths += Dir["#{Rails.root}/vendor/gems/**"].map do |dir|
-  #     File.directory?(lib = "#{dir}/lib") ? lib : dir
-  #   end
-  # end
+    # config.middleware.use "Api::EndpointHandler"
+    # config.middleware.use "Api::RootService"
 
-  # Make Time.zone default to the specified zone, and make Active Record store time values
-  # in the database in UTC, and return them converted to the specified local zone.
-  # Run "rake -D time" for a list of tasks for finding time zone names. Uncomment to use default local time.
-  config.time_zone = 'London'
+    # UPDATE ? - Is this old rails code or custom code?
+    # if %w(development test sandbox production cucumber).include? Rails.env
+    #   config.load_paths += Dir["#{Rails.root}/vendor/gems/**"].map do |dir|
+    #     File.directory?(lib = "#{dir}/lib") ? lib : dir
+    #   end
+    # end
 
-  # We disable sprockets, at least for the moment
-  config.assets.enabled = false
+    # Make Time.zone default to the specified zone, and make Active Record store time values
+    # in the database in UTC, and return them converted to the specified local zone.
+    # Run "rake -D time" for a list of tasks for finding time zone names. Uncomment to use default local time.
+    config.time_zone = 'London'
 
-  # Your secret key for verifying cookie session data integrity.
-  # If you change this key, all old sessions will become invalid!
-  # Make sure the secret is at least 30 characters and all random,
-  # no regular words or you'll be exposed to dictionary attacks.
-  # config.action_controller.session = {
-  #    :key => '_sequencescape_projects_session',
-  #    :secret      => '331126909929cd365e60e61c66e88d260ef609cb813566e03618f6a455dbfc7f50486aa6dc721bcc5fce54455282e3e17bb500f11d8b72bbac369f194c9dae73'
-  #  }
+    # We disable sprockets, at least for the moment
+    config.assets.enabled = false
 
-  # Enable localisations to be split over multiple paths.
-  config.i18n.load_path = Dir[File.join(Rails.root, %w{config locales metadata *.{rb,yml}})]
-  I18n.enforce_available_locales = false
+    # Your secret key for verifying cookie session data integrity.
+    # If you change this key, all old sessions will become invalid!
+    # Make sure the secret is at least 30 characters and all random,
+    # no regular words or you'll be exposed to dictionary attacks.
+    # config.action_controller.session = {
+    #    :key => '_sequencescape_projects_session',
+    #    :secret      => '331126909929cd365e60e61c66e88d260ef609cb813566e03618f6a455dbfc7f50486aa6dc721bcc5fce54455282e3e17bb500f11d8b72bbac369f194c9dae73'
+    #  }
+
+    # Enable localisations to be split over multiple paths.
+    config.i18n.load_path = Dir[File.join(Rails.root, %w{config locales metadata *.{rb,yml}})]
+    I18n.enforce_available_locales = false
 
 
-  # Jruby 1.7 seems to try and use the http.proxyX settings, but ignores the noProxyHost ENV.
-  if defined?(ENV_JAVA)
-    ENV_JAVA['http.proxyHost'] = nil
-    ENV_JAVA['http.proxyPort'] = nil
-    ENV_JAVA['https.proxyHost'] = nil
-    ENV_JAVA['https.proxyPort'] = nil
-  end
+    # Jruby 1.7 seems to try and use the http.proxyX settings, but ignores the noProxyHost ENV.
+    if defined?(ENV_JAVA)
+      ENV_JAVA['http.proxyHost'] = nil
+      ENV_JAVA['http.proxyPort'] = nil
+      ENV_JAVA['https.proxyHost'] = nil
+      ENV_JAVA['https.proxyPort'] = nil
+    end
   end
 end

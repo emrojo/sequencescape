@@ -35,6 +35,7 @@
     </script>
     <%= javascript_include_tag 'tablesorter/jquery.tablesorter.js' %>
     <%= javascript_include_tag 'tablesorter/jquery.metadata.js' %>
+    <%= javascript_include_tag 'application.js' %>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon" />
   </head>
@@ -87,7 +88,7 @@
           <%- end -%>
 
             <div id="search">
-            <% form_tag searches_path, :method => :get do %>Search
+            <%= form_tag searches_path, :method => :get do %>Search
               <%= select_tag :type, options_for_select(search_options), :id => 'layout_search_options' %>
               <%= text_field_tag :q, "", :size => 20, :type => "search", :placeholder => "name, id, barcode", :id => 'layout_search' %>
             <% end %>

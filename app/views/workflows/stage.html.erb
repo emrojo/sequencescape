@@ -38,7 +38,7 @@
 <% if not @task.partial.blank? %>
   <%= render :partial => @task.partial, :locals => { :requests => @batch.requests } %>
 <% elsif not @batch.processing_in_manual_qc? %>
-  <% form_for :workflow, :url => { :action => "stage", :id => @stage }, :html => { :id => "stage_form"} do |form| %>
+  <%= form_for :workflow, :url => { :action => "stage", :id => @stage }, :html => { :id => "stage_form"} do |form| %>
     <%= render :partial => "shared/batch", :locals => { :requests => @batch.ordered_requests, :edit => false, :stage => true } %>
 
     <br />

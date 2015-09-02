@@ -3,7 +3,7 @@
 #Copyright (C) 2007-2011 Genome Research Ltd.%>
 <h1>New activity</h1>
 
-<% form_for(@activity) do |f| %>
+<%= form_for(@activity) do |f| %>
   <%= f.error_messages %>
 
   <%= render :partial => "activity_form", :locals => {:activity => @activity, :f => f } %>

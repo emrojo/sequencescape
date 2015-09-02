@@ -203,7 +203,7 @@ class Request < ActiveRecord::Base
 
   scope :holder_not_control, lambda {
     joins(["INNER JOIN container_associations hncca ON hncca.content_id = asset_id", "INNER JOIN assets AS hncc ON hncc.id = hncca.container_id"]).
-    conditions(['hncc.sti_type != ?', 'ControlPlate' ]).
+    where(['hncc.sti_type != ?', 'ControlPlate' ]).
     readonly(false)
   }
   scope :without_asset, where('asset_id is null')

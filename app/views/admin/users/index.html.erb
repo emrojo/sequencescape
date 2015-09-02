@@ -5,7 +5,7 @@
 
 <h1>User management</h1>
 
-<% form_tag(:url => filter_admin_users_url, :remote => true, :html => { :id => "filter_form" }, :update => "users", :loading => "show_update_loader();", :complete => "hide_update_loader();") do %>
+<%= form_tag(:url => filter_admin_users_url, :remote => true, :html => { :id => "filter_form" }, :update => "users", :loading => "show_update_loader();", :complete => "hide_update_loader();") do %>
 <div class="callout_filter">
   <table width="100%">
     <tr>

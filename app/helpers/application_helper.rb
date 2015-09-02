@@ -46,11 +46,11 @@ module ApplicationHelper
   end
 
   def required_marker
-    output = %Q{<span class="required">&raquo;</span>}
+    %Q{<span class="required">&raquo;</span>}.html_safe
   end
 
   def required_marker_bold
-    %Q{<span style="font-size : medium;"class="required">&raquo;</span>}
+    %Q{<span style="font-size : medium;"class="required">&raquo;</span>}.html_safe
   end
 
   def render_flashes
@@ -232,10 +232,6 @@ module ApplicationHelper
     add :help, help
   end
 
-  def required_marker
-    output = %Q{<span class="required">&raquo;</span>}
-  end
-
   def tabulated_error_messages_for(*params)
     options = params.last.is_a?(Hash) ? params.pop.symbolize_keys : {}
     objects = params.collect {|object_name| instance_variable_get("@#{object_name}") }.compact
@@ -316,6 +312,10 @@ module ApplicationHelper
     label_tag(name, text, options.merge(:style => 'display:none;'))
   end
 
+  def non_breaking_space
+    '&nbsp;'.html_safe
+  end
+
   def help_text(label_text = nil, suggested_id = nil, &block)
     content = capture(&block)
 
@@ -327,13 +327,13 @@ module ApplicationHelper
     shortened_text = (content =~ /^(.{20}\S*)\s\S/ and $1)
 
     if content.blank?
-      concat('&nbsp;')
+      concat(non_breaking_space)
     elsif shortened_text.nil?
-      concat(content)
+      concat(content.html_safe)
     else
-      concat(shortened_text)
+      concat(shortened_text.html_safe)
       tooltip_id = "prop_#{suggested_id || content.hash}_help"
-      concat(label_tag("tooltip_content_#{tooltip_id}", label_text, :style => 'display:none;'))
+      concat(label_tag("tooltip_content_#{tooltip_id}", label_text, :style => 'display:none;').html_safe)
 
       tooltip('...', :id => tooltip_id, &block)
     end

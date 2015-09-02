@@ -129,7 +129,7 @@ Then /^(?:|I )should see "([^\"]*)"(?: within "([^\"]*)")?$/ do |text, selector|
     if page.respond_to? :should
       page.should have_content(text)
     else
-      assert page.has_content?(text)
+      assert page.has_content?(text), "Could not see #{text} on page."
     end
   end
 end
@@ -246,8 +246,8 @@ Then /^show me the page$/ do
   # We don't use save_and_open_source as
   # it passes the source through Nokogiri
   # first and passes it out as xml.
-  require 'capybara/util/save_and_open_page'
-  Capybara.save_and_open_page(source)
+  # require 'capybara/util/save_and_open_page'
+  Capybara.save_and_open_page("tmp/#{Time.now.strftime('%Y%m%d%H%M%S')}.htm")
 end
 
 Given /^the "([^\"]*)" field is hidden$/ do |field_name|

@@ -132,8 +132,8 @@ Sequencescape::Application.routes.draw do
       end
     end
 
-    resources :samples
-    resources :events
+    resources :samples, :controller => "studies/samples"
+    resources :events, :controller => "studies/events"
 
     resources :requests do
       member do
@@ -142,9 +142,9 @@ Sequencescape::Application.routes.draw do
       end
     end
 
-    resources :comments
+    resources :comments, :controller => "studies/comments"
 
-    resources :asset_groups do
+    resources :asset_groups, :controller => "studies/asset_groups" do
       member do
         post :search
         post :add
@@ -154,7 +154,7 @@ Sequencescape::Application.routes.draw do
       end
     end
 
-    resources :plates, :excpet => :destroy do
+    resources :plates, :controller => "studies/plates", :excpet => :destroy do
 
       collection do
         post :view_wells
@@ -169,7 +169,7 @@ Sequencescape::Application.routes.draw do
       resources :wells, :expect => [:destroy,:edit]
     end
 
-    resources :workflows do
+    resources :workflows, :controller => "studies/workflows" do
 
       member do
         get :summary
@@ -183,7 +183,7 @@ Sequencescape::Application.routes.draw do
       end
     end
 
-    resources :documents, :only => [:show,:destroy]
+    resources :documents, :controller => "studies/documents", :only => [:show,:destroy]
 
   end
 
@@ -208,6 +208,21 @@ Sequencescape::Application.routes.draw do
 
   resources :requests do
     resources :comments
+
+    member do
+      get :history
+      get :copy
+      get :cancel
+      get :print
+    end
+
+    collection do
+      get :incomplete_requests_for_family
+      get :pending
+      get :get_children_requests
+      get :mpx_requests_details
+    end
+
   end
 
   resources :items do
@@ -535,4 +550,6 @@ Sequencescape::Application.routes.draw do
 
   match '/' => 'home#index', :namespace => 'sdb/', :path_prefix => '/sdb'
   match '/:controller(/:action(/:id))'
+
+  mount Api::RootService.new => '/api/1'
 end

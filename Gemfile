@@ -107,12 +107,12 @@ group :cucumber do
   # making sensible choices.  Should ...
   # Yeah well, it doesn't.
   gem "rubyzip", "~>0.9"
-  gem "capybara", "< 2", :require => false
+  gem "capybara", :require => false
   gem 'mime-types', '< 2'
   gem "database_cleaner", :require => false
-  gem "cucumber", '~> 1.2.1', :require => false
-  gem "cucumber-rails", "~>0.3.2", :require => false
-  gem "poltergeist", "1.0.3"
+  gem "cucumber", :require => false
+  gem "cucumber-rails", :require => false
+  gem "poltergeist"
 end
 
 group :deployment do

@@ -22,7 +22,7 @@
       <td><%= bait_library.bait_library_supplier.name %></td>
       <td><%= bait_library.target_species %></td>
       <td><%= bait_library.bait_library_type.name %></td>
-      <td><%= link_to 'Edit', edit_bait_library_path(bait_library), :title => "Edit #{bait_library.name}" %></td>
+      <td><%= link_to 'Edit', edit_admin_bait_library_path(bait_library), :title => "Edit #{bait_library.name}" %></td>
       <td><%= link_to 'Delete', bait_library, :title => "Delete #{bait_library.name}", :confirm => 'Are you sure?', :method => :delete %></td>
     </tr>
   <% end %>
@@ -31,7 +31,7 @@
 
 <br />
 
-<%= link_to 'New Bait Library', new_bait_library_path %>
+<%= link_to 'New Bait Library', new_admin_bait_library_path %>
 <br />
 <%= render :partial => "supplier_index" %>
 <br />
