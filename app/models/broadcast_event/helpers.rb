@@ -12,76 +12,76 @@ module BroadcastEvent::Helpers
   end
 
   module SimpleTargetLookup
+    def initialize(name,method)
+      @name = name
+      @method = method
+    end
+
     def target_for(seed)
       seed.send(method)
+    end
+
+    def self.included(base)
+      base.class_eval { attr_reader :name, :method }
     end
   end
 
   module BlockTargetLookup
+    def initialize(name,&block)
+      @name = name
+      @block = block
+    end
+
     def target_for(seed)
       block.call(seed)
+    end
+
+    def self.included(base)
+      base.class_eval { attr_reader :name, :block }
+    end
+  end
+
+  module SingleTarget
+    def for(seed)
+      Subject.new(name,target_for(seed))
+    end
+  end
+
+  module MultiTarget
+    def for(seed)
+      target_for(seed).map {|t| Subject.new(name,t) }
+    end
+  end
+
+  class SeedSubjectAssociation
+
+    attr_reader :name
+
+    def initialize(name)
+      @name = name
+    end
+    def for(seed)
+      Subject.new(name,seed)
     end
   end
 
   class SimpleSingleSubjectAssociation
     include SimpleTargetLookup
-
-    attr_reader :name, :method
-
-    def initialize(name,method)
-      @name = name
-      @method = method
-    end
-
-    def for(seed)
-      Subject.new(name,target_for(seed))
-    end
+    include SingleTarget
   end
 
   class SimpleManySubjectAssociation
     include SimpleTargetLookup
-
-    attr_reader :name, :method
-
-    def initialize(name,method)
-      @name = name
-      @method = method
-    end
-
-    def for(seed)
-      target = target_for(seed)
-
-      target.map {|t| Subject.new(name,t) }
-    end
+    include MultiTarget
   end
 
   class BlockSingleSubjectAssociation
     include BlockTargetLookup
-    attr_reader :name, :block
-
-    def initialize(name,&block)
-      @name = name
-      @block = block
-    end
-
-    def for(seed)
-      Subject.new(name,target_for(seed))
-    end
+    include SingleTarget
   end
 
   class BlockManySubjectAssociation
     include BlockTargetLookup
-    attr_reader :name, :block
-
-    def initialize(name,&block)
-      @name = name
-      @block = block
-    end
-
-    def for(seed)
-      target_for(seed).map do |t|
-        Subject.new(name,t)
-      end
-    end
+    include MultiTarget
   end
 end

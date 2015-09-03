@@ -22,10 +22,12 @@ class BroadcastEvent < ActiveRecord::Base
   module ClassMethods
     # The class expected to seed the messenger
     def seed_class(seed_class)
+      @seed_class = seed_class
     end
 
     # The role type that will identify the seed (if applicable)
     def seed_subject(role_type)
+      subject_associations << Helpers::SeedSubjectAssociation.new(role_type)
     end
 
     # Defines a new subject, specifies the role type and either a method on the seed that will return
