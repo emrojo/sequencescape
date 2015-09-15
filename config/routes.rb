@@ -25,12 +25,12 @@ Sequencescape::Application.routes.draw do
     end
   end
 
-  #### NPG start ####
-  match 'assets/:id/pass_qc_state', :action => 'pass', :path_prefix => '/npg_actions', :conditions => { :method => :post, :format => :xml }, :controller => 'npg_actions/assets'
-  match 'assets/:id/fail_qc_state', :action => 'fail', :path_prefix => '/npg_actions', :conditions => { :method => :post, :format => :xml }, :controller => 'npg_actions/assets'
-  match 'assets/:id/pass_qc_state' => 'npg_actions/assets#pass', :as => :pass_qc_state, :path_prefix => '/npg_actions', :via => 'post'
-  match 'assets/:id/fail_qc_state' => 'npg_actions/assets#fail', :as => :fail_qc_state, :path_prefix => '/npg_actions', :via => 'post'
-  #### NPG end ####
+  scope 'npg_actions', :module => 'npg_actions' do
+    resources :assets, :only => [] do
+      post :pass_qc_state, :action => :pass, :format => :xml
+      post :fail_qc_state, :action => :fail, :format => :xml
+    end
+  end
 
   resources :items
 
@@ -290,8 +290,12 @@ Sequencescape::Application.routes.draw do
       resources :robot_properties
     end
     resources :bait_libraries
-    resources :bait_library_types
-    resources :bait_library_suppliers
+
+
+    scope :module => :bait_libraries do
+      resources :bait_library_types
+      resources :bait_library_suppliers
+    end
   end
   match 'admin' => 'admin#index', :as => :admin
 
@@ -388,12 +392,35 @@ Sequencescape::Application.routes.draw do
 
   resources :families
 
-  resources :tag_groups do
-      resources :tags
+  resources :tag_groups, :excpet=>[:destroy] do
+    resources :tags, :except => [:destroy, :index, :create, :new, :edit]
   end
 
   resources :assets do
-    resources :comments
+    collection do
+      get :snp_register
+      get :reception
+      post :print_labels
+    end
+
+    member do
+      get :parent_assets
+      get :child_assets
+      get :show_plate
+      get :new_request
+      post :create_request
+      get :summary
+      get :close
+      get :print
+      post :print_items
+      get :history
+      get :filtered_move
+      post :move
+      get :move_to_2D
+      post :complete_move_to_2D
+    end
+
+    resources :comments, :controller => "assets/comments"
   end
 
   resources :plates do

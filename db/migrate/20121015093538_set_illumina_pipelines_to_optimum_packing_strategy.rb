@@ -4,7 +4,7 @@
 class SetIlluminaPipelinesToOptimumPackingStrategy < ActiveRecord::Migration
   class PlatePurpose < ActiveRecord::Base
     self.table_name =('plate_purposes')
-    self.inheritance_column =
+    set_inheritance_column
 
     scope :illumina_plate_purposes, where(
       :name => (IlluminaB::PlatePurposes::PLATE_PURPOSE_FLOWS + Pulldown::PlatePurposes::PLATE_PURPOSE_FLOWS).flatten)

@@ -182,8 +182,8 @@ Feature: Manage a list of bait libraries
       And I am on the Submissions Inbox page
     When I follow "new Submission"
      And I select "Pulldown ISC - Single ended sequencing" from "submission_template_id"
-     Then I should see "Human all exon 50MB"
-     And I should not see "Delete This"
+     Then I should see the select field "Bait library" with the option "Human all exon 50MB"
+     And I should see the select field "Bait library" without the option "Delete This"
 
   @api @json @pulldown @submission @single-sign-on @new-api @barcode-service @pulldown_api
   Scenario: Invalid submission bait libraries are checked at creation

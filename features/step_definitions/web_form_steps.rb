@@ -88,6 +88,23 @@ Then /^I should see the (required )?select field "([^\"]+)" with options "([^\"]
     element.all("option").detect {|o| o.text == option} or raise Capybara::ElementNotFound, "Field #{field.inspect} has no option #{option.inspect}"
   end
 end
+Then /^I should see the (required )?select field "([^\"]+)" without options "([^\"]+(?:\/[^\"]+)+)"$/ do |required, field, options|
+  assert_label_exists(field, required)
+  element = locate_labeled_field_type(field, 'select')
+  options.split('/').each do |option|
+    element.all("option").none? {|o| o.text == option} or raise Capybara::ElementNotFound, "Field #{field.inspect} has option #{option.inspect}"
+  end
+end
+Then /^I should see the (required )?select field "([^\"]+)" with the option "([^\"]+)"$/ do |required, field, option|
+  assert_label_exists(field, required)
+  element = locate_labeled_field_type(field, 'select')
+  element.all("option").detect {|o| o.text == option} or raise Capybara::ElementNotFound, "Field #{field.inspect} has no option #{option.inspect}"
+end
+Then /^I should see the (required )?select field "([^\"]+)" without the option "([^\"]+)"$/ do |required, field, option|
+  assert_label_exists(field, required)
+  element = locate_labeled_field_type(field, 'select')
+  element.all("option").none? {|o| o.text == option} or raise Capybara::ElementNotFound, "Field #{field.inspect} has option #{option.inspect}"
+end
 
 Then /^the "([^\"]+)" field should be marked in error$/ do |field|
   element = page.find_field(field) or raise Capybara::ElementNotFound, "Field #{ field.inspect } not found"

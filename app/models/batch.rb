@@ -61,7 +61,7 @@ class Batch < ActiveRecord::Base
     if user = User.find_by_login(query)
       conditions = [ 'user_id=?', user.id ]
     end
-    { :conditions => conditions }
+    where(conditions)
   }
 
   scope :includes_for_ui,    limit(5).includes(:user)

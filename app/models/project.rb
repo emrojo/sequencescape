@@ -44,7 +44,7 @@ class Project < ActiveRecord::Base
   validates_uniqueness_of :name, :on => :create, :message => "already in use (#{self.name})"
 
  scope :for_search_query, lambda { |query,with_includes|
-    { :conditions => [ 'name LIKE ? OR id=?', "%#{query}%", query ] }
+    where([ 'name LIKE ? OR id=?', "%#{query}%", query ])
   }
 
   def ended_billable_lanes(ended)

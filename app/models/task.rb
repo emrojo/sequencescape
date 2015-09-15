@@ -8,7 +8,7 @@ class Task < ActiveRecord::Base
 
   acts_as_descriptable :active
 
-  self.inheritance_column = "sti_type"
+  set_inheritance_column "sti_type"
 
 
   # BEGIN descriptor_to_attribute, could be move into a mixin

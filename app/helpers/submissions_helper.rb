@@ -10,7 +10,7 @@ module SubmissionsHelper
   end
 
   def order_input_label(field_info)
-    label("submission[order_params][#{field_info.key}]", field_info.display_name)
+    label('submission[order_params]',field_info.key, field_info.display_name)
   end
 
   # Returns a either a text input or a selection tag based on the 'kind'

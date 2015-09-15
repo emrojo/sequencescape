@@ -60,7 +60,7 @@ module ApplicationHelper
       content = message.map { |m| content_tag(:div, m) }.join if message.is_a?(Array)
       output << content_tag(:div, content, :class => 'flash', :id => "message_#{ key }")
     end
-    return output
+    return raw(output)
   end
 
   def api_data

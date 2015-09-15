@@ -29,3 +29,11 @@ After('@javascript') do
     end
   end
 end
+
+After do |s|
+  # If we're lost in time then we need to return to the present...
+  Timecop.return
+
+  # Tell Cucumber to quit after this scenario is done - if it failed.
+  # Cucumber.wants_to_quit = true if s.failed?
+end

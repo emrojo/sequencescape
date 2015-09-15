@@ -28,7 +28,7 @@
 </table>
 
 <%= fields_for(study) do |form| %>
-  <% form.fields_for(:study_metadata, :builder => Metadata::FormBuilder) do |metadata_fields| %>
+  <%= form.fields_for(:study_metadata, :builder => Metadata::FormBuilder) do |metadata_fields| %>
     <%= metadata_fields.select_by_association(:reference_genome) %>
   <% end %>
 <% end %>

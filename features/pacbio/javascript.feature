@@ -40,7 +40,7 @@ Feature: Push samples through the PacBio pipeline with javascript
     When I set PacBioLibraryTube "3980000333858" to be in freezer "PacBio sequencing freezer"
     Given I am on the show page for pipeline "PacBio Sequencing"
     When I check "Select Request Group 0"
-    And I press "Submit"
+    And I press the first "Submit"
     When I follow "Binding Kit Box Barcode"
     When I fill in "Binding Kit Box Barcode" with "777"
     And I press "Next step"

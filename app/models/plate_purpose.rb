@@ -27,14 +27,15 @@ class PlatePurpose < Purpose
 
   include Relationship::Associations
 
+ # We declare the scopes as lambdas as Rails 3.2 seems to fail to include the various subclasses otherwise
  scope :compatible_with_purpose, lambda {|purpose| purpose.nil? ? {:conditions=>'FALSE'} : { :conditions => ["(target_type is null and 'Plate'=?)  or target_type=?",purpose.target_plate_type, purpose.target_plate_type], :order=>"name ASC" } }
 
- scope :cherrypickable_as_target, where( :cherrypickable_target => true )
- scope :cherrypickable_as_source, where( :cherrypickable_source => true )
- scope :cherrypickable_default_type, where( :cherrypickable_target => true, :cherrypickable_source => true )
- scope :for_submissions, where('can_be_considered_a_stock_plate = true OR name = "Working Dilution"').
-    order('can_be_considered_a_stock_plate DESC')
- scope :considered_stock_plate, where( :can_be_considered_a_stock_plate => true )
+ scope :cherrypickable_as_target, lambda { where( :cherrypickable_target => true ) }
+ scope :cherrypickable_as_source, lambda { where( :cherrypickable_source => true ) }
+ scope :cherrypickable_default_type, lambda { where( :cherrypickable_target => true, :cherrypickable_source => true ) }
+ scope :for_submissions, lambda { where('can_be_considered_a_stock_plate = true OR name = "Working Dilution"').
+    order('can_be_considered_a_stock_plate DESC') }
+ scope :considered_stock_plate, lambda { where( :can_be_considered_a_stock_plate => true ) }
 
   serialize :cherrypick_filters
   validates_presence_of(:cherrypick_filters, :if => :cherrypickable_target?)
@@ -208,3 +209,4 @@ class PlatePurpose < Purpose
   def supports_multiple_submissions?; false; end
 
 end
+

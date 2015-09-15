@@ -61,7 +61,7 @@ module Api
     end
 
     [ :post, :put, :delete ].each do |action|
-      send(action, %r{^/#{self.api_version_path}/?$}) do
+      send(action, %r{^/?$}) do
         raise MethodNotAllowed, [ :get ]
       end
     end

@@ -11,7 +11,7 @@ class TagLayout < ActiveRecord::Base
   include Uuid::Uuidable
   include ModelExtensions::TagLayout
 
-  self.inheritance_column = "sti_type"
+  set_inheritance_column "sti_type"
 
   # The user performing the layout
   belongs_to :user

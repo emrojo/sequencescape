@@ -6,6 +6,7 @@ Then /^log "([^\"]+)" for debugging$/ do |message|
 end
 
 Then /^launch the debugger$/ do
+  binding.pry
   debugger
   puts
 end

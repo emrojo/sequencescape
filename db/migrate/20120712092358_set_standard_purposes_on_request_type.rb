@@ -10,7 +10,7 @@ class SetStandardPurposesOnRequestType < ActiveRecord::Migration
   class Tube
     class Purpose < ActiveRecord::Base
       self.table_name =('plate_purposes')
-      self.inheritance_column =
+      set_inheritance_column
     end
   end
 

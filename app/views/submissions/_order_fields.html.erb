@@ -8,10 +8,10 @@
   <% if @presenter.order_fields.present? -%>
     <table>
       <% @presenter.order_fields.sort {|a, b| a.display_name <=> b.display_name }.each_with_index do |order_param, index| -%>
-        <%= "<tr>" if index.even? %>
+        <% if index.even? %> <tr><% end %>
           <th><%= order_input_label(order_param) %></th>
           <td><%= order_input_tag(@presenter.order, order_param) %></td>
-          <%= "</tr>" if index.odd? || index + 1 == @presenter.order_fields.size %>
+          <% if index.odd? || index + 1 == @presenter.order_fields.size %></tr><% end %>
       <% end -%>
     </table>
   <% end -%>

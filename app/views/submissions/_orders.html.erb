@@ -20,7 +20,7 @@
   <li id="order-template" class="pane active">
   <span class="completed badge" >&#10004;</span>
   <span class="invalid badge"   >&#10006;</span>
-  <%= form_for :submission, @presenter do |f| -%>
+  <%= form_for(:submission) do |f| -%>
   <h2>Order Template</h2>
     <%= f.grouped_collection_select :template_id,
       @presenter.product_lines, :last, :first, :id, :name,
@@ -43,7 +43,7 @@
 
     <%# Render completed Orders %>
     <% @presenter.orders.each_with_index do |order, index| -%>
-      <% f.fields_for :orders, order do |orders_fields| -%>
+      <%= f.fields_for :orders, order do |orders_fields| -%>
         <% orders_fields.fields_for index.to_s, order  do |order_form| -%>
           <li class="pane order completed">
           <%= render :partial => 'saved_order', :locals => { :presenter => @presenter, :form => order_form, :order => order } %>
@@ -64,14 +64,14 @@
 
   <%# Render a single blank Order %>
   <li id="blank-order" class="pane order">
-    <%= form_for :blank_order, @presenter do |f| -%>
+    <%= form_for :blank_order do |f| -%>
         <%= render :partial => 'order', :locals => { :form => f, :presenter => @presenter } %>
     <% end -%>
   </li>
 
 
   <li class="buttons">
-  <%= form_for :submission, @presenter, :url => @presenter.url(self) , :html => { :id => 'build-form', :method => :put }   do |f| -%>
+  <%= form_for :submission, :url => @presenter.url(self) , :html => { :id => 'build-form', :method => :put }   do |f| -%>
 
     <%= submit_tag "&#10034; Build Submission",
       :id       => "start-submission",

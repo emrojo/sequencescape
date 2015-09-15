@@ -3,7 +3,7 @@
 #Copyright (C) 2011,2012,2013 Genome Research Ltd.
 def upload_submission_spreadsheet(name)
   attach_file("bulk_submission_spreadsheet", File.join(Rails.root,'features', 'submission', 'csv', "#{name}.csv"))
-  click_button "bulk_submission_submit"
+  click_button "Create Bulk submission"
 end
 
 When /^I upload a file with (.*) data for (\d+) submissions$/ do |type,number|
@@ -23,7 +23,7 @@ When /^I upload an empty file$/ do
 end
 
 When /^I submit an empty form$/ do
-  click_button "bulk_submission_submit"
+  click_button "Create Bulk submission"
 end
 
 When /^I upload a file with an invalid header row$/ do

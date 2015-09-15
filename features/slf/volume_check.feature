@@ -43,7 +43,7 @@ Feature: Upload volume results from the volume checker robot
     Given I am on the show page for pipeline "DNA QC"
     When I check "Select DN1234567T for batch"
     And I select "Create Batch" from "action_on_requests"
-    And I press "Submit"
+    And I press the first "Submit"
     When I follow "QC result"
     Then I should see dna qc table:
       | Well | Volume  |

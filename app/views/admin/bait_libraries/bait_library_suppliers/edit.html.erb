@@ -3,7 +3,7 @@
 #Copyright (C) 2012 Genome Research Ltd.%>
 <h1>Editing Bait Library Supplier</h1>
 
-<%= form_for(@bait_library_supplier) do |f| %>
+<%= form_for([:admin,@bait_library_supplier]) do |f| %>
   <%= f.error_messages %>
 
   <%= render :partial => "edit_form", :locals => {:f => f } %>

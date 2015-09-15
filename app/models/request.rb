@@ -22,7 +22,7 @@ class Request < ActiveRecord::Base
   has_many_events
   has_many_lab_events
 
-  self.inheritance_column = "sti_type"
+  set_inheritance_column "sti_type"
 
   def self.delegate_validator
     DelegateValidation::AlwaysValidValidator
@@ -126,7 +126,7 @@ class Request < ActiveRecord::Base
 
   scope :with_request_type_id, lambda { |id| { :conditions => { :request_type_id => id } } }
 
-  scope :for_pacbio_sample_sheet, includes([{:target_asset=>:map},:request_metadata])
+  scope :for_pacbio_sample_sheet, lambda { includes([{:target_asset=>:map},:request_metadata]) }
 
   # project is read only so we can set it everywhere
   # but it will be only used in specific and controlled place

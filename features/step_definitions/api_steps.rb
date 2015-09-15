@@ -212,7 +212,7 @@ Then /^the JSON should match the following for the specified fields:$/ do |seria
   expected = decode_json(serialised_json, 'Expected')
   received = decode_json(page.source, 'Received')
   strip_extraneous_fields(expected, received)
-  assert_hash_equal(expected, received, 'JSON differs in the specified fields')
+  assert_hash_equal(expected, received, "JSON #{page.source} differs in the specified fields")
 end
 
 Then /^the JSON "([^\"]+)" should be exactly:$/ do |path, serialised_json|
@@ -244,7 +244,7 @@ Then /^the HTTP response should be "([^\"]+)"$/ do |status|
   match = /^(\d+).*/.match(status) or raise StandardError, "Status #{status.inspect} should be an HTTP status code + message"
   begin
   assert_equal(match[1].to_i, page.driver.status_code)
-  rescue Test::Unit::AssertionFailedError => e
+  rescue MiniTest::Assertion => e
     step %Q{show me the HTTP response body}
     raise e
   end

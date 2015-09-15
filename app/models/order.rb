@@ -21,7 +21,7 @@ class Order < ActiveRecord::Base
 
   include Workflowed
 
-  self.inheritance_column = "sti_type"
+  set_inheritance_column "sti_type"
 
   # Required at initial construction time ...
   belongs_to :study

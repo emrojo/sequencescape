@@ -30,7 +30,7 @@ class Asset < ActiveRecord::Base
 
   cattr_reader :per_page
   @@per_page = 500
-  self.inheritance_column = "sti_type"
+  set_inheritance_column "sti_type"
   #acts_as_paranoid
 #  validates_uniqueness_of :name
 

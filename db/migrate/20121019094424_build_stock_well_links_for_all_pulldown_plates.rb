@@ -4,7 +4,7 @@
 class BuildStockWellLinksForAllPulldownPlates < ActiveRecord::Migration
   class PlatePurpose < ActiveRecord::Base
     self.table_name =('plate_purposes')
-    self.inheritance_column =
+    set_inheritance_column
 
     class Relationship < ActiveRecord::Base
       self.table_name =('plate_purpose_relationships')

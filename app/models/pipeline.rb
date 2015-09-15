@@ -118,7 +118,7 @@ class Pipeline < ActiveRecord::Base
 
 
 
-  self.inheritance_column = "sti_type"
+  set_inheritance_column "sti_type"
 
   include SequencingQcPipeline
   include Uuid::Uuidable

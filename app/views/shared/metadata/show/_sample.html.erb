@@ -3,7 +3,7 @@
 #Copyright (C) 2007-2011,2013 Genome Research Ltd.%>
 <%# NOTE[xxx]: Kind of a hack because we're not actually building a form %>
 <%= fields_for(sample) do |form| %>
-  <% form.fields_for(:sample_metadata, :builder => Metadata::ViewBuilder) do |metadata_fields| %>
+  <%= form.fields_for(:sample_metadata, :builder => Metadata::ViewBuilder) do |metadata_fields| %>
     <% metadata_fields.filter { |field| current_user.workflow.visible_attribute?(field) } %>
 
     <%# Fields for 'Microarray genotyping' %>

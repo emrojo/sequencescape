@@ -14,7 +14,7 @@ class Well < Aliquot::Receptacle
 
   class Link < ActiveRecord::Base
     self.table_name =('well_links')
-    self.inheritance_column =
+    set_inheritance_column
     belongs_to :target_well, :class_name => 'Well'
     belongs_to :source_well, :class_name => 'Well'
   end
@@ -198,7 +198,7 @@ class Well < Aliquot::Receptacle
 
   def create_child_sample_tube
     Tube::Purpose.standard_sample_tube.create!(:map => self.map, :aliquots => aliquots.map(&:dup)).tap do |sample_tube|
-      AssetLink.connect(self, sample_tube)
+      AssetLink.create_edge(self, sample_tube)
     end
   end
 

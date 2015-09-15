@@ -21,7 +21,7 @@ Feature: Recycling requests in the Cherrypicking pipeline
     Given I am on the "Cherrypick" pipeline page
     When I check "Include request 1"
     And I select "Create Batch" from "Action to perform"
-    And I press "Submit"
+    And I press the first "Submit"
     And I follow "Select Plate Template"
     And I press "Next"
 
@@ -53,7 +53,7 @@ Feature: Recycling requests in the Cherrypicking pipeline
     # It's not until you choose to create a new batch that you find out how many wells there are!
     When I check "Include request 1"
     And I select "Create Batch" from "Action to perform"
-    And I press "Submit"
+    And I press the first "Submit"
     Then the batch input asset table should be:
       | Wells              |
       | <number to remove> |

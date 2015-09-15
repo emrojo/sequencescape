@@ -36,7 +36,7 @@ Feature: Picking more than 13 minimum volume should render in tecan file
     And I check "Select DN222J for batch"
     And I check "Select DN333P for batch"
     And I select "Create Batch" from "Action to perform"
-    And I press "Submit"
+    And I press the first "Submit"
     When I follow "Select Plate Template"
     When I select "testtemplate" from "Plate Template"
     And I choose "Pick by ng"

@@ -100,7 +100,7 @@ class ActiveRecord::RecordInvalid
   end
 
   def errors_grouped_by_attribute
-    Hash[record.errors.to_a.group_by(&:first).map { |k,v| [ yield(k), v.map(&:last).uniq ] }]
+    record.errors.messages
   end
   private :errors_grouped_by_attribute
 end

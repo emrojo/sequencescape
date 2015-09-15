@@ -8,7 +8,7 @@
     <td width="60%"><%= form.check_box :ethically_approved %></td>
   </tr>
 </table>
-  <% form.fields_for(:study_metadata, :builder => Metadata::FormBuilder) do |metadata_fields| %>
+  <%= form.fields_for(study.study_metadata, :builder => Metadata::FormBuilder) do |metadata_fields| %>
     <%= metadata_fields.text_field :hmdmc_approval_number %>
   <% end %>
 <table width="100%" cellspacing="0" cellpadding="0">

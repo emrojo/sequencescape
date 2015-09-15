@@ -30,27 +30,30 @@ class Array
   end
 end
 
-class BulkSubmission < ActiveRecord::Base
+class BulkSubmission
+  include ActiveModel::AttributeMethods
+  include ActiveModel::Validations
+  include ActiveModel::Conversion
+  extend ActiveModel::Naming
 
-  # Using table-less pattern - all columns are specified in the model rather than the DBMS
-  # see http://codetunes.com/2008/07/20/tableless-models-in-rails
-  def self.columns() @columns ||= []; end
-
-  def self.column(name, sql_type = nil, default = nil, null = true)
-    columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, sql_type.to_s, null)
-  end
-
-  # The only column is the spreadsheet, which needs to be validated before submitting in one big transaction
-  column :spreadsheet, :binary
+  attr_accessor :spreadsheet
+  define_attribute_methods [:spreadsheet]
 
   validates_presence_of :spreadsheet
   validate :process_file
+
+  def persisted?; false; end
+  def id; nil; end
+
+  def initialize(attrs={})
+    self.spreadsheet = attrs[:spreadsheet]
+  end
 
   def process_file
     # Slightly inelegant file-type checking
     #TODO (jr) Find a better way of verifying the CSV file?
     unless spreadsheet.blank?
-      if File.size(spreadsheet) == 0
+      if spreadsheet.size == 0
         errors.add(:spreadsheet, "The supplied file was empty")
       else
         if /^.*\.csv$/.match(spreadsheet.original_filename)

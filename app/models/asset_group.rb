@@ -16,7 +16,7 @@ class AssetGroup < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
   validates :study, :presence => true
 
- scope :for_search_query, lambda { |query,with_includes| { :conditions => [ 'name LIKE ?', "%#{query}%" ] } }
+ scope :for_search_query, lambda { |query,with_includes| where([ 'name LIKE ?', "%#{query}%" ]) }
 
   def all_samples_have_accession_numbers?
     unaccessioned_samples.count == 0

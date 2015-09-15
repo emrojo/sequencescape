@@ -5,15 +5,7 @@
 class AssetLink < ActiveRecord::Base
   include Api::AssetLinkIO::Extensions
 
-  # class_attribute :acts_as_dag_options
-
-  # def self.write_inheritable_attribute(attribute,value)
-  #   puts "DEPRECATED! wrtie_inheritable_attribute"
-  #   self.send(:"#{attribute}=",value)
-  # end
-
-  # def self.class_inheritable_reader(ignore)
-  # end
+  acts_as_dag_links :node_class_name => 'Asset'
 
   # Enables the bulk creation of the asset links defined by the pairs passed as edges.
   # Basically we should be moving away from these and this enables us to ignore them.
@@ -39,7 +31,6 @@ class AssetLink < ActiveRecord::Base
 
   cattr_reader :per_page
   @@per_page = 500
-  acts_as_dag_links :node_class_name => 'Asset'
   include Uuid::Uuidable
 
   def destroy!

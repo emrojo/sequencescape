@@ -22,7 +22,7 @@ class Item < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => [:workflow_id, :version], :on => :create, :message => "already in use (item)"
 
  scope :for_search_query, lambda { |query,with_includes|
-    { :conditions => [ 'name LIKE ? OR id=?', "%#{query}%", query ] }
+    where([ 'name LIKE ? OR id=?', "%#{query}%", query ])
   }
 
   before_validation :set_version, :on => :create
