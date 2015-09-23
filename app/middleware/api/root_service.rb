@@ -26,7 +26,9 @@ module Api
                       :actions,
                       endpoint.model_handler,
                       :response => self, :endpoint => endpoint
-                    ).map(&actions_stream.method(:attribute))
+                    ).map do |action,url|
+                      actions_stream.attribute(action,url)
+                    end
                   end
                 end
               end
