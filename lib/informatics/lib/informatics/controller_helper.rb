@@ -38,6 +38,10 @@ module ApplicationHelper
     end
   end
 
+  def logger
+    Rails.logger
+  end
+
   private
 
   def add_link(menu, l, o, options)
@@ -54,10 +58,6 @@ module ApplicationHelper
       menu.add_item :text => l.first_key, :link => l.first_value
     end
     menu
-  end
-
-  def logger
-    Rails.logger
   end
 
 end

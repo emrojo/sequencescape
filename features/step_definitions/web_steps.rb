@@ -99,6 +99,12 @@ When /^(?:|I )select "([^"]*)" from "([^"]*)"(?: within "([^"]*)")?$/ do |value,
   end
 end
 
+When /^(?:|I )select "([^"]*)" from the first "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
+  with_scope(selector) do
+    first(:select,field).select(value)
+  end
+end
+
 When /^(?:|I )check "([^"]*)"(?: within "([^"]*)")?$/ do |field, selector|
   with_scope(selector) do
     check(field)
@@ -152,11 +158,11 @@ Then /^(?:|I )should see \/([^\/]*)\/(?: within "([^\"]*)")?$/ do |regexp, selec
 end
 
 Then /^I should see "(.*?)" within the javascript$/ do |text|
-  assert all('script').any? {|s| s.has_content?(text) }, "Didn't find #{text} in javascript"
+  assert all('script', :visible=>false).any? {|s| s.native.text.include?(text) }, "Didn't find #{text} in javascript"
 end
 
 Then /^I should not see "(.*?)" within the javascript$/ do |text|
-  assert all('script').none? {|s| s.has_content?(text) }, "Found #{text} in javascript"
+  assert all('script', :visible=>false).none? {|s| s.native.text.include?(text) }, "Found #{text} in javascript"
 end
 
 Then /^(?:|I )should not see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|

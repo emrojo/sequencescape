@@ -53,7 +53,7 @@ end
 
 Given /^I am editing the custom text field "([^\"]+)"$/ do |name|
  field = CustomText.find_by_identifier(name) or raise StandardError, "Cannot find custom text field #{ name.inspect }"
- visit edit_custom_text_path(field)
+ visit edit_admin_custom_text_path(field)
 end
 
 Then /^the page should contain the following$/ do |table|
@@ -76,7 +76,7 @@ Then /^I should be able to (enter|edit) the following fields$/ do |action, table
     step(%Q{I fill in "#{ hash[:label] }" with "#{ hash[:value] }"})
   end
 
-  step "I press \"Save changes\""
+  step "I press \"Save Custom text\""
   case action
   when "enter"
     step "I should see \"Custom text successfully created\""

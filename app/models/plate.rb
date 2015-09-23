@@ -64,7 +64,7 @@ class Plate < Asset
   end
 
   def self.derived_classes
-    @derived_classes ||= [ self, *self.descendants.map(&:name) ].map(&:name)
+    @derived_classes ||= [ self, *self.descendants ].map(&:name)
   end
 
   def prefix
@@ -114,10 +114,6 @@ class Plate < Asset
     def create!(options)
       plate.submissions.each {|s| s.add_comment(options[:description],options[:user]) }
       Comment.create!(options.merge(:commentable=>plate))
-    end
-
-    def count(*args)
-      super(args,{:select=>'DISTINCT comments.description, IFNULL(comments.title,""), comments.user_id'})
     end
 
   end
@@ -237,15 +233,23 @@ WHERE c.container_id=?
 
   before_create :set_plate_name_and_size
 
- scope :qc_started_plates, lambda {
-    {
-      :select => "distinct assets.*",
-      :order => 'assets.id DESC',
-      :conditions => ["(events.family = 'create_dilution_plate_purpose' OR asset_audits.key = 'slf_receive_plates') AND plate_purpose_id = ?", PlatePurpose.find_by_name('Stock Plate') ],
-      :joins => "LEFT OUTER JOIN `events` ON events.eventful_id = assets.id LEFT OUTER JOIN `asset_audits` ON asset_audits.asset_id = assets.id" ,
-      :include => [:events, :asset_audits]
-    }
+ # scope :qc_started_plates, lambda {
+ #    {
+ #      :select => "distinct assets.*",
+ #      :order => 'assets.id DESC',
+ #      :conditions => ["(events.family = 'create_dilution_plate_purpose' OR asset_audits.key = 'slf_receive_plates') AND plate_purpose_id = ?", PlatePurpose.find_by_name('Stock Plate') ],
+ #      :joins => "LEFT OUTER JOIN `events` ON events.eventful_id = assets.id LEFT OUTER JOIN `asset_audits` ON asset_audits.asset_id = assets.id" ,
+ #      :include => [:events, :asset_audits]
+ #    }
+ #  }
+  scope :qc_started_plates, lambda {
+    select('DISTINCT assets.*').
+    joins("LEFT OUTER JOIN `events` ON events.eventful_id = assets.id LEFT OUTER JOIN `asset_audits` ON asset_audits.asset_id = assets.id").
+    where(["(events.family = 'create_dilution_plate_purpose' OR asset_audits.key = 'slf_receive_plates') AND plate_purpose_id = ?", PlatePurpose.stock_plate_purpose.id ]).
+    order('assets.id DESC').
+    includes(:events,:asset_audits)
   }
+
 
   scope :with_sample,    lambda { |sample|
     {
@@ -298,12 +302,11 @@ WHERE c.container_id=?
   def find_map_by_rowcol(row, col)
     # Count from 0
     description  = asset_shape.location_from_row_and_column(row,col+1,size)
-    Map.find(:first,
-             :conditions =>{
-              :description    => description,
-              :asset_size     => size,
-              :asset_shape_id => asset_shape
-             })
+    Map.where(
+      :description    => description,
+      :asset_size     => size,
+      :asset_shape_id => asset_shape
+     ).first
   end
 
   def find_well_by_rowcol(row, col)
@@ -336,7 +339,7 @@ WHERE c.container_id=?
   end
 
   def find_well_by_name(well_name)
-    self.wells.position_name(well_name, self.size).first
+    self.wells.located_at_position(well_name).first
   end
   alias :find_well_by_map_description :find_well_by_name
 

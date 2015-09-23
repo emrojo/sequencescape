@@ -75,7 +75,7 @@ Given /^I have a cherrypicking batch with (\d+) samples$/ do |number_of_samples|
   step(%Q{I am on the show page for pipeline "Cherrypick"})
 
   step(%Q{I check "Select DN1234567T for batch"})
-  step(%Q{I select "Create Batch" from "action_on_requests"})
+  step(%Q{I select "Create Batch" from the first "action_on_requests"})
   step(%Q{I press "Submit"})
 end
 
@@ -109,7 +109,7 @@ Given /^I have a cherrypicked plate with barcode "([^"]*)" and plate purpose "([
   step(%Q{I have a Cherrypicking submission for asset group "Plate asset group"})
   step(%Q{I am on the show page for pipeline "Cherrypick"})
   step(%Q{I check "Select DN1234567T for batch"})
-  step(%Q{I select "Create Batch" from "action_on_requests"})
+  step(%Q{I select "Create Batch" from the first "action_on_requests"})
   step(%Q{I press "Submit"})
   step(%Q{a plate barcode webservice is available and returns "#{plate_barcode}"})
   step(%Q{I complete the cherrypicking batch with "#{plate_purpose_name}" plate purpose but dont release it})

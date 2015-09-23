@@ -9,7 +9,7 @@
    // namespace we should be storing things.
    if (window.SCAPE == undefined) window.SCAPE = {};
 
-   SCAPE.user_project_names =  <%= stringify_array(@presenter.user_valid_projects) %>;
+   SCAPE.user_project_names =  <%= raw(stringify_array(@presenter.user_valid_projects)) %>;
    })(window, jQuery);
 </script>
 

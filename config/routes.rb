@@ -382,7 +382,6 @@ Sequencescape::Application.routes.draw do
   match 'assets/lookup' => 'assets#lookup', :as => :assets_lookup
   match 'assets/receive_barcode' => 'assets#receive_barcode'
   match 'assets/import_from_snp' => 'assets#import_from_snp'
-  match 'assets/confirm_reception' => 'assets#confirm_reception'
   match 'assets/combine' => 'assets#combine'
   match 'assets/get_plate_layout' => 'assets#get_plate_layout'
   match 'assets/create_plate_layout' => 'assets#create_plate_layout'
@@ -439,8 +438,9 @@ Sequencescape::Application.routes.draw do
     end
   end
 
-  resources :receptions do
+  resources :receptions, :only => [:index] do
     collection do
+      post :confirm_reception
       get :snp_register
       get :reception
       get :snp_import

@@ -84,11 +84,10 @@ class StudiesController < ApplicationController
     respond_to do |format|
       format.html do
         if current_user.workflow.nil?
-          flash[:notice] = "Your profile is incomplete. Please select a workflow."
+          action_flash[:notice] = "Your profile is incomplete. Please select a workflow."
           redirect_to edit_profile_path(current_user)
         else
-          flash.keep
-          flash.merge!({:warning=>@study.warnings}) if @study.warnings.present?
+          action_flash[:warning] = @study.warnings if @study.warnings.present?
           redirect_to study_workflow_path(@study, current_user.workflow)
         end
       end
@@ -99,8 +98,7 @@ class StudiesController < ApplicationController
 
   def edit
     @study = Study.find(params[:id])
-    flash.keep
-    flash.merge!({:warning=>@study.warnings}) if @study.warnings.present?
+    flash[:warning] = @study.warnings if @study.warnings.present? && flash.blank?
     @users   = User.all
     redirect_if_not_owner_or_admin
   end
@@ -126,7 +124,7 @@ class StudiesController < ApplicationController
       redirect_to study_path(@study)
     end
   rescue ActiveRecord::RecordInvalid => exception
-    logger.warn "Failed to update attributes: #{@study.errors.map {|e| e.to_s }}"
+    Rails.logger.warn "Failed to update attributes: #{@study.errors.map {|e| e.to_s }}"
     flash[:error] = "Failed to update attributes for study!"
     render :action => "edit", :id => @study.id
   end
@@ -467,7 +465,7 @@ class StudiesController < ApplicationController
     begin
       yield
     rescue ActiveRecord::RecordInvalid
-      logger.warn "Failed to update attributes: #{@study.errors.map {|e| e.to_s }}"
+      Rails.logger.warn "Failed to update attributes: #{@study.errors.map {|e| e.to_s }}"
       flash[:error] = "Failed to update attributes for study!"
       render :action => "edit", :id => @study.id
     end

@@ -18,13 +18,13 @@
     <td><%= property.name %></td>
     <td><%= property.key %></td>
     <td><%= property.value %></td>
-    <td><%= link_to 'Show', robot_robot_property_path(@robot, property) %></td>
-    <td><%= link_to 'Edit', edit_robot_robot_property_path(@robot, property) %></td>
-    <td><%= link_to 'Delete', robot_robot_property_path(@robot, property), :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Show', admin_robot_robot_property_path(@robot, property) %></td>
+    <td><%= link_to 'Edit', edit_admin_robot_robot_property_path(@robot, property) %></td>
+    <td><%= link_to 'Delete', admin_robot_robot_property_path(@robot, property), :confirm => 'Are you sure?', :method => :delete %></td>
 
   </tr>
   <% end %>
 </table>
 
 <br />
-<%= link_to 'New property', new_robot_robot_property_path(@robot) %> <%= link_to 'Back to Robot', @robot %>
+<%= link_to 'New property', new_admin_robot_robot_property_path(@robot) %> <%= link_to 'Back to Robot', [:admin,@robot] %>

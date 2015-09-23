@@ -61,7 +61,7 @@ class AssetLink < ActiveRecord::Base
             raise RuntimeError, 'Value for #{name} must be saved' if value.new_record?
             old_value = self.#{name}
             parents.delete(old_value) if old_value.present?
-            AssetLink.create_edge(value, self)
+            AssetLink.create_edge!(value, self)
           end
 
           def has_#{name}?

@@ -10,9 +10,6 @@ class Submission < ActiveRecord::Base
   include Request::Statistics::DeprecatedMethods
   include Submission::Priorities
 
-
-  include DelayedJobEx
-
   belongs_to :user
   validates_presence_of :user
 

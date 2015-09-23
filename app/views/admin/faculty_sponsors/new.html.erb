@@ -3,7 +3,7 @@
 #Copyright (C) 2007-2011 Genome Research Ltd.%>
 <h1>New Faculty Sponsor</h1>
 
-<%= form_for(@faculty_sponsor) do |f| %>
+<%= form_for([:admin,@faculty_sponsor]) do |f| %>
   <%= f.error_messages %>
 
   <p>

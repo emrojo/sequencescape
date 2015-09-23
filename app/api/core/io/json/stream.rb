@@ -22,7 +22,9 @@ module ::Core::Io::Json
     end
 
     def attribute(attribute, value, options = {})
-      named(attribute) { encode(value, options) }
+      named(attribute) do
+        encode(value, options)
+      end
     end
 
     def block(attribute, &block)

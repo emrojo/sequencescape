@@ -28,7 +28,12 @@ class PlatePurpose < Purpose
   include Relationship::Associations
 
  # We declare the scopes as lambdas as Rails 3.2 seems to fail to include the various subclasses otherwise
- scope :compatible_with_purpose, lambda {|purpose| purpose.nil? ? {:conditions=>'FALSE'} : { :conditions => ["(target_type is null and 'Plate'=?)  or target_type=?",purpose.target_plate_type, purpose.target_plate_type], :order=>"name ASC" } }
+  scope :compatible_with_purpose, lambda { |purpose|
+    purpose.nil? ?
+      where('FALSE') :
+      where(["(target_type is null and 'Plate'=?)  or target_type=?",purpose.target_plate_type, purpose.target_plate_type]).
+        order("name ASC")
+  }
 
  scope :cherrypickable_as_target, lambda { where( :cherrypickable_target => true ) }
  scope :cherrypickable_as_source, lambda { where( :cherrypickable_source => true ) }

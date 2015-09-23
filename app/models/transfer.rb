@@ -12,11 +12,11 @@ class Transfer < ActiveRecord::Base
         has_many :transfers_as_destination, :class_name => 'Transfer', :foreign_key => :destination_id, :order => 'id ASC'
 
         # This looks odd but it's a LEFT OUTER JOIN, meaning that the rows we would be interested in have no source_id.
-        scope :with_no_outgoing_transfers,
+        scope :with_no_outgoing_transfers, lambda {
           select("DISTINCT #{base.quoted_table_name}.*").
           joins("LEFT OUTER JOIN `transfers` outgoing_transfers ON outgoing_transfers.`source_id`=#{base.quoted_table_name}.`id`").
           where('outgoing_transfers.source_id IS NULL')
-
+        }
       end
     end
   end

@@ -55,7 +55,12 @@ module ApplicationHelper
 
   def render_flashes
     output = ""
-    flash.merge!(action_flash).each do |key, message|
+    flash.each do |key, message|
+      content = message
+      content = message.map { |m| content_tag(:div, m) }.join if message.is_a?(Array)
+      output << content_tag(:div, content, :class => 'flash', :id => "message_#{ key }")
+    end
+    action_flash.each do |key, message|
       content = message
       content = message.map { |m| content_tag(:div, m) }.join if message.is_a?(Array)
       output << content_tag(:div, content, :class => 'flash', :id => "message_#{ key }")
@@ -237,10 +242,13 @@ module ApplicationHelper
     objects = params.collect {|object_name| instance_variable_get("@#{object_name}") }.compact
     count   = objects.inject(0) {|sum, object| sum + object.errors.count }
     unless count.zero?
-      error_messages = objects.map {|object| object.errors.full_messages.map {|msg| content_tag(:div, msg) } }
-      html = %Q{<td class="error item">Your #{params.first} has not been created.</td>}
-      html = html + %Q{<td class="error">#{error_messages}</td>}
-      html
+      error_messages = objects.map {|object| object.errors.full_messages.map {|msg| content_tag(:div, msg) } }.join
+      [content_tag(:td, :class=>'error item') do
+        "Your #{params.first} has not been created."
+      end,
+      content_tag(:td, :class=>'error') do
+        raw(error_messages)
+      end].join.html_safe
     else
       ""
     end

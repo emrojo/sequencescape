@@ -1,7 +1,7 @@
 #This file is part of SEQUENCESCAPE is distributed under the terms of GNU General Public License version 1 or later;
 #Please refer to the LICENSE and README files for information on licensing and authorship of this file.
 #Copyright (C) 2007-2011 Genome Research Ltd.
-class RobotPropertiesController < ApplicationController
+class Admin::RobotPropertiesController < ApplicationController
   before_filter :find_robot_by_id
 
   def index
@@ -19,7 +19,7 @@ class RobotPropertiesController < ApplicationController
   def create
     @robot_property = @robot.robot_properties.build(params[:robot_property])
     if @robot_property.save
-      redirect_to robot_robot_property_url(@robot, @robot_property)
+      redirect_to [:admin, @robot, @robot_property]
     else
       render :action => "new"
     end
@@ -32,7 +32,7 @@ class RobotPropertiesController < ApplicationController
   def update
     @robot_property = RobotProperty.find(params[:id])
     if @robot_property.update_attributes(params[:robot_property])
-      redirect_to robot_robot_property_url(@robot, @robot_property)
+      redirect_to [:admin, @robot, @robot_property]
     else
       render :action => "edit"
     end
@@ -42,7 +42,7 @@ class RobotPropertiesController < ApplicationController
     @robot_property = RobotProperty.find(params[:id])
     @robot_property.destroy
     respond_to do |format|
-      format.html { redirect_to robot_robot_properties_path(@robot) }
+      format.html { redirect_to admin_robot_robot_properties_path(@robot) }
       format.xml { head :ok }
     end
   end

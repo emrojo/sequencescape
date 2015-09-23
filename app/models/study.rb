@@ -3,7 +3,6 @@
 #Copyright (C) 2007-2011,2011,2012,2013,2014,2015 Genome Research Ltd.
 class Study < ActiveRecord::Base
 
-
   include StudyReport::StudyDetails
   include ModelExtensions::Study
 
@@ -277,7 +276,18 @@ class Study < ActiveRecord::Base
     end
 
   end
+
+  def self.human_attribute_name(attribute,options={})
+    if attribute.to_s.split(".").first == 'study_metadata'
+      attrib = attribute.to_s.split(".").last
+      I18n.translate("metadata.study.metadata.#{attrib}.label",:default=>attrib.humanize)
+    else
+      super
+    end
+  end
+
   class Metadata
+
     def remove_x_and_autosomes?
       remove_x_and_autosomes == YES
     end
@@ -717,4 +727,5 @@ class Study < ActiveRecord::Base
       )
     end
   end
+
 end

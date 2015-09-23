@@ -57,7 +57,7 @@ Given /^I have a released cherrypicking batch with 3 plates$/ do
   step(%Q{I check "Select DN1S for batch"})
   step(%Q{I check "Select DN10I for batch"})
   step(%Q{I check "Select DN5W for batch"})
-  step(%Q{I select "Create Batch" from "action_on_requests"})
+  step(%Q{I select "Create Batch" from the first "action_on_requests"})
   step(%Q{I press "Submit"})
 
   # must use @javascript

@@ -77,11 +77,11 @@ module ::Core::Io::Base::JsonFormattingBehaviour::Input
       if model.nil?
         code << "    section[#{leaf.inspect}] = value #nil"
       elsif model.respond_to?(:reflections) and association = model.reflections[leaf]
-        code << "    handle_#{association.macro}(section, #{leaf.inspect}, value, object) #reflections"
+        code << "    handle_#{association.macro}(section, #{leaf.inspect}, value, object)"
       elsif model.respond_to?(:klass) and association = model.klass.reflections[leaf]
-        code << "    handle_#{association.macro}(section, #{leaf.inspect}, value, object)  #klass"
+        code << "    handle_#{association.macro}(section, #{leaf.inspect}, value, object)"
       else
-        code << "    section[#{leaf.inspect}] = value  #fb"
+        code << "    section[#{leaf.inspect}] = value"
       end
       code << "  end"
       code << "end"

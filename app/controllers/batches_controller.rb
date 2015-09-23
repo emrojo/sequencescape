@@ -135,7 +135,6 @@ class BatchesController < ApplicationController
         @batch.lab_events.create(:description => "Submitted to QC", :message => "Batch #{@batch.id} was submitted to QC queue", :user_id => @current_user.id)
         respond_to do |format|
           message = "Batch #{@batch.id} was submitted to QC queue"
-          logger.debug message
           format.html do
             flash[:info] = message
             redirect_to request.env["HTTP_REFERER"] || 'javascript:history.back()'
@@ -145,7 +144,6 @@ class BatchesController < ApplicationController
       else
         respond_to do |format|
           message = "Batch #{@batch.id} was not submitted to QC queue!"
-          logger.debug message
           format.html do
             flash[:warning] = message
             redirect_to request.env["HTTP_REFERER"] || 'javascript:history.back()'
@@ -190,11 +188,9 @@ class BatchesController < ApplicationController
         target = br.request.target_asset
         if qc_state == "fail"
           target.set_qc_state("failed")
-          logger.debug "SENDING FAIL FOR ASSET #{br.request_id}, BATCH #{@batch.id}"
           EventSender.send_fail_event(br.request_id, "", "Failed manual QC", @batch.id)
         elsif qc_state == "pass"
           target.set_qc_state("passed")
-          logger.debug "SENDING PASS FOR ASSET #{br.request_id}, BATCH #{@batch.id}"
           EventSender.send_pass_event(br.request_id, "", "Passed manual QC", @batch.id)
         end
         target.save

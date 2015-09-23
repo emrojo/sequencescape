@@ -25,7 +25,7 @@ Feature: Creating studies
     Then I should be on the studies page
     And I should see "Name can't be blank"
     And I should see "Study description can't be blank"
-    And I should see "Faculty sponsor can't be blank"
+    And I should see "Faculty Sponsor can't be blank"
     # The rest of the fields are selections so can't be set to anything else!
 
   Scenario: Error messages do not show up on subsequent pages

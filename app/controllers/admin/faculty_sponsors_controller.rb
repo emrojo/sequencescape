@@ -48,7 +48,7 @@ class Admin::FacultySponsorsController < ApplicationController
 
     respond_to do |format|
       flash[:notice] = 'Faculty Sponsor was successfully deleted.'
-      format.html { redirect_to(faculty_sponsors_url) }
+      format.html { redirect_to(admin_faculty_sponsors_path) }
     end
   end
 

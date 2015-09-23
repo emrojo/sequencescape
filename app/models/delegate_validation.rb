@@ -11,30 +11,36 @@ module DelegateValidation
   def delegate_validation(*args)
     options           = args.extract_options!
     delegation_target = options.delete(:to) or raise StandardError, "Cannot delegate validation without :to!"
+    attribute_tag     = options[:as]
     args.push(options)
 
     validates_each(*args) do |record, attr, value|
-      record.send(:"#{delegation_target}_delegate_validator").new(value).valid?
+      validator = record.send(:"#{delegation_target}_delegate_validator").new(value)
+      validator.valid?.tap do
+        validator.errors.messages.each do |attrib,message|
+          record.errors.add("#{attribute_tag}.#{attrib}",message.join('; '))
+        end
+      end
     end
   end
 
   class Validator
     include ActiveModel::Validations
 
+    class DelegateError < ActiveModel::Errors
+      def initialize(base,target)
+        @base     = base
+        @messages = target.errors.messages
+      end
+    end
+
     attr_reader :target
     protected :target
     delegate :include_unset_values?, :to => :target
 
-    #--
-    # Hack the errors returned from the target object so that they do not get cleared when we are validating.
-    # This enables multiple #valid? calls to be made by the CompositeValidator building up the error messages.
-    #
-    # NOTE: It's not ideal to do this but I can live with it for the moment.
-    #++
-    def errors
-      errors_from_target = target.errors
-      def errors_from_target.clear ; end # do nothing!
-      errors_from_target
+
+    def self.name
+      'Nothing'
     end
 
     def initialize(target)
@@ -74,8 +80,8 @@ module DelegateValidation
 
   # A composite validator that will perform multiple validations across several validator classes.
   class CompositeValidator
+    include ActiveModel::Validations
     class_attribute :validator_classes, :instance_writer => false
-    validator_classes =  []
 
     def self.CompositeValidator(*validator_classes)
       Class.new(CompositeValidator).tap do |sub_class|
@@ -84,13 +90,19 @@ module DelegateValidation
     end
 
     def initialize(target)
+      @target = target
       @validators = self.class.validator_classes.map { |c| c.new(target) }
     end
 
     def valid?
       # We have to run over all validators to get all error messages, then we can check they're all valid
-      @validators.map(&:valid?).all? { |v| v == true }
+      return true if @validators.map(&:valid?).all? { |v| v == true }
+      @validators.each do |validator|
+        errors.messages.merge!(validator.errors.messages)
+      end
+      false
     end
+
   end
 end
 

@@ -34,7 +34,7 @@ module Api
               # Be kind...
               file.rewind
               request.body.rewind
-              uuid_in_url, parts = params[:captures][0], params[:captures][1].try(:split, '/') || []
+              uuid_in_url, parts = params[:captures][0], params[:captures][1].try(:split, '/')|| []
               uuid = Uuid.with_external_id(uuid_in_url).first or raise ActiveRecord::RecordNotFound, "UUID does not exist"
               handle_request(:instance, request, action, parts) do |request|
                 request.io     = lookup_for_class(uuid.resource.class) { |e| raise e }
@@ -60,7 +60,7 @@ module Api
               # Be kind...
               file.rewind
               request.body.rewind
-              determine_model_from_parts(*params[:captures].to_s.split('/')) do |model, parts|
+              determine_model_from_parts(*params[:captures].join.split('/')) do |model, parts|
                 handle_request(:model, request, action, parts) do |request|
                   request.io     = lookup_for_class(model) { |_| nil }
                   request.target = model
@@ -115,7 +115,7 @@ module Api
       def model_action(action, http_method)
         send(http_method, %r{^/([^\d/][^/]+(?:/[^/]+){0,2})$}, :file_attatched=> false, :file_requested=>false) do
           report("model") do
-            determine_model_from_parts(*params[:captures].to_s.split('/')) do |model, parts|
+            determine_model_from_parts(*params[:captures].join.split('/')) do |model, parts|
               handle_request(:model, request, action, parts) do |request|
                 request.io     = lookup_for_class(model) { |_| nil }
                 request.target = model
@@ -163,8 +163,6 @@ module Api
           return yield(model_name.join('/').classify.constantize, remainder)
         rescue NameError => exception
           # Re-raise No Method Errors as it means something is wrong
-          p exception
-          p exception.backtrace
           raise exception if exception.is_a?(NoMethodError)
           # Nope, try again
         end

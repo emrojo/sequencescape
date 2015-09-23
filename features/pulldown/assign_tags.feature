@@ -429,7 +429,7 @@ Feature: Cherrypicking for Pulldown pipeline
     When I set Pulldown Multiplexed Library "3980000001795" to be in freezer "Cluster formation freezer"
     Given I am on the show page for pipeline "Cluster formation PE"
     When I check "Select PulldownMultiplexedLibraryTube 1 for batch"
-    And I select "Create Batch" from "action_on_requests"
+    And I select "Create Batch" from the first "action_on_requests"
     And I press the first "Submit"
     And I follow "Specify Dilution Volume"
     And I press "Next step"

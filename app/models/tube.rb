@@ -22,7 +22,7 @@ class Tube < Aliquot::Receptacle
     true
   end
 
-  scope :include_scanned_into_lab_event, includes(:scanned_into_lab_event)
+  scope :include_scanned_into_lab_event, lambda { includes(:scanned_into_lab_event) }
 
  scope :with_purpose, lambda { |*purposes|
     { :conditions => { :plate_purpose_id => purposes.flatten.map(&:id) } }

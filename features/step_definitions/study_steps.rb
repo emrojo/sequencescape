@@ -7,7 +7,7 @@ Given /^study "([^\"]*)" has property "([^\"]*)" set to "([^\"]*)"$/ do |study_n
 end
 
 Given /^I have a study called "([^\"]*)"$/ do |study|
-  proj = Factory :study, :name => study
+  Factory :study, :name => study
 end
 
 Given /^study "([^\"]*)" status is "([^\"]*)"$/ do |study, status|
@@ -294,7 +294,7 @@ end
 def assign_asset_to_study(asset,study_name)
   study = Study.find_by_name(study_name) or raise StandardError, "Cannot find study #{study_name.inspect}"
   asset_ids = [asset.id]
-  asset_ids = asset.well_ids if asset.respond_to?(:wells)
+  asset_ids = asset.wells.map(&:id) if asset.respond_to?(:wells)
   if asset.can_be_created? || (asset.respond_to?(:wells) && (asset.stock_plate?))
     RequestFactory.create_assets_requests(Asset.find(asset_ids), study)
   else

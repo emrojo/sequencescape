@@ -38,7 +38,7 @@ module NavigationHelpers
       send(:"#{ $1 }_path")
 
     when /the custom texts admin page/
-      custom_texts_path
+      admin_custom_texts_path
     when /the search page/
       searches_path
     when /the gel QC page/
@@ -179,7 +179,7 @@ module NavigationHelpers
       profile_path(user)
 
     when /the plate purpose homepage/
-      plate_purposes_path
+      admin_plate_purposes_path
 
     when /the pulldown homepage/
       '/pulldown/plates'

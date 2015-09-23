@@ -38,8 +38,8 @@ end
 
 Given /^I have a plate for PacBio$/ do
   PlatePurpose.stock_plate_purpose.create!(:without_wells, :barcode=>1234567) do |plate|
-    plate.wells.create!(:map=>Map.find_by_asset_size_and_description(96,'A1'),:aliquots => SampleTube.find_by_barcode(111).aliquots.map(&:dup))
-    plate.wells.create!(:map=>Map.find_by_asset_size_and_description(96,'B1'),:aliquots => SampleTube.find_by_barcode(222).aliquots.map(&:dup)) if  SampleTube.find_by_barcode(222).present?
+    plate.wells.build(:map=>Map.find_by_asset_size_and_description(96,'A1'),:aliquots => SampleTube.find_by_barcode(111).aliquots.map(&:dup))
+    plate.wells.build(:map=>Map.find_by_asset_size_and_description(96,'B1'),:aliquots => SampleTube.find_by_barcode(222).aliquots.map(&:dup)) if  SampleTube.find_by_barcode(222).present?
     plate.location = Location.find_by_name('PacBio library prep freezer')
     AssetGroup.create!(:name=>"PacBio group", :study=>Study.find_by_name('Test study')).assets << plate.wells
   end
@@ -50,18 +50,18 @@ Given /^I have a PacBio Library Prep batch$/ do
   step(%Q{I have a PacBio submission})
   step(%Q{I am on the show page for pipeline "PacBio Library Prep"})
   step(%Q{I check "Select DN1234567T for batch"})
-  step(%Q{I press "Submit"})
+  step(%Q{I press the first "Submit"})
   step(%Q{Well "1234567":"A1" has a PacBioLibraryTube "333"})
   step(%Q{Well "1234567":"B1" has a PacBioLibraryTube "444"})
 end
 
-Given /^SampleTube "([^"]*)" has a PacBioLibraryTube "([^"]*)"$/ do |sample_tube_barcode, library_tube_barcode|
+Given /^SampleTube "([^\"]*)" has a PacBioLibraryTube "([^\"]*)"$/ do |sample_tube_barcode, library_tube_barcode|
   sample_tube = SampleTube.find_by_barcode(sample_tube_barcode)
   request = Request.find_by_asset_id(sample_tube.id)
   request.target_asset.update_attributes!(:barcode => library_tube_barcode)
 end
 
-Given /^Well "([^"]*)":"([^"]*)" has a PacBioLibraryTube "([^"]*)"$/ do |plate_barcode, well, library_tube_barcode|
+Given /^Well "([^\"]*)":"([^"]*)" has a PacBioLibraryTube "([^"]*)"$/ do |plate_barcode, well, library_tube_barcode|
   well = Plate.find_by_barcode(plate_barcode).wells.located_at(well).first
   request = Request.find_by_asset_id(well.id)
   request.target_asset.update_attributes!(:barcode => library_tube_barcode, :name=>well.display_name)
@@ -81,6 +81,7 @@ Given /^I have a fast PacBio sequencing batch$/ do
   PacBioSequencingRequest.last.update_attributes!(:asset => library_2)
   step(%Q{I am on the show page for pipeline "PacBio Sequencing"})
   step(%Q{I check "Select Request Group 0"})
+
   step(%Q{I check "Select Request 0"})
   step(%Q{I check "Select Request 1"})
   step(%Q{I press "Submit"})
@@ -102,7 +103,7 @@ Given /^I have a PacBio sequencing batch$/ do
   step(%Q{I check "Select Request Group 0"})
   step(%Q{I check "Select Request 0"})
   step(%Q{I check "Select Request 1"})
-  step(%Q{I press "Submit"})
+  step(%Q{I press the first "Submit"})
   step(%Q{the sample tubes are part of the study})
 end
 

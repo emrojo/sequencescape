@@ -91,9 +91,9 @@ module SubmissionsHelper
     when 'processing' then
       display_user_guide("Your submission is currently being processed.  This should take no longer than five minutes.")
     when 'failed' then
-      display_user_error("<h2>Your submission has failed:</h2><p> #{h((submission.message||'No failure reason recorded').lines.first)} </p>")
+      display_user_error(raw("<h2>Your submission has failed:</h2><p> #{h((submission.message||'No failure reason recorded').lines.first)} </p>"))
     when 'ready'
-      content_tag(:p, 'Your submission has been <strong>processed</strong>.')
+      content_tag(:p, raw('Your submission has been <strong>processed</strong>.'))
     else
       content_tag(:p, 'Your submission is in an unknown state (contact support).')
     end

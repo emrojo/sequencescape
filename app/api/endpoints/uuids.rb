@@ -38,7 +38,7 @@ class ::Endpoints::Uuids < ::Core::Endpoint::Base
       end
     end
 
-    include ActiveModel::Validations
+    include ::Validateable
 
     attr_reader :lookup
     protected :lookup
@@ -69,7 +69,9 @@ class ::Endpoints::Uuids < ::Core::Endpoint::Base
     end
 
     def self.create!(attributes)
-      self.new(attributes).tap { |search| search.validate! }
+      search = self.new(attributes)
+      search.validate! {}
+      search
     end
 
     def self.create_bulk!(list_of_attributes)

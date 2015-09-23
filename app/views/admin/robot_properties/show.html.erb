@@ -14,5 +14,5 @@
   <strong>Value:</strong><%= @robot_property.value %>
 </p>
 
-<%= link_to 'Edit', edit_robot_robot_property_path(@robot, @robot_property) %> | <%= link_to 'Back', robot_robot_properties_path(@robot) %>
-| <%= link_to 'Back to Robot', @robot %>
+<%= link_to 'Edit', edit_admin_robot_robot_property_path(@robot, @robot_property) %> | <%= link_to 'Back', admin_robot_robot_properties_path(@robot) %>
+| <%= link_to 'Back to Robot', [:admin,@robot] %>

@@ -3,7 +3,7 @@
 #Copyright (C) 2007-2011,2011,2012 Genome Research Ltd.
 class StudyReport < ActiveRecord::Base
   extend DbFile::Uploader
-  include DelayedJobEx # add send_later_with_priority. need for delayed job 2.0.x
+
   class ProcessingError < Exception
   end
   cattr_reader :per_page
@@ -25,7 +25,7 @@ class StudyReport < ActiveRecord::Base
        "Pico","Gel", "Qc Status", "Genotyping Status", "Genotyping Chip"]
    end
 
-  def synchronous_perform
+  def perform
     ActiveRecord::Base.transaction do
       csv_options =  {:row_sep => "\r\n", :force_quotes => true }
       Tempfile.open("#{self.study.dehumanise_abbreviated_name}_progress_report.csv") do |tempfile|
@@ -37,17 +37,10 @@ class StudyReport < ActiveRecord::Base
       end
     end
   end
+  handle_asynchronously :perform, :priority => Proc.new {|i| i.priority }
 
-  # we don't use handle_asynchronously because it doesn't accept the priority options (in the version 2.0.3)
-  # handle_asynchronously :perform
-  def perform
-   conf_priority = configatron.delayed_job.study_report_priority
-   priority = conf_priority.present? ? conf_priority : 100
-
-   send_later_with_priority(priority, :synchronous_perform)
-
-   #job = Delayed::PerformableMethod.new(self, :synchronous_perform, [])
-   #elayed::Job.enqueue(job, priority)
+  def priority
+    configatron.delayed_job.fetch(:study_report_priority) || 100
   end
 
 end

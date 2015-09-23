@@ -17,7 +17,7 @@
       <td width="40%" class="item">Listing <%= pluralize(study.documents.size, "document") %>:</label></td>
       <td width="60%">
         <% study.documents.each do |document| %>
-          <div id='<%= document.filename.downcase.gsub(/[^\w]+/,'_') %>_listing' class="ListingDocuments">
+          <div id='<%= document.filename.underscore %>_listing' class="ListingDocuments">
             <%= display_file_icon(document) %>
             <%= link_to document.filename, study_document_path(study, document) %>
             <% if current_user.administrator? %>

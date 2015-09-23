@@ -20,8 +20,8 @@ module ModelExtensions::Plate
 
   def self.included(base)
     base.class_eval do
-      scope :include_plate_purpose, includes(:plate_purpose)
-      scope :include_plate_metadata, includes(:plate_metadata)
+      scope :include_plate_purpose, lambda { includes(:plate_purpose) }
+      scope :include_plate_metadata, lambda { includes(:plate_metadata) }
       delegate :pool_id_for_well, :to => :plate_purpose, :allow_nil => true
     end
   end

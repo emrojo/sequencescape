@@ -28,10 +28,12 @@ private
     # our code, which would create a new default instance.
     line = __LINE__ + 1
     class_eval(%Q{
+
       def #{association_name}_with_initialization
         #{association_name}_without_initialization ||
         build_#{association_name}
       end
+
       alias_method_chain(:#{association_name}, :initialization)
 
       def validating_ena_required_fields=(state)
@@ -115,8 +117,8 @@ private
     # This ensures that the default values are stored within the DB, meaning that this information will be
     # preserved for the future, unlike the original properties information which didn't store values when
     # nil which lead to us having to guess.
-    def initialize(attributes = {}, options=[], &block)
-      super(self.class.defaults.merge(attributes.try(:symbolize_keys) || {}), &block)
+    def initialize(attributes = {}, *args, &block)
+      super(self.class.defaults.merge(attributes.try(:symbolize_keys) || {}),*args, &block)
     end
 
     before_validation :merge_instance_defaults, :on => :create

@@ -363,6 +363,3 @@ DEPENDENCIES
   utility_belt
   uuidtools
   will_paginate
-
-BUNDLED WITH
-   1.10.6

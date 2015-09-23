@@ -61,24 +61,24 @@ class FakeBarcodeService < FakeSinatraService
   end
 
   # Barcode printing related
-  def printed_labels()
+  def printed_labels
     @printed_labels ||= []
   end
 
-  def printed_labels!()
+  def printed_labels!
     labels = printed_labels
     clear_printed_labels!
     labels
   end
 
-  def clear_printed_labels!()
+  def clear_printed_labels!
     @printed_labels=[]
   end
 
-  def first_printed_labels!()
+  def first_printed_labels!
     @printed_labels.shift
   end
-  def last_printed_label!()
+  def last_printed_label!
     @printed_labels.pop
   end
 
@@ -122,7 +122,7 @@ class FakeBarcodeService < FakeSinatraService
 
     # Hand crafted SOAP envelope to say success!
     post('/barcode_service') do
-      data = request.body.map
+      data = request.body.to_a
       FakeBarcodeService.instance.printed_labels << data
       status(200)
       headers('Content-Type' => 'text/xml')

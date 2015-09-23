@@ -60,7 +60,10 @@ class Asset < ActiveRecord::Base
   belongs_to :map
   belongs_to :barcode_prefix
   scope :sorted , order("map_id ASC")
-  scope :position_name, lambda { |*args| { :joins => :map, :conditions => ["description = ? AND asset_size = ?", args[0], args[1]] }}
+
+  scope :position_name, lambda { |*args|
+    joins(:map).where(["description = ? AND asset_size = ?", args[0], args[1]])
+  }
   scope :get_by_type, lambda {|*args| {:conditions => { :sti_type => args[0]} } }
   scope :for_summary, includes([:map,:barcode_prefix])
 
@@ -479,14 +482,15 @@ class Asset < ActiveRecord::Base
     self.requests.sort_by{ |r| r.id }.select{ |request| request.request_type == request_type }.map{ |filtered_request| filtered_request.state }
   end
 
-  def transfer(volume)
-    volume = [volume.to_f, self.volume || 0].min
-    raise VolumeError, "not enough volume left" if volume <=0
+  def transfer(max_transfer_volume)
+
+    transfer_volume = [max_transfer_volume.to_f, self.volume || 0.0].min
+    raise VolumeError, "not enough volume left" if transfer_volume <=0
 
     self.class.create!(:name => self.name) do |new_asset|
       new_asset.aliquots = self.aliquots.map(&:dup)
-      new_asset.volume   = volume
-      update_attributes!(:volume => self.volume - volume)  # Update ourselves
+      new_asset.volume   = transfer_volume
+      update_attributes!(:volume => self.volume - transfer_volume)  # Update ourselves
     end.tap do |new_asset|
       new_asset.add_parent(self)
     end

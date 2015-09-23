@@ -69,7 +69,7 @@ class Request < ActiveRecord::Base
       :group => 'submissions.id',
       :conditions => [
         'requests.sti_type NOT IN (?) AND container_associations.container_id=?',
-        [TransferRequest,*TransferRequest.decendants].map(&:name), plate.id
+        [TransferRequest,*TransferRequest.descendants].map(&:name), plate.id
       ]
     }
   }

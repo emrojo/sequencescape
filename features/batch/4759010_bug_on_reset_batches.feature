@@ -13,7 +13,7 @@ Feature: Resetting a batch and creating an "identical" batch
     Then I should be on the "Illumina-B MX Library Preparation" pipeline page
 
     When I check "Select Request Group 0"
-    And I select "Create Batch" from "Action to perform"
+    And I select "Create Batch" from the first "Action to perform"
     And I press the first "Submit"
 
     # "Start batch" page

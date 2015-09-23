@@ -303,7 +303,7 @@ module Attributable
       unless (condition = conditions[:if]).nil?
         model.class_eval(%Q{
           before_validation do |record|
-            record[#{name}] = nil unless record.#{condition}
+            record.#{name}= nil unless record.#{condition}
           end
         })
       end

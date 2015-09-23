@@ -89,24 +89,26 @@ def build_batch_for(name, count, &block)
     asset_attributes = { }
     if submission_details.key?(:holder_type)
       asset_attributes[:container] = Factory(submission_details[:holder_type], :location_id => pipeline.location_id)
-      asset_attributes[:map_id] = Map.find(1)
+      asset_attributes[:map_id] = 1
     else
       asset_attributes[:location_id] = pipeline.location_id
     end
     Factory(submission_details[:asset_type], asset_attributes)
   end
 
+  wf = pipeline.request_types.last.workflow
+  rts = pipeline.request_types.reject(&:deprecated?).map(&:id)
   # Build a submission that should end up in the appropriate inbox, once all of the assets have been
   # deemed as scanned into the lab!
   LinearSubmission.build!(
     :study    => Factory(:study),
     :project  => Factory(:project),
-    :workflow => pipeline.request_types.last.workflow,
+    :workflow => wf,
     :user     => user,
 
     # Setup the assets so that they have samples and they are scanned into the correct lab.
     :assets        => assets,
-    :request_types => [pipeline.request_type_ids.detect {|id| !RequestType.find(id).deprecated }],
+    :request_types => rts,
 
     # Request parameter options
     :request_options => submission_details[:request_options]
