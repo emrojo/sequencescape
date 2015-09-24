@@ -23,6 +23,6 @@ class Comment < ActiveRecord::Base
 
   }
 
-  scope :include_uuid, {} # BLUFF!
+  scope :include_uuid, where('TRUE')
 
 end

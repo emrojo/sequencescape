@@ -438,13 +438,13 @@ td.summary, th.summary {
   font-size: 10px;
 }
 
-.fieldWithErrors {
+.field_with_errors {
     display: inline;
   padding: 0px;
   margin: 0px;
 }
 
-.fieldWithErrors input, .fieldWithErrors select, .fieldWithErrors textarea {
+.field_with_errors input, .field_with_errors select, .field_with_errors textarea {
     background-color: #FFB3B5;
 }
 

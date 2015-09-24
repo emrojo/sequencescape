@@ -151,6 +151,11 @@ module NavigationHelpers
       study      = Study.first(:conditions => { :name => study_name }) or raise StandardError, "No study defined with name '#{ study_name }'"
       new_study_sample_registration_path(study)
 
+    when /the spreadsheet sample registration page for study "([^\"]+)"/
+      study_name = $1
+      study      = Study.first(:conditions => { :name => study_name }) or raise StandardError, "No study defined with name '#{ study_name }'"
+      spreadsheet_study_sample_registration_index_path(study)
+
     when /the sample error page for study "([^\"]+)"/
       study_name = $1
       study      = Study.first(:conditions => { :name => study_name }) or raise StandardError, "No study defined with name '#{ study_name }'"

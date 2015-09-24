@@ -26,9 +26,9 @@
     <%= form.input :barcode_printer,  :as => :select, :collection => @barcode_printers %>
   <% end %>
   <% end %>
-  <%= form.buttons do %>
-    <%= form.input :asset_type, :value => params[:type], :as => :hidden %>
-    <%= form.action(:submit) 'Create manifest and print labels' %>
+  <%= form.input :asset_type, :value => params[:type], :as => :hidden %>
+  <%= form.actions do %>
+    <%= form.action(:submit, :as=>:button, :label => 'Create manifest and print labels') %>
   <% end %>
 
 

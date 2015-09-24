@@ -66,7 +66,9 @@ class SubmissionTemplate < ActiveRecord::Base
 
   # create a new submission of the good subclass and with pre-set attributes
   def new_order(params={})
-    attributes = submission_attributes.deep_merge(safely_duplicate(params))
+    duped_params = safely_duplicate(params)
+    duped_params[:request_options].stringify_keys! if duped_params[:request_options].present?
+    attributes = submission_attributes.deep_merge(duped_params)
     infos      = SubmissionTemplate.unserialize(attributes.delete(:input_field_infos))
 
     submission_class.new(attributes).tap do |order|

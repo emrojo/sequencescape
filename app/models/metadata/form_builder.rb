@@ -109,7 +109,7 @@ private
     end
 
     div_options = { :id => field.to_s }
-    div_options[:class] = 'fieldWithErrors' unless @object.errors.get(field).blank?
+    div_options[:class] = 'field_with_errors' unless @object.errors.get(field).blank?
     content_tag(:div, content, div_options)
   end
 end

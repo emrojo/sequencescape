@@ -130,7 +130,7 @@ en:
       no_comments: "There are no comments yet"
 
   samples:
-    name_format: "Sample name can only contain letters, numbers, _ or -"
+    name_format: "can only contain letters, numbers, _ or -"
 
   asset_audit:
     key_format: "Key can only contain letters, numbers or _"

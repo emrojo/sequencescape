@@ -146,7 +146,7 @@ class SampleRegistrar < ActiveRecord::Base
   REQUIRED_COLUMNS_SENTENCE = REQUIRED_COLUMNS.map { |w| "'#{w}'" }.to_sentence(:two_words_connector => ' or ', :last_word_connector => ', or ')
 
   def self.from_spreadsheet(file, study, user)
-    workbook = Spreadsheet.open(file) or raise SpreadsheetError, 'Problems processing your file. Only Excel spreadsheets accepted'
+    workbook = Spreadsheet.open(file.path) or raise SpreadsheetError, 'Problems processing your file. Only Excel spreadsheets accepted'
     worksheet = workbook.worksheet(0)
 
     # Assume there is always 1 header row

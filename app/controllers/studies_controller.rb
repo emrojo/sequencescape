@@ -79,15 +79,14 @@ class StudiesController < ApplicationController
 
   def show
     @study = Study.find(params[:id])
-
-
+    flash.keep
     respond_to do |format|
       format.html do
         if current_user.workflow.nil?
-          action_flash[:notice] = "Your profile is incomplete. Please select a workflow."
+          flash[:notice] = "Your profile is incomplete. Please select a workflow."
           redirect_to edit_profile_path(current_user)
         else
-          action_flash[:warning] = @study.warnings if @study.warnings.present?
+          flash[:warning] = @study.warnings if @study.warnings.present?
           redirect_to study_workflow_path(@study, current_user.workflow)
         end
       end
@@ -174,7 +173,7 @@ class StudiesController < ApplicationController
     @study    = Study.find(params[:id])
     @relation_names = StudyRelationType::names
     @studies = current_user.interesting_studies
-    @studies.delete(@study)
+    @studies.reject {|s| s == @study }
 
     #TODO create a proper ReversedStudyRelation
     @relations = @study.study_relations.map { |r| [r.related_study, r.name ] } +

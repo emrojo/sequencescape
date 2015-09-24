@@ -126,8 +126,8 @@ Sequencescape::Application.routes.draw do
 
     resources :sample_registration, :only => [:index,:new,:create], :controller => "studies/sample_registration" do
       collection do
-        post :new
-        get :new
+        post :spreadsheet
+        # get :new
         get :upload
       end
     end
@@ -556,26 +556,28 @@ Sequencescape::Application.routes.draw do
 
   end
 
+  namespace :sdb, as:'' do
+    resources :sample_manifests do
+      collection do
+        post :upload
+      end
+      member do
+        get :export
+        get :uploaded_spreadsheet
+      end
+    end
 
-  resources :sample_manifests do
-    collection do
-      post :upload
+    resources :suppliers do
+
+      member do
+        get :sample_manifests
+        get :studies
+      end
     end
-    member do
-      get :export
-      get :uploaded_spreadsheet
-    end
+
+    match '/' => 'home#index'
   end
 
-  resources :suppliers do
-
-    member do
-      get :sample_manifests
-      get :studies
-    end
-  end
-
-  match '/' => 'home#index', :namespace => 'sdb/', :path_prefix => '/sdb'
   match '/:controller(/:action(/:id))'
 
   mount Api::RootService.new => '/api/1'

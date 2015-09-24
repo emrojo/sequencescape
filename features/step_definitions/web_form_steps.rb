@@ -52,8 +52,8 @@ Then /^I should see the following (required )?fields:$/ do |required,table|
 end
 
 def assert_label_exists(label_text, required = false)
-  selector = 'label' << (required ? '.required' : ':not(.required)')
-  assert(page.has_css?(selector), "The #{ label_text.inspect } should #{ required ? '' : 'not '}be labeled as 'required' (class=\"required\")")
+  selector = 'label' << (required ? '.required' : ':not(.required)') << ":contains('#{label_text}')"
+  assert(page.has_css?(selector,:visible=>false), "The #{ label_text.inspect } should #{ required ? '' : 'not '}be labeled as 'required' (class=\"required\")")
 end
 
 def locate_labeled_field_type(label_text, field_type)
@@ -108,7 +108,7 @@ end
 
 Then /^the "([^\"]+)" field should be marked in error$/ do |field|
   element = page.find_field(field) or raise Capybara::ElementNotFound, "Field #{ field.inspect } not found"
-  find(".fieldWithErrors ##{element['id']}")
+  find(".field_with_errors ##{element['id']}")
 end
 
 # There is an issue when attaching a file to a field and using the @javascript tag: the path is relative to some

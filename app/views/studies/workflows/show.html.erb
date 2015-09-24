@@ -67,7 +67,7 @@
   <% end -%>
   <br />
   Study <%= @study.id %> &middot; Created on <%= @study.created_at.to_formatted_s(:long) %> &middot; <%= @study.state.capitalize %> <br />
-  Overall progress: <%= progress_bar(@study.completed(@workflow)) %>
+  Overall progress: <%= raw(progress_bar(@study.completed(@workflow))) %>
 </div>
 
 <div class="content">
