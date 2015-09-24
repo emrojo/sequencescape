@@ -36,5 +36,5 @@ Sequencescape::Application.configure do
   config.time_zone = 'London'
 
 
-  config.active_record.observers = [ :batch_cache_sweeper, :request_observer ]
+  #config.active_record.observers = [ :batch_cache_sweeper, :request_observer ]
 end
