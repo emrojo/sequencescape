@@ -10,7 +10,7 @@ require 'factory_girl'
 
 begin
   require 'pry'
-rescue
+rescue LoadError => exception
 end
 
 require File.expand_path(File.join(Rails.root, %w{test factories.rb}))

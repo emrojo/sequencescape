@@ -38,6 +38,6 @@ When /^I start request (\d+) in the "([^\"]+)" pipeline$/ do |index, pipeline|
   step(%Q{I follow "#{pipeline}"})
   step(%Q{I check "Include request #{index}"})
   step(%Q{I select "Create Batch" from the first "Action to perform"})
-  step(%Q{I press "Submit"})
+  step(%Q{I press the first "Submit"})
   step(%Q{I follow "QC result"})
 end
