@@ -4,7 +4,7 @@
 class SupercedeAllHiddenSubmissionTemplates < ActiveRecord::Migration
   class SubmissionTemplate < ActiveRecord::Base
     self.table_name =('submission_templates')
-   scope :hidden, where( :visible => false )
+    scope :hidden, -> { where( :visible => false ) }
   end
 
   def self.up

@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, :if => :password_required?
 
   scope :with_login, lambda { |*logins| { :conditions => { :login => logins.flatten } } }
-  scope :all_administrators, joins(:roles).where(:roles=>{:name=>'administrator'})
+  scope :all_administrators, -> { joins(:roles).where(:roles=>{:name=>'administrator'}) }
 
   acts_as_authorized_user
 

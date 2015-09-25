@@ -184,7 +184,7 @@ class Transfer < ActiveRecord::Base
   # You can only transfer from one plate to another once, anything else is an error.
   belongs_to :source, :class_name => 'Plate'
   validates_presence_of :source
-  scope :include_source, includes( :source => ModelExtensions::Plate::PLATE_INCLUDES )
+  scope :include_source, -> { includes( :source => ModelExtensions::Plate::PLATE_INCLUDES ) }
 
   # Before creating an instance of this class the appropriate transfers need to be made from a source
   # asset to the destination one.

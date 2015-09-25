@@ -223,7 +223,7 @@ WHERE c.container_id=?
     end
   end
 
-  scope :include_wells_and_attributes, includes(:wells => [ :map, :well_attribute ])
+  scope :include_wells_and_attributes, -> { includes(:wells => [ :map, :well_attribute ]) }
 
   #has_many :wells, :as => :holder, :class_name => "Well"
   DEFAULT_SIZE = 96

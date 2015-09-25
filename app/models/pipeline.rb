@@ -104,12 +104,12 @@ class Pipeline < ActiveRecord::Base
   belongs_to :next_pipeline,     :class_name => 'Pipeline'
   belongs_to :previous_pipeline, :class_name => 'Pipeline'
 
- scope :externally_managed, where( :externally_managed => true )
- scope :internally_managed, where( :externally_managed => false )
- scope :active, where(:active => true)
- scope :inactive, where( :active => false )
+ scope :externally_managed, -> { where( :externally_managed => true ) }
+ scope :internally_managed, -> { where( :externally_managed => false ) }
+ scope :active,             -> { where(:active => true) }
+ scope :inactive,           -> { where( :active => false ) }
 
- scope :for_request_type, lambda { |rt|
+ scope :for_request_type, ->(rt) {
     {
       :joins => [ 'LEFT JOIN pipelines_request_types prt ON prt.pipeline_id = pipelines.id' ],
       :conditions => ['prt.request_type_id = ?', rt.id]

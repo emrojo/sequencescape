@@ -14,7 +14,7 @@ class Robot < ActiveRecord::Base
     { :conditions => [ 'barcode=? AND ?', barcode_number, Barcode.prefix_from_barcode(barcode)==prefix ] }
   }
 
-  scope :include_properties, includes(:robot_properties)
+  scope :include_properties, -> { includes(:robot_properties) }
 
   def minimum_volume
     configatron.tecan_minimum_volume

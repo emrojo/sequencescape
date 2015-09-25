@@ -23,6 +23,6 @@ class Comment < ActiveRecord::Base
 
   }
 
-  scope :include_uuid, where('TRUE')
+  scope :include_uuid, -> { where('TRUE') }
 
 end

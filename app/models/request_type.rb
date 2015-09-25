@@ -42,8 +42,8 @@ class RequestType < ActiveRecord::Base
   belongs_to :product_line
 
   # Couple of named scopes for finding billable types
- scope :billable, where( :billable => true )
- scope :non_billable, where( :billable => false )
+ scope :billable, -> { where( :billable => true ) }
+ scope :non_billable, -> { where( :billable => false ) }
 
   # Defines the acceptable plate purposes or the request type.  Essentially this is used to limit the
   # cherrypick plate types when going into pulldown to the correct list.

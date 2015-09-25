@@ -7,7 +7,7 @@ class TagGroup < ActiveRecord::Base
   has_many :tags, :order => 'map_id ASC'
 
 
- scope :visible, where(:visible => true)
+ scope :visible, -> { where(:visible => true) }
 
   validates_presence_of :name
   validates_uniqueness_of :name

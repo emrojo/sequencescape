@@ -138,7 +138,7 @@ class Map < ActiveRecord::Base
 
   scope :where_description, lambda { |*descriptions| where(:description => descriptions.flatten) }
   scope :where_plate_size,  lambda { |size| where(:asset_size => size) }
-  scope :where_plate_shape,  lambda { |asset_shape| where(:asset_shape_id => asset_shape)}
+  scope :where_plate_shape, lambda { |asset_shape| where(:asset_shape_id => asset_shape)}
   scope :where_vertical_plate_position, lambda { |*positions| where(:column_order => positions.map {|v| v-1}) }
 
   belongs_to :asset_shape, :class_name => 'AssetShape'
@@ -271,10 +271,10 @@ class Map < ActiveRecord::Base
     map.description
   end
 
-   scope :in_row_major_order,            order('row_order ASC' )
-   scope :in_reverse_row_major_order,    order('row_order DESC' )
-   scope :in_column_major_order,         order('column_order ASC' )
-   scope :in_reverse_column_major_order, order('column_order DESC' )
+   scope :in_row_major_order,            -> { order('row_order ASC' ) }
+   scope :in_reverse_row_major_order,    -> { order('row_order DESC' ) }
+   scope :in_column_major_order,         -> { order('column_order ASC' ) }
+   scope :in_reverse_column_major_order, -> { order('column_order DESC' ) }
 
   class << self
     # Caution! Only use for seeds. Not valid elsewhere

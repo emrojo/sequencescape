@@ -5,7 +5,7 @@ class AddTransferRequestTypeToRequests < ActiveRecord::Migration
 
   class Requests < ActiveRecord::Base
     belongs_to :request_type
-   scope :transfer_requests, where( :sti_type => 'TransferRequest' )
+    scope :transfer_requests, -> { where( :sti_type => 'TransferRequest' ) }
   end
 
   class RequestType < ActiveRecord::Base

@@ -82,7 +82,7 @@ class Sample < ActiveRecord::Base
     where(['name LIKE ? OR id=?', "%#{query}%", query ])
   }
 
-  scope :non_genotyped, where("samples.id not in (select propertied_id from external_properties where propertied_type = 'Sample' and `key` = 'genotyping_done'  )")
+  scope :non_genotyped, -> { where("samples.id not in (select propertied_id from external_properties where propertied_type = 'Sample' and `key` = 'genotyping_done'  )") }
 
   def self.by_name(sample_id)
     self.find_by_name(sample_id)

@@ -88,8 +88,8 @@ module Submission::StateMachine
 
   UnprocessedStates = ["building", "pending", "processing"]
   def configure_named_scopes
-   scope :unprocessed, where(:state => UnprocessedStates)
-   scope :processed, where(:state => ["ready", "failed"])
+   scope :unprocessed, -> { where(:state => UnprocessedStates) }
+   scope :processed, -> { where(:state => ["ready", "failed"]) }
   end
 
   private :configure_named_scopes

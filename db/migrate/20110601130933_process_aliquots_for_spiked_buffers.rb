@@ -25,7 +25,7 @@ class ProcessAliquotsForSpikedBuffers < ActiveRecord::Migration
     has_one :tag_instance, :through => :links_as_child, :source => :ancestor, :conditions => { :sti_type => 'TagInstance' }
     has_many :aliquots, :foreign_key => :receptacle_id, :class_name => 'ProcessAliquotsForSpikedBuffers::Aliquot'
 
-   scope :spiked_buffer, where( :sti_type => 'SpikedBuffer' )
+   scope :spiked_buffer, -> { where( :sti_type => 'SpikedBuffer' ) }
 
     def is_spiked_buffer?
       self.sti_type == 'SpikedBuffer'

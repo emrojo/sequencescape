@@ -13,7 +13,7 @@ class AssetRack < Asset
   # Yuck! Yuck! Yuck!
   self.prefix = "DN"
 
-  scope :include_asset_rack_purpose, includes(:purpose)
+  scope :include_asset_rack_purpose, ->{ includes(:purpose) }
   belongs_to :purpose, :class_name => 'AssetRack::Purpose', :foreign_key => :plate_purpose_id
   alias_method :asset_rack_purpose, :purpose
 

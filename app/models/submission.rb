@@ -37,18 +37,18 @@ class Submission < ActiveRecord::Base
 
   cattr_reader :per_page
   @@per_page = 500
-  scope :including_associations_for_json, includes([
+  scope :including_associations_for_json, -> { includes([
       :uuid_object,
       {:orders => [
          {:project => :uuid_object},
          {:assets => :uuid_object },
          {:study => :uuid_object },
          :user]}
-  ])
+  ])}
 
- scope :building, where( :state => "building" )
- scope :pending, where( :state => "pending" )
- scope :ready, where( :state => "ready" )
+  scope :building, -> { where( :state => "building" ) }
+  scope :pending,  -> { where( :state => "pending" ) }
+  scope :ready,    -> { where( :state => "ready" ) }
 
   before_destroy :building?, :empty_of_orders?
 

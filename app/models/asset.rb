@@ -48,7 +48,7 @@ class Asset < ActiveRecord::Base
   has_many :submitted_assets
   has_many :orders, :through => :submitted_assets
 
- scope :requests_as_source_is_a?, lambda { |t| { :joins => :requests_as_source, :conditions => { :requests => { :sti_type => [ t, *t.descendants ].map(&:name) } } } }
+ scope :requests_as_source_is_a?, ->(t) { { :joins => :requests_as_source, :conditions => { :requests => { :sti_type => [ t, *t.descendants ].map(&:name) } } } }
 
   extend ContainerAssociation::Extension
 
@@ -65,11 +65,12 @@ class Asset < ActiveRecord::Base
     joins(:map).where(["description = ? AND asset_size = ?", args[0], args[1]])
   }
   scope :get_by_type, lambda {|*args| {:conditions => { :sti_type => args[0]} } }
-  scope :for_summary, includes([:map,:barcode_prefix])
+  scope :for_summary, -> { includes([:map,:barcode_prefix]) }
 
  scope :of_type, lambda { |*args| { :conditions => { :sti_type => args.map { |t| [t, *t.descendants] }.flatten.map(&:name) } } }
 
-  scope :recent_first, order('id DESC')
+  scope :recent_first, -> { order('id DESC') }
+
   def studies
     []
   end
@@ -83,7 +84,7 @@ class Asset < ActiveRecord::Base
     (orders.map(&:study)+studies).compact.uniq
   end
   # Named scope for search by query string behaviour
- scope :for_search_query, lambda { |query,with_includes|
+ scope :for_search_query, ->(query,with_includes) {
     {
       :conditions => [
         'assets.name IS NOT NULL AND (assets.name LIKE :like OR assets.id=:query OR assets.barcode = :query)', { :like => "%#{query}%", :query => query } ]

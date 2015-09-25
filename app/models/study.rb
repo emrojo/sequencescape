@@ -138,14 +138,14 @@ class Study < ActiveRecord::Base
     joins(:study_metadata).where([ 'name LIKE ? OR studies.id=? OR prelim_id=?', "%#{query}%", query, query ])
   }
 
- scope :with_no_ethical_approval, where( :ethically_approved => false )
+ scope :with_no_ethical_approval, -> { where( :ethically_approved => false ) }
 
- scope :is_active, where( :state => 'active' )
- scope :is_inactive, where( :state => 'inactive' )
- scope :is_pending, where( :state => 'pending' )
+ scope :is_active,   -> { where( :state => 'active' ) }
+ scope :is_inactive, -> { where( :state => 'inactive' ) }
+ scope :is_pending,  -> { where( :state => 'pending' ) }
 
-  scope :newest_first, order("#{ self.quoted_table_name }.created_at DESC" )
-  scope :with_user_included, includes(:user)
+  scope :newest_first, -> { order("#{ self.quoted_table_name }.created_at DESC" ) }
+  scope :with_user_included, -> { includes(:user) }
 
   YES = 'Yes'
   NO  = 'No'

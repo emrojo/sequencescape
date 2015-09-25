@@ -16,7 +16,7 @@ class Uuid < ActiveRecord::Base
         after_create :ensure_uuid_created
 
         # Some named scopes ...
-        scope :include_uuid, includes(:uuid_object )
+        scope :include_uuid, -> { includes(:uuid_object ) }
       end
     end
 
@@ -98,7 +98,7 @@ class Uuid < ActiveRecord::Base
 
   scope :with_resource_type, lambda { |type| where(:resource_type => type.to_s ) }
 
-  scope :include_resource, includes(:resource)
+  scope :include_resource, -> { includes(:resource) }
   scope :with_external_id, lambda { |external_id| where(:external_id => external_id) }
   scope :with_resource_by_type_and_id, lambda { |t,id| where(:resource_type => t, :resource_id => id ) }
 

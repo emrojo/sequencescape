@@ -4,7 +4,7 @@
 module ModelExtensions::Well
   def self.included(base)
     base.class_eval do
-      scope :for_api_plate_json, includes(
+      scope :for_api_plate_json, -> { includes(
               :map,
               :transfer_requests, # Should be :transfer_requests_as_target
               :uuid_object, {
@@ -22,6 +22,7 @@ module ModelExtensions::Well
                 ]
               }
             )
+    }
     end
   end
 end

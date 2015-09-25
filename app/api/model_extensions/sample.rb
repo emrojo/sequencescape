@@ -4,7 +4,7 @@
 module ModelExtensions::Sample
   def self.included(base)
     base.class_eval do
-      scope :include_studies, includes(:studies => :study_metadata)
+      scope :include_studies, -> { includes(:studies => :study_metadata) }
 
       has_one :primary_study_samples, :class_name => 'StudySample', :order => 'study_id'
       has_one :primary_study, :through => :primary_study_samples, :source => :study

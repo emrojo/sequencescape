@@ -18,7 +18,7 @@ class Role < ActiveRecord::Base
   belongs_to :authorizable, :polymorphic => true
 
   validates_presence_of :name
-  scope :general_roles, where("authorizable_type IS NULL")
+  scope :general_roles, -> { where("authorizable_type IS NULL") }
 
   def self.keys
     Role.all.map { |r| r.name }.uniq
@@ -37,7 +37,7 @@ class Role < ActiveRecord::Base
       base.instance_eval do
         has_many :roles, :as => :authorizable
 
-       scope :with_related_users_included, includes(:roles => :users )
+       scope :with_related_users_included, -> { includes(:roles => :users ) }
        scope :of_interest_to, lambda { |user|
           {
             :joins => joins_through_to_users,

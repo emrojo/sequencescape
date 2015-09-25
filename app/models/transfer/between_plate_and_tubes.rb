@@ -32,14 +32,14 @@ class Transfer::BetweenPlateAndTubes < Transfer
 
     validates_presence_of :source
 
-    scope :include_destination, includes(Transfer::BetweenPlateAndTubes::DESTINATION_INCLUDES)
+    scope :include_destination, -> { includes(Transfer::BetweenPlateAndTubes::DESTINATION_INCLUDES) }
   end
 
   include Transfer::ControlledDestinations
 
   # Records the transfers from the wells on the plate to the assets they have gone into.
   has_many :well_to_tubes, :class_name => 'Transfer::BetweenPlateAndTubes::WellToTube', :foreign_key => :transfer_id
-  scope :include_transfers, includes( :well_to_tubes => DESTINATION_INCLUDES )
+  scope :include_transfers, -> { includes( :well_to_tubes => DESTINATION_INCLUDES ) }
 
   def transfers
     Hash[well_to_tubes.include_destination.map { |t| [t.source, tube_to_hash(t.destination)] }]

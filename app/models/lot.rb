@@ -33,11 +33,11 @@ class Lot < ActiveRecord::Base
 
   delegate :valid_template_class, :target_purpose, :to => :lot_type
 
- scope :include_lot_type, includes(:lot_type)
- scope :include_template, includes(:template)
- scope :with_lot_number, lambda { |lot_number| {:conditions=>{:lot_number=>lot_number} } }
+ scope :include_lot_type, -> { includes(:lot_type) }
+ scope :include_template, -> { includes(:template) }
+ scope :with_lot_number,  ->(lot_number) { {:conditions=>{:lot_number=>lot_number} } }
 
- scope :with_qc_asset, lambda {|qc_asset|
+ scope :with_qc_asset, ->(qc_asset) {
     return { :conditions => 'FALSE' } if qc_asset.nil?
     sibling = qc_asset.transfers_as_destination.first.source
 

@@ -31,8 +31,8 @@ class Well < Aliquot::Receptacle
     end
   end
 
-  scope :include_stock_wells, includes(:stock_wells => :requests_as_source)
-  scope :include_map,         includes(:map)
+  scope :include_stock_wells, -> { includes(:stock_wells => :requests_as_source) }
+  scope :include_map,         -> { includes(:map) }
 
   scope :located_at, lambda { |location|
     joins(:map).where(:maps => { :description => location })
@@ -68,23 +68,25 @@ class Well < Aliquot::Receptacle
     where([ '(pasb.sti_type IS NULL OR pasb.sti_type IN (?))', [ type, *type.descendants ].map(&:name) ]).
     select('DISTINCT assets.*, pasb.submission_id AS pool_id')
   }
-  scope :in_column_major_order, joins(:map).order('column_order ASC')
-  scope :in_row_major_order, joins(:map).order('row_order ASC')
-  scope :in_inverse_column_major_order, joins(:map).order('column_order DESC')
-  scope :in_inverse_row_major_order, joins(:map).order('row_order DESC')
+  scope :in_column_major_order,         -> { joins(:map).order('column_order ASC') }
+  scope :in_row_major_order,            -> { joins(:map).order('row_order ASC') }
+  scope :in_inverse_column_major_order, -> { joins(:map).order('column_order DESC') }
+  scope :in_inverse_row_major_order,    -> { joins(:map).order('row_order DESC') }
 
   scope :in_plate_column, lambda {|col,size|  joins(:map).where(:maps => {:description => Map::Coordinate.descriptions_for_column(col,size), :asset_size => size }) }
   scope :in_plate_row,    lambda {|row,size|  joins(:map).where(:maps => {:description => Map::Coordinate.descriptions_for_row(row,size), :asset_size =>size }) }
 
-  scope :with_blank_samples,
+  scope :with_blank_samples, -> {
     joins([
       "INNER JOIN aliquots ON aliquots.receptacle_id=assets.id",
       "INNER JOIN samples ON aliquots.sample_id=samples.id"
     ]).
     where(['samples.empty_supplier_sample_name=?',true])
+  }
 
-  scope :with_contents,
+  scope :with_contents, -> {
     joins('INNER JOIN aliquots ON aliquots.receptacle_id=assets.id')
+  }
 
   include Transfer::WellHelpers
 

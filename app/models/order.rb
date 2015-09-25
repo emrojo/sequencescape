@@ -42,7 +42,7 @@ class Order < ActiveRecord::Base
   has_many :requests, :inverse_of => :order
 
   belongs_to :submission, :inverse_of => :orders
-  scope :include_for_study_view, includes([:submission])
+  scope :include_for_study_view, -> { includes(:submission) }
   #validates_presence_of :submission
 
   before_destroy :is_building_submission?
@@ -114,7 +114,15 @@ class Order < ActiveRecord::Base
 
   cattr_reader :per_page
   @@per_page = 500
-  scope :including_associations_for_json, includes([:uuid_object, {:assets => [:uuid_object] }, { :project => :uuid_object }, { :study => :uuid_object }, :user])
+  scope :including_associations_for_json, -> {
+    includes([
+      :uuid_object,
+      {:assets => [:uuid_object] },
+      { :project => :uuid_object },
+      { :study => :uuid_object },
+      :user
+    ])
+  }
 
 
   def self.render_class

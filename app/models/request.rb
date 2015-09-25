@@ -117,7 +117,7 @@ class Request < ActiveRecord::Base
   delegate :billable?, :to => :request_type, :allow_nil => true
   belongs_to :workflow, :class_name => "Submission::Workflow"
 
-  scope :for_billing, includes([ :initial_project, :request_type, { :target_asset => :aliquots }])
+  scope :for_billing, -> { includes([ :initial_project, :request_type, { :target_asset => :aliquots }]) }
 
   belongs_to :user
 
@@ -179,14 +179,14 @@ class Request < ActiveRecord::Base
 
   scope :where_is_a?,     lambda { |clazz| where([ 'sti_type IN (?)',     [ clazz, *clazz.descendants ].map(&:name) ]) }
   scope :where_is_not_a?, lambda { |clazz| where([ 'sti_type NOT IN (?)', [ clazz, *clazz.descendants ].map(&:name) ]) }
-  scope :where_has_a_submission, where('submission_id IS NOT NULL')
+  scope :where_has_a_submission, -> { where('submission_id IS NOT NULL') }
 
- scope :full_inbox, where(:state => ["pending","hold"])
+ scope :full_inbox, -> { where(:state => ["pending","hold"]) }
 
-  scope :with_asset,  where('asset_id is not null')
-  scope :with_target, where('target_asset_id is not null and (target_asset_id <> asset_id)')
-  scope :join_asset,  joins(:asset)
-  scope :with_asset_location, includes(:asset => :map)
+  scope :with_asset,  -> { where('asset_id is not null')}
+  scope :with_target, -> { where('target_asset_id is not null and (target_asset_id <> asset_id)')}
+  scope :join_asset,  -> { joins(:asset)}
+  scope :with_asset_location, -> { includes(:asset => :map) }
 
   scope :siblings_of, lambda {|request| { :conditions => ['asset_id = ? AND NOT id = ?', request.asset_id, request.id ] } }
 
@@ -206,16 +206,16 @@ class Request < ActiveRecord::Base
     where(['hncc.sti_type != ?', 'ControlPlate' ]).
     readonly(false)
   }
-  scope :without_asset, where('asset_id is null')
-  scope :without_target, where('target_asset_id is null')
-  scope :ordered, order("id ASC")
-  scope :full_inbox, where(:state => ["pending","hold"])
-  scope :hold, where(:state => "hold")
+  scope :without_asset, -> { where('asset_id is null') }
+  scope :without_target, -> { where('target_asset_id is null') }
+  scope :ordered, -> { order("id ASC") }
+  scope :full_inbox, -> { where(:state => ["pending","hold"]) }
+  scope :hold, -> { where(:state => "hold") }
 
-  scope :loaded_for_inbox_display, includes([{:submission => {:orders =>:study}, :asset => [:scanned_into_lab_event,:studies]}])
-  scope :loaded_for_grouped_inbox_display, includes([ {:submission => :orders}, :asset , :target_asset, :request_type ])
-  scope :ordered_for_ungrouped_inbox, order('id DESC')
-  scope :ordered_for_submission_grouped_inbox, order('submission_id DESC, id ASC')
+  scope :loaded_for_inbox_display, -> { includes([{:submission => {:orders =>:study}, :asset => [:scanned_into_lab_event,:studies]}])}
+  scope :loaded_for_grouped_inbox_display, -> { includes([ {:submission => :orders}, :asset , :target_asset, :request_type ])}
+  scope :ordered_for_ungrouped_inbox, -> { order('id DESC') }
+  scope :ordered_for_submission_grouped_inbox, -> { order('submission_id DESC, id ASC') }
 
   scope :group_conditions, lambda { |conditions, variables|
     where([ conditions.join(' OR '), *variables ])
@@ -270,8 +270,8 @@ class Request < ActiveRecord::Base
     where(:initial_study_id => studies.map(&:id))
   }
 
-  scope :with_assets_for_starting_requests, includes([:request_metadata,{:asset=>:aliquots,:target_asset=>:aliquots}])
-  scope :not_failed, where(['state != ?', 'failed'])
+  scope :with_assets_for_starting_requests, -> { includes([:request_metadata,{:asset=>:aliquots,:target_asset=>:aliquots}]) }
+  scope :not_failed, -> { where(['state != ?', 'failed']) }
 
   #------
   #TODO: use eager loading association
