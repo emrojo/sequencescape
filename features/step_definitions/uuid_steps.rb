@@ -173,8 +173,7 @@ end
 
 Given /^the UUID of the next (#{SINGULAR_MODELS_BASED_ON_ID_REGEXP}) created will be "([^\"]+)"$/ do |model,uuid_value|
   model_class = model.gsub(/\s+/, '_').classify.constantize
-
-  next_id = ActiveRecord::Base.connection.execute("SHOW TABLE STATUS WHERE `name` = '#{model_class.table_name}'").fetch_hash['Auto_increment']
+  next_id = ActiveRecord::Base.connection.execute("SHOW TABLE STATUS WHERE `name` = '#{model_class.table_name}'").first['Auto_increment']
 
   # Unforunately we need to find the root of the tree
   root_class = model_class
