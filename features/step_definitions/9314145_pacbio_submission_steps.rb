@@ -82,8 +82,8 @@ Given /^I have a fast PacBio sequencing batch$/ do
   step(%Q{I am on the show page for pipeline "PacBio Sequencing"})
   step(%Q{I check "Select Request Group 0"})
 
-  step(%Q{I check "Select Request 0"})
-  step(%Q{I check "Select Request 1"})
+  step(%Q{I check the invisible "Select Request 0"})
+  step(%Q{I check the invisible "Select Request 1"})
   step(%Q{I press "Submit"})
 end
 
@@ -101,8 +101,8 @@ Given /^I have a PacBio sequencing batch$/ do
   step(%Q{set the location of PacBioLibraryTube "3980000444684" to be in "PacBio sequencing freezer"})
   step(%Q{I am on the show page for pipeline "PacBio Sequencing"})
   step(%Q{I check "Select Request Group 0"})
-  step(%Q{I check "Select Request 0"})
-  step(%Q{I check "Select Request 1"})
+  step(%Q{I check the invisible "Select Request 0"})
+  step(%Q{I check the invisible "Select Request 1"})
   step(%Q{I press the first "Submit"})
   step(%Q{the sample tubes are part of the study})
 end

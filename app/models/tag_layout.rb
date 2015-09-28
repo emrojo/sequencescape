@@ -38,6 +38,7 @@ class TagLayout < ActiveRecord::Base
 
   # After loading the record from the database, inject the behaviour.
   after_initialize :import_behaviour
+
   def import_behaviour
     extend(direction_algorithm.constantize) unless direction_algorithm.blank?
     extend(walking_algorithm.constantize)   unless walking_algorithm.blank?

@@ -45,7 +45,6 @@ module Core::Service::ErrorHandling
     end
 
     def general_error(code, errors = nil)
-      puts exception_thrown.backtrace
       errors ||= [ exception_thrown.message ]
       error(code, JsonError.new(:general => errors))
     end
@@ -101,9 +100,15 @@ class ActiveRecord::RecordInvalid
   end
 
   def errors_grouped_by_attribute
-    record.errors.messages
+    Hash[record.errors.map { |k,v| [ yield(k), [v].flatten.uniq ] }]
   end
   private :errors_grouped_by_attribute
+end
+
+class ActiveRecord::RecordNotSaved
+  def api_error(response)
+    response.content_error(422, message)
+  end
 end
 
 class IllegalOperation < RuntimeError

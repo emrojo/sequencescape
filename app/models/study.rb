@@ -16,7 +16,7 @@ class Study < ActiveRecord::Base
   include DataRelease
   include Commentable
   include Identifiable
-  include Named
+  include SharedBehaviour::Named
   include ReferenceGenome::Associations
   include SampleManifest::Associations
   include Request::Statistics::DeprecatedMethods
@@ -275,15 +275,6 @@ class Study < ActiveRecord::Base
       end
     end
 
-  end
-
-  def self.human_attribute_name(attribute,options={})
-    if attribute.to_s.split(".").first == 'study_metadata'
-      attrib = attribute.to_s.split(".").last
-      I18n.translate("metadata.study.metadata.#{attrib}.label",:default=>attrib.humanize)
-    else
-      super
-    end
   end
 
   class Metadata

@@ -14,7 +14,7 @@ module ModelExtensions::Order
     # request options have been specified.  Once they are specified they are always checked, unless they are
     # completely blanked.
     def validate_request_options?
-      not building? or not self.request_options.blank?
+      true #not building? or not self.request_options.blank?
     end
     private :validate_request_options?
 

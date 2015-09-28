@@ -173,7 +173,7 @@ Factory.define(:tag_layout) do |tag_layout|
 
   # Factory girl builds things in bits, rather than all at once, so we need to trigger the after_initialize call
   # after the instance has been built so that the correct behaviours are installed.
-  tag_layout.after_build { |tag_layout| tag_layout.after_initialize }
+  tag_layout.after_build { |tag_layout| tag_layout.import_behaviour }
 end
 
 # Plate creations

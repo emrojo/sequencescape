@@ -19,7 +19,7 @@ class RequestType < ActiveRecord::Base
 
   include Workflowed
   include Uuid::Uuidable
-  include Named
+  include SharedBehaviour::Named
 
   has_many :requests, :inverse_of => :request_type
   has_many :pipelines_request_types, :inverse_of => :request_type

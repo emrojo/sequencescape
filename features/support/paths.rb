@@ -4,7 +4,7 @@
 module NavigationHelpers
   # Finds the specified page for the given model with the specified name.
   def page_for_model(model, page, name)
-    object = model.find_by_name(name) or raise StandardError, "#{ model.name } #{ name.inspect } does not exist"
+    object = model.find_by_name!(name)
     routing_method = "#{ model.name.underscore }_path"
     routing_method = "#{ page }_#{ routing_method }" unless page == 'show'
     send(routing_method.to_sym, object)
