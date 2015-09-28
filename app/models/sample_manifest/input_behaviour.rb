@@ -39,7 +39,7 @@ module SampleManifest::InputBehaviour
           # These need to be checked when updating from a sample manifest.  We need to be able to display
           # the sample ID so this can't be done with validates_presence_of
           validates_each(:volume, :concentration, :if => :updating_from_manifest?) do |record, attr, value|
-            record.errors.add_on_blank(attr, "can't be blank for #{record.sample.sanger_sample_id}")
+            record.errors.add_on_blank(attr, message:"can't be blank for #{record.sample.sanger_sample_id}")
           end
 
         end

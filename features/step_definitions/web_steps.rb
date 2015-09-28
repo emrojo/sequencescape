@@ -105,9 +105,10 @@ When /^(?:|I )select "([^"]*)" from the first "([^"]*)"(?: within "([^"]*)")?$/ 
   end
 end
 
-When /^(?:|I )check "([^"]*)"(?: within "([^"]*)")?$/ do |field, selector|
+When /^(?:|I )check (the invisible )?"([^"]*)"(?: within "([^"]*)")?$/ do |invisible,field, selector|
+  visible = invisible != "the invisible "
   with_scope(selector) do
-    check(field)
+    check(field,:visible=>visible)
   end
 end
 

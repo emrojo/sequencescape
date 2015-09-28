@@ -12,7 +12,7 @@ class Sample < ActiveRecord::Base
   include Identifiable
   include Uuid::Uuidable
   include StandardNamedScopes
-  include Named
+  include SharedBehaviour::Named
   include Aliquot::Aliquotable
 
   extend EventfulRecord

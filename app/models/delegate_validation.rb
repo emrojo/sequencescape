@@ -25,7 +25,7 @@ module DelegateValidation
   end
 
   class Validator
-    include ActiveModel::Validations
+    include Validateable
 
     class DelegateError < ActiveModel::Errors
       def initialize(base,target)

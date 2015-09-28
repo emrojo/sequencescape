@@ -162,6 +162,7 @@ end
 Then /^the last created sample manifest should be:$/ do |table|
   offset = 9
   Tempfile.open('testfile.xls') do |tempfile|
+    tempfile.binmode
     tempfile.write(SampleManifest.last.generated_document.current_data)
     tempfile.flush
     tempfile.open

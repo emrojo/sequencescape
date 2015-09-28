@@ -45,6 +45,7 @@ Feature: Creating projects
     Given I am on the project creation page
     And I fill in "Name" with "Testing project creation"
     And I fill in "Project cost code" with "Cost code 101"
+    And I select "Internal" from "Project funding model"
     And I press "Create"
 
     Then I should be on the show page for project "Testing project creation"
@@ -56,6 +57,7 @@ Feature: Creating projects
     Given I am on the project creation page
     And I fill in "Name" with "Testing project creation"
     And I fill in "Project cost code" with "Cost code 101"
+    And I select "Internal" from "Project funding model"
     And I press "Create"
 
     Then I should be on the show page for project "Testing project creation"

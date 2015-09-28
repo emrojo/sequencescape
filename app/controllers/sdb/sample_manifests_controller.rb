@@ -16,7 +16,6 @@ class Sdb::SampleManifestsController < Sdb::BaseController
       flash[:error] = "Cannot find details about the sample manifest"
       return
     end
-
     @sample_manifest.update_attributes(params[:sample_manifest])
     @sample_manifest.process(current_user, params[:sample_manifest][:override] == "1")
     flash[:notice] = "Manifest being processed"

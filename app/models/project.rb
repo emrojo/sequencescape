@@ -11,8 +11,9 @@ class Project < ActiveRecord::Base
   include EventfulRecord
   include AASM
   include Uuid::Uuidable
-  include Named
+  include SharedBehaviour::Named
   extend EventfulRecord
+
   has_many_events
   has_many_lab_events
 
