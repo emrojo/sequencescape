@@ -16,7 +16,7 @@ Feature: Creating new requests from an asset
       And the asset "Sample tube for testing new request" belongs to study "Study testing new request"
 
     Given I am on the assets page for the study "Study testing new request" in the "<workflow>" workflow
-     When I follow "New request" within "*[@id='asset_sample_tube_for_testing_new_request']"
+     When I follow "New request" within "[id='asset_sample_tube_for_testing_new_request']"
      Then I should be on the new request page for "Sample tube for testing new request"
       And "Study testing new request" should be selected from "Study"
 
