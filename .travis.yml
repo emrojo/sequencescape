@@ -4,6 +4,7 @@ rvm:
 bundler_args: --without warehouse development deployment
 before_install:
   - export TZ=Europe/London
+  - export TESTOPTS="-v"
 before_script:
   - "bundle exec rake db:create RAILS_ENV=test"
   - "bundle exec rake db:test:load"
