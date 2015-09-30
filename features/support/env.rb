@@ -56,3 +56,18 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :transaction
 
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+end
+
+Capybara.current_driver = :chrome
+
+Capybara.javascript_driver = :chrome
+
+ Capybara.default_driver = :chrome
+
+#if Selenium::WebDriver::Platform.find_binary "chromedriver"
+#  Capybara.default_driver = :chrome
+#else
+#  Capybara.default_driver = :selenium
+#end
