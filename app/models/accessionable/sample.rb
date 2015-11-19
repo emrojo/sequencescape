@@ -55,11 +55,9 @@ module Accessionable
       # In case the accession number is defined, we won't send the alias
       {
         :alias => alias_attribute,
-        :accession => accession_number,
-        :title => title
+        :accession => accession_number
       }.tap do |obj|
         obj.delete(:alias) unless self.accession_number.blank?
-        obj.delete(:title) if title.nil?
       end
     end
 
@@ -69,6 +67,7 @@ module Accessionable
       xml.SAMPLE_SET('xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance') {
         xml.SAMPLE(sample_element_attributes) {
           xml.IDENTIFIERS {
+            xml.TITLE self.title unless title.nil?
             xml.SUBMITTER_ID(self.alias, :namespace=>'sc')
             xml.PRIMARY_ID self.accession_number
           }
