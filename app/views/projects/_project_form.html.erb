@@ -8,10 +8,12 @@
 
   <%= render(:partial => 'shared/metadata/edit/project', :locals => { :project => @project }) %>
 
+  <div class="form-inline center-text">
   <% unless @project.new_record? %>
-    <%= submit_tag :project, :value => "Update" %> or <%= link_to "cancel", project_path(@project) %>
+    <%= submit_tag :project, :value => "Update", :class => 'form-control' %> or <%= link_to "cancel", project_path(@project) %>
   <% else %>
-    <%= submit_tag :project, :value => "Create" %> or <%= link_to "cancel", projects_path %>
+    <%= submit_tag :project, :value => "Create", :class => 'form-control' %> or <%= link_to "cancel", projects_path %>
   <% end %>
+  </div>
 
 <% end %>

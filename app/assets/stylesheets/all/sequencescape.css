@@ -1519,3 +1519,41 @@ section { margin-bottom: 0.5em;}
 table.sortable tbody tr td { padding-left: 0.5em;}
 
 .tablesorter-header-inner { overflow: hidden; text-overflow: ellipsis;}
+
+.center-text { text-align: center;}
+
+header .navbar { border-radius: inherit;}
+
+@media all and (min-width: 768px) {
+  #bs-example-navbar-collapse-1{ margin-left: 75px;}
+}
+
+div.header.small ul.list-inline { text-align: right;}
+
+nav { top: -0.5em;}
+
+@media all and (max-width: 1290px) {
+   header nav .navbar-collapse.collapse.in {
+    display: block !important;
+   }
+   header nav .navbar-collapse.collapse {
+    display: none !important;
+   }
+  header nav .navbar-toggle {
+      display: block;
+      position: absolute;
+      right: 0px;
+  }
+}
+/*@media all and (min-width: 1290px) {
+  header nav .navbar-collapse.collapse {
+    display: block !important;
+    height: auto !important;
+    padding-bottom: 0;
+    overflow: visible !important;
+  }
+  header nav .navbar-toggle {
+      display: none !important;
+  }
+}
+*/
