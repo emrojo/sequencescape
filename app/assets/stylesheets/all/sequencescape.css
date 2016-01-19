@@ -1524,8 +1524,11 @@ table.sortable tbody tr td { padding-left: 0.5em;}
 
 header .navbar { border-radius: inherit;}
 
-@media all and (min-width: 768px) {
+@media all and (min-width: 1290px) {
   #bs-example-navbar-collapse-1{ margin-left: 75px;}
+}
+@media all and (max-width: 1290px) {
+  #bs-example-navbar-collapse-1 { margin-right: 5em;}
 }
 
 div.header.small ul.list-inline { text-align: right;}
@@ -1544,7 +1547,20 @@ nav { top: -0.5em;}
       position: absolute;
       right: 0px;
   }
+  #logo_container {
+    display: none;
+  }
+  .navbar-searching-box {
+    /* margin-right: 7em; */
+  }
 }
+
+button.navbar-toggle {
+  background-image: url('/public/sequencescape.gif');
+  width: 5em;
+  height: 2.3em
+}
+.navbar-toggle span.icon-bar { display: none;}
 /*@media all and (min-width: 1290px) {
   header nav .navbar-collapse.collapse {
     display: block !important;
@@ -1557,3 +1573,4 @@ nav { top: -0.5em;}
   }
 }
 */
+

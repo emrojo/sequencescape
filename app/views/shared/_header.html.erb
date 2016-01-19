@@ -50,17 +50,20 @@
     <ul class="nav navbar-nav">
       <%= render :partial => 'shared/tab', :collection => @tabs.items %>
     </ul>
-    <%= form_tag searches_path, :method => :get, :class => "navbar-form navbar-right", :role => "search" do %>
+    <%= form_tag searches_path, :method => :get, :class => "navbar-form navbar-right navbar-searching-box", :role => "search" do %>
       <div class="form-group">
       <%= search_field_tag :q, "", :size => 20, :type => "search", :placeholder => "name, id, barcode", :id => 'layout_search', :class=>"form-control" %>
       <%= select_tag :type, options_for_select(search_options,""), :id => 'layout_search_options', :class=>"form-control" %>
       </div>
     <% end %>
+
   </div><!-- /.navbar-collapse -->
 
   </div>
 
+
 </nav>
+
 
 <%- unless custom_text("app_info_box", 1).blank? -%>
   <div id="app-info-box" class="well well-sm">
