@@ -1547,30 +1547,4 @@ nav { top: -0.5em;}
       position: absolute;
       right: 0px;
   }
-  #logo_container {
-    display: none;
-  }
-  .navbar-searching-box {
-    /* margin-right: 7em; */
-  }
 }
-
-button.navbar-toggle {
-  background-image: url('/public/sequencescape.gif');
-  width: 5em;
-  height: 2.3em
-}
-.navbar-toggle span.icon-bar { display: none;}
-/*@media all and (min-width: 1290px) {
-  header nav .navbar-collapse.collapse {
-    display: block !important;
-    height: auto !important;
-    padding-bottom: 0;
-    overflow: visible !important;
-  }
-  header nav .navbar-toggle {
-      display: none !important;
-  }
-}
-*/
-
