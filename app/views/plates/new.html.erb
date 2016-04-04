@@ -28,7 +28,7 @@
     <% end %>
   };
   var dilutionFactorsNodes = $("#plates_dilution_factor");
-  var defaultOption = "<option value='1.0'>1.0</option>";
+  var defaultOption = "<option value='1.00'>1.00</option>";
 
   dilutionFactorsNodes.html(defaultOption);
 
@@ -38,7 +38,7 @@
       var validDilutionFactors = plate_creator_parameters[name].valid_dilution_factors;
       for (var i=0; i<validDilutionFactors.length; i++) {
         var val = validDilutionFactors[i]
-        dilutionFactorsNodes.append("<option value='"+val+"'>"+val+"</option>");
+        dilutionFactorsNodes.append("<option value='"+val.toFixed(2)+"'>"+val.toFixed(2)+"</option>");
       }
     } else {
       dilutionFactorsNodes.append(defaultOption);
