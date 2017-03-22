@@ -43,9 +43,9 @@ class ExtractionAttribute < ActiveRecord::Base
       actual_parent = Uuid.find_by(external_id: t['actual_plate_uuid']).resource
       actual_parent.well_at(t['actual_location']).destroy
 
-      well.update_attributes(:parent => actual_parent)
+      well.update_attributes(parent: actual_parent)
       actual_parent.wells << well
-    end    
+    end
   end
 
   private :update_performed
