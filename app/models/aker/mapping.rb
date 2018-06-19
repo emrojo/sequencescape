@@ -85,6 +85,7 @@ module Aker
     end
 
     def aker_attr_name(table_name, field_name)
+      return field_name unless config[:map_aker_with_ss_columns][table_name]
       config[:map_aker_with_ss_columns][table_name][field_name] || field_name
     end
 

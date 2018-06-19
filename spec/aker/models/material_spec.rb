@@ -8,7 +8,7 @@ RSpec.describe Aker::Material, type: :model, aker: true do
 
   it_behaves_like 'a mapping between an Aker model and Sequencescape'
 
-  let(:config) do
+  let(:my_config) do
     {
       # Maps SS models with Aker attributes
       map_ss_tables_with_aker: {
@@ -39,7 +39,7 @@ RSpec.describe Aker::Material, type: :model, aker: true do
   end
   context 'with a custom config' do
     before do
-      Aker::Material.config = config
+      Aker::Material.config = my_config
     end
     context '#attributes' do
       it 'generates an attributes object and adds the sample name as id' do
