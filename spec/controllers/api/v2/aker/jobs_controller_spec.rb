@@ -18,7 +18,7 @@ RSpec.describe Api::V2::Aker::JobsController, type: :request, aker: true do
   before do
     Aker::Material.config = my_config
   end
-  
+
   include BarcodeHelper
   before do
     mock_plate_barcode_service
