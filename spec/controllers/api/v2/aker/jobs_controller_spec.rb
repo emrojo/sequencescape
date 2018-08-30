@@ -4,6 +4,21 @@ require 'rails_helper'
 require 'support/barcode_helper'
 
 RSpec.describe Api::V2::Aker::JobsController, type: :request, aker: true do
+  let(:my_config) do
+    %(
+    sample_metadata.gender              <=   gender
+    sample_metadata.donor_id            <=   donor_id
+    sample_metadata.phenotype           <=   phenotype
+    sample_metadata.sample_common_name  <=   common_name
+    well_attribute.measured_volume      <=>  volume
+    well_attribute.concentration        <=>  concentration
+    )
+  end
+
+  before do
+    Aker::Material.config = my_config
+  end
+  
   include BarcodeHelper
   before do
     mock_plate_barcode_service
