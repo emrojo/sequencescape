@@ -8,6 +8,7 @@ ADD package.json /sequencescape
 ADD yarn.lock /sequencescape
 RUN gem update --system
 RUN gem install bundler
+RUN bundle update -bundler
 RUN bundle install
 ADD . /sequencescape/
 RUN bundle exec rake db:create
