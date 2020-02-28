@@ -1,6 +1,6 @@
 FROM starefossen/ruby-node
 RUN apt-get update -qq && apt-get install -y
-RUN apt-get -y install git vim mysql mysql-server
+RUN apt-get -y install git vim mysql-server
 WORKDIR /sequencescape
 ADD Gemfile /sequencescape
 ADD Gemfile.lock /sequencescape
