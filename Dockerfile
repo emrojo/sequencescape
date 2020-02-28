@@ -6,7 +6,7 @@ ADD Gemfile /sequencescape
 ADD Gemfile.lock /sequencescape
 ADD package.json /sequencescape
 ADD yarn.lock /sequencescape
-RUN gem install bundler
+RUN gem install bundler -v "2.0.2"
 RUN bundle install
 ADD . /sequencescape/
 RUN bundle exec rake db:create
