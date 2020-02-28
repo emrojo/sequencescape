@@ -6,6 +6,7 @@ ADD Gemfile /sequencescape
 ADD Gemfile.lock /sequencescape
 ADD package.json /sequencescape
 ADD yarn.lock /sequencescape
+RUN gem uninstall bundler
 RUN gem install bundler -v "2.0.2"
 RUN bundle install
 ADD . /sequencescape/
