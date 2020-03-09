@@ -17,7 +17,7 @@ module Api
         return default if default.dig('fields', 'submissions')
 
         default['fields'] ||= {}
-        default['fields']['submissions'] = 'uuid,name'
+        default['fields']['submissions'] = 'uuid,name,number_of_lanes,bait_library_name'
         default
       end
     end
