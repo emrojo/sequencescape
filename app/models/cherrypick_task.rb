@@ -196,14 +196,37 @@ class CherrypickTask < Task
     positions
   end
 
-  def pick_new_plate(requests, template, robot, plate_purpose, auto_add_control_plate = nil)
+  def pick_new_plate(requests, template, robot, plate_purpose, control_plate = nil)
+    processor = Cherrypick::Processors::PlateLayoutProcessor.new(
+      size: template.size,
+      shape: plate_purpose.try(:asset_shape) || AssetShape.default,
+      control_plate: control_plate,
+      partial_plate: nil,
+      template_plate: template,
+      requests: requests
+    )
+    direction = plate_purpose.nil? ? 'column' : plate_purpose.cherrypick_direction
+    return processor.plates.map{|plate_layout| plate_layout.by_direction(direction) }
+    #plate_purpose.nil? ? processor.plates.map(&:by_column) : plate_purpose.cherrypick_direction
+    #return 
     target_type = PickTarget.for(plate_purpose)
     perform_pick(requests, robot, auto_add_control_plate) do
       target_type.new(template, plate_purpose.try(:asset_shape))
     end
   end
 
-  def pick_onto_partial_plate(requests, template, robot, partial_plate, auto_add_control_plate = nil)
+  def pick_onto_partial_plate(requests, template, robot, partial_plate, control_plate = nil)
+    processor = Cherrypick::Processors::PlateLayoutProcessor.new(
+      size: template.size,
+      shape: plate_purpose.try(:asset_shape) || AssetShape.default,
+      control_plate: control_plate,
+      partial_plate: partial_plate,
+      template_plate: template,
+      requests: requests
+    )
+    direction = plate_purpose.nil? ? 'column' : plate_purpose.cherrypick_direction
+    return processor.plates.map{|plate_layout| plate_layout.by_direction(direction) }
+
     purpose = partial_plate.plate_purpose
     target_type = PickTarget.for(purpose)
 
@@ -271,6 +294,15 @@ class CherrypickTask < Task
   end
 
   def perform_pick(requests, robot, auto_add_control_plate)
+    if auto_add_control_plate
+      batch = requests.first.batch
+      control_assets = auto_add_control_plate.wells.joins(:samples)
+      control_positions = control_positions(batch.id, num_plate, current_destination_plate.size, control_assets.count)
+    end
+    
+    
+
+
     max_plates = robot.max_beds
     raise StandardError, 'The chosen robot has no beds!' if max_plates.zero?
 
